@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+  	<!-- member -->
+  	<sql id="memberSql">
+  		SELECT 
+  			member_seq
+  		   , id
+  		   , name
+  		   , `role`
+  		   , profile
+  		   , email
+  		   , phone
+  		   , addr
+  		   , remark
+  		   , social_yn
+  		   , del_yn
+  		   , created_dt
+  		   , updated_dt
+  		   , updated_no
+		FROM member
+  	</sql>
+  	
+  	<select id="getMembers" resultMap="camelCaseMap">
+  		<include refid="memberSql"/>
+  		<where>
+  		  	1=1
+  			<if test="role != null and !role.equals('')">
+  				and `role`= #{role}
+  			</if>
+  			<if test="id != null and  !id.equals('')">
+  				and id= #{id}
+  			</if>
+  			<if test="name != null and !name.equals('')">
+  				and name= #{name}
+  			</if>
+  			<if test="email != null and !email.equals('')">
+  				and email= #{email}
+  			</if>
+  			<if test="phone != null and !phone.equals('')">
+  				and phone= #{phone}
+  			</if>
+  			<if test="socialYn != null and !socialYn.equals('')">
+  				and social_yn= #{socialYn}
+  			</if>
+  			<if test="delYn != null and !delYn.equals('')">
+  				and del_yn= #{delYn}
+  			</if>
+  			<if test="memberSeq != null and !memberSeq.equals('')">
+  				and member_seq= #{memberSeq}
+  			</if>
+  		</where>
+  		ORDER BY member_seq desc
+  		<if test="startRow != null and !startRow.equals('')">
+  			limit #{startRow}, #{size}
+  		</if>
+  	</select>
+  
+    <select id="getMembersCnt" resultMap="camelCaseMap">
+    	select count(*) from (
+	    	<include refid="memberSql"/>
+	  		<where>
+	  			 1=1
+	  			<if test="role != null and !roll.equals('')">
+	  				and `role`= #{role}
+	  			</if>
+	  			<if test="id != null and  !id.equals('')">
+	  				and id= #{id}
+	  			</if>
+	  			<if test="name != null and !name.equals('')">
+	  				and name= #{name}
+	  			</if>
+	  			<if test="email != null and !email.equals('')">
+	  				and email= #{email}
+	  			</if>
+	  			<if test="phone != null and !phone.equals('')">
+	  				and phone= #{phone}
+	  			</if>
+	  			<if test="socialYn != null and !socialYn.equals('')">
+	  				and social_yn= #{socialYn}
+	  			</if>
+	  			<if test="delYn != null and !delYn.equals('')">
+	  				and del_yn= #{delYn}
+	  			</if>
+	  			<if test="memberSeq != null and !memberSeq.equals('')">
+	  				and member_seq= #{memberSeq}
+	  			</if>
+	  		</where>
+    	) tb
+  	</select>
+  		
+  	<insert id="addMember">
+  		INSERT INTO member ( 
+	  		id
+	  		, name
+	  		, `role`
+	  		, profile
+	  		, email
+	  		, phone
+	  		, addr
+	  		, remark
+	  		, social_yn
+	  		, del_yn
+	  		, created_dt
+	  	) VALUES (
+  			#{id}
+  			, #{name}
+  			, #{role}
+  			, #{profile}
+  			, #{email}
+  			, #{phone}
+  			, #{addr}
+  			, #{remark}
+  			, #{socialYn}
+  			, 'N'
+  			, NOW()
+  		)
+  		<selectKey keyColumn="memberSeq" order="AFTER">
+  			 SELECT LAST_INSERT_ID()
+  		</selectKey>
+  	</insert>
+  	
+  	<update id="setMember">
+  		UPDATE member
+  		<set>
+  			<if test="name != null and !name.equals('')">name= #{name},</if>
+  			<if test="role != null and !role.equals('')">`role`= #{role},</if>
+  			<if test="profile != null and !profile.equals('')">profile= #{profile},</if>
+  			<if test="email != null and !email.equals('')">email= #{email},</if>
+  			<if test="phone != null and !phone.equals('')">phone= #{phone},</if>
+  			<if test="addr != null and !addr.equals('')">addr= #{addr},</if>
+  			<if test="remark != null and !remark.equals('')">remark= #{remark},</if>
+  			<if test="socialYn != null and !socialYn.equals('')">social_yn= #{socialYn},</if>
+  			<if test="delYn != null and !delYn.equals('')">del_yn= #{delYn},</if>
+  			updated_dt= NOW(), 
+  			updated_no=	#{memberSeq}
+  		</set>
+  		<where>
+  			member_seq= #{memberSeq}
+  		</where> 
+  	</update>
+  	
+  	<delete id="removeMember">
+  		DELETE FROM member
+		WHERE member_seq= #{memberSeq}
+  	</delete>
+  	
+  	<!-- member-detail -->
+  	<sql id="memberDetailSql">
+  		SELECT 
+  			detail_seq
+  			, member_fk
+  			, category
+  			, content
+  			, remark
+  			, created_dt
+  			, created_no
+		FROM member_detail
+  	</sql>
+  	
+  	<select id="getMemberDetails" resultMap="camelCaseMap">
+  		<include refid="memberDetailSql"/>
+  		WHERE member_fk= #{memberSeq}
+  	</select>
+  	
+  	<insert id="addMemberDetail">
+  		INSERT INTO member_detail (
+  			member_fk
+  			, category
+  			, content
+  			, remark
+  			, created_dt
+  			, created_no
+  		) VALUES (
+  			#{memberSeq}
+  			, #{category}
+  			, #{content}
+  			, #{remark}
+  			, NOW()
+  			, #{memberSeq}
+  		)
+  		
+  	</insert>
+  	
+  	<delete id="removeMemberDetail">
+  		DELETE FROM member_detail
+		WHERE detail_seq= #{detailSeq}
+  	</delete>
+  	
+  	<!-- member-social -->
+  	<select id="getMemberSocial" resultMap="camelCaseMap">
+  		SELECT 
+  			social_seq
+  			, member_fk
+  			, name
+  			, del_yn
+  			, created_dt
+  			, created_no
+		FROM member_social
+		WHERE member_fk= #{memberSeq}
+		AND	del_yn= #{delYn} 
+  	</select>
+  	
+  	<insert id="addMemberSocial">
+  		INSERT INTO member_social (
+  			member_fk
+  			, name
+  			, del_yn
+  			, created_dt
+  			, created_no
+  		) VALUES ( 
+  			#{memberSeq}
+  			, #{name}
+  			, 'N'
+  			, NOW()
+  			, #{memberSeq}
+  		)
+  	</insert>
+  	
+   	<update id="setMemberSocial">
+  		UPDATE member_social
+  		<set>
+  			del_yn= 'Y'
+  		</set>
+  		<where>
+  			member_fk= #{memberSeq}
+  		</where>
+  	</update>
+  	
+  	<delete id="removeMemberSocial">
+  		DELETE FROM member_social
+  		WHERE member_fk= #{memberSeq}
+  	</delete> 	
+</mapper>

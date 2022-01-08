@@ -3,9 +3,12 @@ package shop.zeedeco.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
 /**
  * @author KMH 
  * 2021.12.27
@@ -15,7 +18,7 @@ import org.springframework.stereotype.Repository;
 public class CustomDao {
 	
 	@Autowired
-	private SqlSession sqlSession;
+	SqlSession sqlSession;
 
 	// ¸ñ·Ï
 	public List<Map<String, Object>> dbDetails(String mapper, Map<String, Object> map) {

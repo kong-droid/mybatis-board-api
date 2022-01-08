@@ -4,16 +4,21 @@ spring:
     url: jdbc:log4jdbc:mysql://localhost:3306/zeedeco?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&allowMultiQueries=true&autoreconnect=true
     username: root
     password: 1234
-  main:
-    web-application-type: none
   
-#mybatis:
-#  mapper-locations: mapper/*.xml
-#  configuration:
-#    map-underscore-to-camel-case: true
+mybatis:
+  mapper-locations: mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 server:
   port: 1000
   
 properties:
-  aesKey: zeedeco1234  
+  aesKey: zeedeco1234
+  
+#logging:
+#  pattern:
+#    dateformat: yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul
+#  level:
+#    root: INFO
+#    org.springframework.data.convert.CustomConversions: ERROR     
