@@ -9,6 +9,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import lombok.RequiredArgsConstructor;
 import shop.zeedeco.dao.CustomDao;
+import shop.zeedeco.exception.BadRequestException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +26,11 @@ public class MemberService {
             requestMap.put("size", size);
         }
         
-        List<Map<String, Object>> list = dao.dbDetails("member.getMembers", requestMap);
-        int totalCount = dao.dbInsert("member.getMembersCnt", requestMap);
-        
-        if(list != null) {
-            responseMap.put("list", list);
+        List<Map<String, Object>> members = dao.dbDetails("member.getMembers", requestMap);
+        Map<String, Object> listCount = dao.dbDetail("member.getMembersCnt", requestMap);
+        Integer totalCount = Integer.parseInt(String.valueOf(listCount.get("cnt")));
+        if(members != null) {
+            responseMap.put("members", members);
             responseMap.put("totalCount", totalCount);
         } else {
         	new ResourceAccessException("데이터가 없습니다.");
@@ -54,20 +55,43 @@ public class MemberService {
     }
 
     public void addMember(Map<String, Object> requestMap) throws Exception {
-    	this.dao.dbInsert("member.addMember", requestMap);
+    	int effectRow = this.dao.dbInsert("member.addMember", requestMap);
+    	System.err.println(requestMap);
+    	if(requestMap.get("details") != null) {
+    		List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
+    		for(Map<String, Object> map : details) {
+    			map.put("memberSeq",  requestMap.get("memberSeq"));
+    			this.dao.dbInsert("member.addMemberDetail", map);
+    		}
+    	}
+    	if(effectRow < 0) throw new BadRequestException("회원가입을 실패했습니다.");
     }
     
     public void setMember(Map<String, Object> requestMap) throws Exception {
-    	this.dao.dbUpdate("member.setMember", requestMap);
+    	int effectRow = this.dao.dbUpdate("member.setMember", requestMap);
+    	if(requestMap.get("details") != null) {
+    		int detailRow;
+    		List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
+			detailRow = this.dao.dbDelete("member.removeMemberDetail", requestMap);
+    		for(Map<String, Object> map : details) {
+    			map.put("memberSeq",  requestMap.get("memberSeq"));
+				detailRow = this.dao.dbInsert("member.addMemberDetail", map);
+				if(detailRow < 0) throw new BadRequestException("상세정보 수정을 실패했습니다.");
+
+    		}
+    	}
+    	if(effectRow < 0) throw new BadRequestException("정보수정을 실패했습니다.");
     }
     
     public void logicalRemoveMember(Map<String, Object> requestMap) throws Exception {
-    	this.dao.dbUpdate("member.setMember", requestMap);
+    	int effectRow = this.dao.dbUpdate("member.setMember", requestMap);
+    	if(effectRow < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
     }
     
     public void physicalRemoveMember(int memberSeq) throws Exception {
     	Map<String, Object> requestMap = new HashMap<>();
     	requestMap.put("memberSeq", memberSeq);
-    	this.dao.dbDelete("member.removeMember", requestMap);
+    	int effectRow = this.dao.dbDelete("member.removeMember", requestMap);
+    	if(effectRow < 0) throw new BadRequestException("물리적 삭제를 실패했습니다.");
     }
 }

@@ -1,6 +1,5 @@
 package shop.zeedeco.dto.member;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.lang.NonNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
@@ -37,6 +32,7 @@ public class MemberDto {
 		private LocalDateTime createdDt;
 		private LocalDateTime updatedDt;
 		private Integer updatedNo;
+		private List<MemberDetailDto.ViewMemberDetailRes> details;
 		
 		public ViewMemberRes(Map<String, Object> responseMap) {
 			this.memberSeq			= (Integer) 	responseMap.get("memberSeq");
@@ -53,17 +49,18 @@ public class MemberDto {
 			this.createdDt			= (LocalDateTime) 	responseMap.get("createdDt") == null ? null : (LocalDateTime) 	responseMap.get("createdDt");
 			this.updatedDt			= (LocalDateTime) 	responseMap.get("updatedDt") == null ? null : (LocalDateTime) 	responseMap.get("updatedDt");
 			this.updatedNo			= (Integer) 	responseMap.get("updatedNo");
+			this.details			= (List<MemberDetailDto.ViewMemberDetailRes>) responseMap.get("details") == null ? null : (List<MemberDetailDto.ViewMemberDetailRes>) responseMap.get("details");
 		}
 	}
 	
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ViewMembersRes {
-        private List<ViewMemberRes> list;
-        private int totalCount;
+        private List<ViewMemberRes> members;
+        private Integer totalCount;
 
-        public ViewMembersRes(List<ViewMemberRes> list, int totalCount) {
-            this.list = list;
+        public ViewMembersRes(List<ViewMemberRes> members, Integer totalCount) {
+            this.members = members;
             this.totalCount = totalCount;
         }
     }
@@ -89,6 +86,7 @@ public class MemberDto {
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class AddMemberReq {
+		private Integer memberSeq;
 		@NotEmpty(message = "아이디 값이 없습니다.")
 		private String id;
 		@NotEmpty(message = "이름 값이 없습니다.")
@@ -104,7 +102,7 @@ public class MemberDto {
 		private String remark;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String socialYn;
-		
+		private List<MemberDetailDto.AddMemberDetailReq> details;
         public Map<String, Object> toMap() throws Exception {
             return new ObjectMapper().convertValue(this, Map.class);
         }
@@ -130,6 +128,7 @@ public class MemberDto {
 		private String remark;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String socialYn;
+		private List<MemberDetailDto.AddMemberDetailReq> details;
 		
         public Map<String, Object> toMap() throws Exception {
             return new ObjectMapper().convertValue(this, Map.class);

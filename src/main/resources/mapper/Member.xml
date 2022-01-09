@@ -58,7 +58,7 @@
   	</select>
   
     <select id="getMembersCnt" resultMap="camelCaseMap">
-    	select count(*) from (
+    	select count(*) as cnt from (
 	    	<include refid="memberSql"/>
 	  		<where>
 	  			 1=1
@@ -116,7 +116,7 @@
   			, 'N'
   			, NOW()
   		)
-  		<selectKey keyColumn="memberSeq" order="AFTER">
+  		<selectKey keyProperty="memberSeq" resultType="Integer" order="AFTER">
   			 SELECT LAST_INSERT_ID()
   		</selectKey>
   	</insert>
@@ -185,7 +185,7 @@
   	
   	<delete id="removeMemberDetail">
   		DELETE FROM member_detail
-		WHERE detail_seq= #{detailSeq}
+		WHERE member_fk= #{memberSeq}		
   	</delete>
   	
   	<!-- member-social -->
