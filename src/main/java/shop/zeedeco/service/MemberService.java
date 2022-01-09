@@ -91,6 +91,7 @@ public class MemberService {
     public void physicalRemoveMember(int memberSeq) throws Exception {
     	Map<String, Object> requestMap = new HashMap<>();
     	requestMap.put("memberSeq", memberSeq);
+    	int detailRow = this.dao.dbDelete("member.removeMemberDetail", requestMap);
     	int effectRow = this.dao.dbDelete("member.removeMember", requestMap);
     	if(effectRow < 0) throw new BadRequestException("물리적 삭제를 실패했습니다.");
     }
