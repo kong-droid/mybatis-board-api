@@ -17,5 +17,5 @@ server:
   port: 1000
   
 properties:
-  aesKey: zeedeco1234
+  aesKey: zeedeco1234!@#$%
    

@@ -10,12 +10,14 @@ import org.springframework.web.client.ResourceAccessException;
 import lombok.RequiredArgsConstructor;
 import shop.zeedeco.dao.CustomDao;
 import shop.zeedeco.exception.BadRequestException;
+import shop.zeedeco.util.MemberEnDecoder;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 	
 	private final CustomDao dao;
+	private final MemberEnDecoder memberEnDecoder;
 	
     public Map<String, Object> getMembers(Map<String, Object> requestMap, Integer page, Integer size) throws Exception {
         
@@ -27,6 +29,8 @@ public class MemberService {
         }
         
         List<Map<String, Object>> members = dao.dbDetails("member.getMembers", requestMap);
+        // 복호화
+        this.memberEnDecoder.decodeMembers(members);
         Map<String, Object> listCount = dao.dbDetail("member.getMembersCnt", requestMap);
         Integer totalCount = Integer.parseInt(String.valueOf(listCount.get("cnt")));
         if(members != null) {
@@ -46,6 +50,7 @@ public class MemberService {
     	
         if(responseMap != null) {
         	details = dao.dbDetails("member.getMemberDetails", requestMap);
+        	this.memberEnDecoder.decodeMember(responseMap);
         	responseMap.put("details", details);
         } else {
         	new ResourceAccessException("데이터가 없습니다.");
@@ -55,8 +60,8 @@ public class MemberService {
     }
 
     public void addMember(Map<String, Object> requestMap) throws Exception {
+    	this.memberEnDecoder.encodeMember(requestMap);
     	int effectRow = this.dao.dbInsert("member.addMember", requestMap);
-    	System.err.println(requestMap);
     	if(requestMap.get("details") != null) {
     		List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
     		for(Map<String, Object> map : details) {
@@ -68,6 +73,7 @@ public class MemberService {
     }
     
     public void setMember(Map<String, Object> requestMap) throws Exception {
+    	this.memberEnDecoder.encodeMember(requestMap);
     	int effectRow = this.dao.dbUpdate("member.setMember", requestMap);
     	if(requestMap.get("details") != null) {
     		int detailRow;

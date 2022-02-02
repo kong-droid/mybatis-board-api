@@ -7,6 +7,7 @@
   		SELECT 
   			member_seq
   		   , id
+  		   , password
   		   , name
   		   , `role`
   		   , profile
@@ -31,6 +32,9 @@
   			</if>
   			<if test="id != null and  !id.equals('')">
   				and id= #{id}
+  			</if>
+  			<if test="password != null and !password.equals('')">
+  				and password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password}))))))
   			</if>
   			<if test="name != null and !name.equals('')">
   				and name= #{name}
@@ -68,6 +72,9 @@
 	  			<if test="id != null and  !id.equals('')">
 	  				and id= #{id}
 	  			</if>
+	  			<if test="password != null and !password.equals('')">
+  					and password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password}))))))
+  				</if>
 	  			<if test="name != null and !name.equals('')">
 	  				and name= #{name}
 	  			</if>
@@ -93,6 +100,7 @@
   	<insert id="addMember">
   		INSERT INTO member ( 
 	  		id
+	  		, password
 	  		, name
 	  		, `role`
 	  		, profile
@@ -105,6 +113,7 @@
 	  		, created_dt
 	  	) VALUES (
   			#{id}
+  			, CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password}))))))
   			, #{name}
   			, #{role}
   			, #{profile}
@@ -125,6 +134,7 @@
   		UPDATE member
   		<set>
   			<if test="name != null and !name.equals('')">name= #{name},</if>
+  			<if test="password != null and !password.equals('')">password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password})))))),</if>
   			<if test="role != null and !role.equals('')">`role`= #{role},</if>
   			<if test="profile != null and !profile.equals('')">profile= #{profile},</if>
   			<if test="email != null and !email.equals('')">email= #{email},</if>

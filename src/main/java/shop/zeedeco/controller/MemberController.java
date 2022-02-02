@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shop.zeedeco.dto.member.MemberDto;
 import shop.zeedeco.service.MemberService;
@@ -48,7 +46,7 @@ public class MemberController {
 		Integer totalCount = (Integer) responseMap.get("totalCount");
 		return new MemberDto.ViewMembersRes(members.stream().map(MemberDto.ViewMemberRes::new).collect(Collectors.toList()), totalCount);
 	}
-
+	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{memberSeq}")
 	public MemberDto.ViewMemberRes getMember(@PathVariable @Valid int memberSeq) throws Exception {

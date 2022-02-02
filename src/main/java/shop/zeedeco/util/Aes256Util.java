@@ -23,7 +23,7 @@ public class Aes256Util {
 
     @Value("${properties.aesKey}")
     private void setAesKey(String aesKey) {
-        this.aesKey = aesKey;
+        Aes256Util.aesKey = aesKey;
     }
 
     private static Key keySpec;

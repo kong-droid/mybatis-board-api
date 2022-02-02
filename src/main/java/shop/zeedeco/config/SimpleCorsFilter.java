@@ -1,4 +1,4 @@
-package shop.zeedeco.security;
+package shop.zeedeco.config;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
