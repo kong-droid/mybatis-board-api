@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+
+	<sql id="getSql">
+		SELECT 
+			post_seq
+			, board_fk
+			, member_fk
+			, thumbnail
+			, title
+			, content
+			, remark
+			, start_dt
+			, end_dt
+			, notice_yn
+			, secret_yn
+			, use_yn
+			, del_yn
+			, view_count
+			, created_dt
+			, created_no
+			, updated_dt
+			, updated_no
+		FROM post
+		WHERE 1=1
+	</sql>
+	
+	<sql id="getWhere">
+		<if test="postSeq != null and !postSeq.equals('')">
+			AND post_seq= #{postSeq}
+		</if>
+		<if test="boardFk != null and !boardFk.equals('')">
+			AND board_fk= #{boardFk}
+		</if>
+		<if test="title != null and !title.equals('')">
+			AND title like CONCAT('%', #{title}, '%')
+		</if>
+		<if test="content != null and !content.equals('')">
+			AND content like CONCAT('%', #{content}, '%')
+		</if>
+		<if test="startDt != null and !startDt.equals('')">
+			AND start_dt= #{startDt}
+		</if>
+		<if test="endDt != null and !endDt.equals('')">
+			AND end_dt= #{endDt}
+		</if>
+		<if test="noticeYn != null and !noticeYn.equals('')">
+			AND notice_yn= #{noticeYn}
+		</if>
+		<if test="secretYn != null and !secretYn.equals('')">
+			AND secret_yn= #{secretYn}
+		</if>
+		<if test="useYn != null and !useYn.equals('')">
+			AND use_yn= #{useYn}
+		</if>
+		<if test="delYn != null and !delYn.equals('')">
+			AND del_yn= #{delYn}
+		</if>
+	</sql>
+	
+	<select id="getPosts" resultMap="camelCaseMap">
+		/** post.getPosts **/
+		<include refid="getSql"/>
+		<include refid="getWhere"/>		
+		ORDER BY post_seq desc
+  		<if test="startRow != null and !startRow.equals('')">
+  			limit #{startRow}, #{size}
+  		</if>
+	</select>
+	
+	<select id="getPostsCnt" resultMap="camelCaseMap">
+		/** post.getPostsCnt **/
+		select count(*) as cnt from (
+			<include refid="getSql"/>
+			<include refid="getWhere"/>			
+    	) tb
+	</select>
+	
+	<insert id="addPost">
+		/** post.addPost **/
+		INSERT INTO post (
+			board_fk
+			, member_fk
+			, thumbnail
+			, title
+			, content
+			, remark
+			, start_dt
+			, end_dt
+			, notice_yn
+			, secret_yn
+			, use_yn
+			, del_yn
+			, view_count
+			, created_dt
+			, created_no
+		) VALUES (
+			#{boardFk}
+			, #{memberSeq}
+			, #{thumbnail}
+			, #{title}
+			, #{content}
+			, #{remark}
+			, #{startDt}
+			, #{endDt}
+			, #{noticeYn}
+			, #{secretYn}
+			, #{useYn}
+			, #{delYn}
+			, 0
+			, NOW()
+			, #{memberSeq}
+		)
+	</insert>
+	
+	<update id="setPost">
+		/** post.setPost **/
+		UPDATE post
+		<set>
+			<if test="thumbnail != null and !thumbnail.equals('')"> thumbnail= #{thumbnail},</if>
+			<if test="title != null and !title.equals('')"> title= #{title},</if>
+			<if test="content != null and !content.equals('')"> content= #{content},</if>
+			<if test="remark != null and !remark.equals('')"> remark= #{remark},</if>
+			<if test="startDt != null and !startDt.equals('')"> start_dt= #{startDt},</if>
+			<if test="endDt != null and !endDt.equals('')"> end_dt= #{endDt},</if>
+			<if test="useYn != null and !useYn.equals('')"> use_yn= #{useYn},</if>
+			<if test="delYn != null and !delYn.equals('')"> del_yn= #{delYn},</if>
+			<if test="noticeYn != null and !noticeYn.equals('')"> notice_yn= #{noticeYn},</if>
+			<if test="secretYn != null and !secretYn.equals('')"> secret_yn= #{secretYn},</if>		
+			updated_dt= NOW(),
+			updated_no= #{memberSeq}	
+		</set>
+		WHERE post_seq= #{postSeq}
+	</update>
+	
+	<update id="setPostForViewCount">
+		/** post.setPostForViewCount **/
+		UPDATE post SET
+			view_count= view_count + 1,
+			updated_dt= NOW(),
+			updated_no= #{memberSeq}	
+		WHERE post_seq= #{postSeq}
+	</update>
+	
+	<delete id="removePost">
+		/** post.removePost **/
+		DELETE FROM zeedeco.post
+		WHERE post_seq= #{postSeq}
+	</delete>
+</mapper>

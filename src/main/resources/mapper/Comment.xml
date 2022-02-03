@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+	
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+	
+	<sql id="getSql">
+		SELECT 
+			comment_seq
+			, post_fk
+			, member_fk
+			, parents
+			, deps
+			, comment
+			, created_dt
+			, created_no
+			, updated_dt
+			, updated_no
+		FROM comment 
+		WHERE 1=1
+	</sql>
+	
+	<sql id="getWhere">
+		<if test="postFk != null and !postFk.equals('')">
+			AND post_fk= #{postFk}
+		</if>
+		<if test="memberFk != null and !memberFk.equals('')">
+			AND member_fk= #{memberFk}
+		</if>		
+		<if test="parents != null and !parents.equals('')">
+			AND parents= #{parents}
+		</if>
+		<if test="deps != null and !deps.equals('')">
+			AND deps= #{deps}
+		</if>											
+	</sql>
+	
+	<select id="getComments" resultMap="camelCaseMap">
+		/** comment.getComments **/
+		<include refid="getSql"/>
+		<include refid="getWhere"/>
+	</select>
+	
+	<select id="getCommentsCnt" resultMap="camelCaseMap">
+		/** comment.getCommentsCnt **/
+		select count(*) as cnt from (
+			<include refid="getSql"/>
+			<include refid="getWhere"/>			
+    	) tb
+	</select>
+	
+	<insert id="addComment">
+		/** comment.addComment **/
+		INSERT INTO comment (
+			post_fk
+			, member_fk
+			, parents
+			, deps
+			, comment
+			, created_dt
+			, created_no
+		) VALUES (
+			#{postFk}
+			, #{memberSeq}
+			, #{parents}
+			, #{deps}
+			, #{comment}
+			, NOW()
+			, #{memberSeq}	
+		)
+	</insert>
+	
+	<update id="setComment">
+		/** comment.setComment **/
+		UPDATE comment
+		<set>
+			comment= #{comment},
+			updated_dt= NOW(),
+			updated_no= #{memberSeq}	
+		</set>
+		WHERE comment_seq= #{commentSeq}
+	</update>
+	
+	<delete id="removeComment">
+		/** comment.removeComment **/
+		DELETE FROM comment
+		WHERE comment_seq= #{commentSeq}
+	</delete>
+	
+</mapper>

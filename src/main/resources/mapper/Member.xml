@@ -24,6 +24,7 @@
   	</sql>
   	
   	<select id="getMembers" resultMap="camelCaseMap">
+  		/** member.getMembers **/
   		<include refid="memberSql"/>
   		<where>
   		  	1=1
@@ -62,6 +63,7 @@
   	</select>
   
     <select id="getMembersCnt" resultMap="camelCaseMap">
+   		/** member.getMembersCnt **/
     	select count(*) as cnt from (
 	    	<include refid="memberSql"/>
 	  		<where>
@@ -98,6 +100,7 @@
   	</select>
   		
   	<insert id="addMember">
+  		/** member.addMember **/
   		INSERT INTO member ( 
 	  		id
 	  		, password
@@ -131,6 +134,7 @@
   	</insert>
   	
   	<update id="setMember">
+  		/** member.setMember **/
   		UPDATE member
   		<set>
   			<if test="name != null and !name.equals('')">name= #{name},</if>
@@ -152,6 +156,7 @@
   	</update>
   	
   	<delete id="removeMember">
+  		/** member.removeMember **/
   		DELETE FROM member
 		WHERE member_seq= #{memberSeq}
   	</delete>
@@ -170,11 +175,13 @@
   	</sql>
   	
   	<select id="getMemberDetails" resultMap="camelCaseMap">
+  		/** member.getMemberDetails **/
   		<include refid="memberDetailSql"/>
   		WHERE member_fk= #{memberSeq}
   	</select>
   	
   	<insert id="addMemberDetail">
+  		/** member.addMemberDetail **/
   		INSERT INTO member_detail (
   			member_fk
   			, category
@@ -194,12 +201,14 @@
   	</insert>
   	
   	<delete id="removeMemberDetail">
+  		/** member.removeMemberDetail **/
   		DELETE FROM member_detail
 		WHERE member_fk= #{memberSeq}		
   	</delete>
   	
   	<!-- member-social -->
   	<select id="getMemberSocial" resultMap="camelCaseMap">
+  		/** member.getMemberSocial **/
   		SELECT 
   			social_seq
   			, member_fk
@@ -213,6 +222,7 @@
   	</select>
   	
   	<insert id="addMemberSocial">
+  		/** member.addMemberSocial **/
   		INSERT INTO member_social (
   			member_fk
   			, name
@@ -229,6 +239,7 @@
   	</insert>
   	
    	<update id="setMemberSocial">
+   		/** member.setMemberSocial **/
   		UPDATE member_social
   		<set>
   			del_yn= 'Y'
@@ -239,6 +250,7 @@
   	</update>
   	
   	<delete id="removeMemberSocial">
+  		/** member.removeMemberSocial **/
   		DELETE FROM member_social
   		WHERE member_fk= #{memberSeq}
   	</delete> 	
