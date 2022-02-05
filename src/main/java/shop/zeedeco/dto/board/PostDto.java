@@ -22,11 +22,12 @@ public class PostDto {
 		private Integer postSeq;
 		private Integer boardFk;
 		private Integer memberFk;
+		private String thumbnail;
 		private String title;
 		private String content;
 		private String remark;
-		private String startDt;
-		private String endDt;
+		private LocalDateTime startDt;
+		private LocalDateTime endDt;
 		private String noticeYn;
 		private String secretYn;
 		private String useYn;
@@ -41,11 +42,12 @@ public class PostDto {
 			this.postSeq			= (Integer) 	responseMap.get("postSeq") 			== null ? null : (Integer) 	responseMap.get("postSeq");
 			this.boardFk			= (Integer) 	responseMap.get("boardFk") 			== null ? null : (Integer) 	responseMap.get("boardFk");
 			this.memberFk			= (Integer) 	responseMap.get("memberFk") 		== null ? null : (Integer) 	responseMap.get("memberFk");
+			this.thumbnail			= (String)		responseMap.get("thumbnail")		== null ? null : (String)	responseMap.get("thumbnail");
 			this.title				= (String) 		responseMap.get("title") 		 	== null ? null : (String) 	responseMap.get("title");
 			this.content			= (String) 		responseMap.get("content")  		== null ? null : (String) 	responseMap.get("content");
 			this.remark				= (String) 		responseMap.get("remark")			== null ? null : (String) 	responseMap.get("remark");
-			this.startDt			= (String) 		responseMap.get("startDt")			== null ? null : (String) 	responseMap.get("startDt");
-			this.endDt				= (String) 		responseMap.get("endDt")			== null ? null : (String) 	responseMap.get("endDt");
+			this.startDt			= (LocalDateTime) 		responseMap.get("startDt")	== null ? null : (LocalDateTime) 	responseMap.get("startDt");
+			this.endDt				= (LocalDateTime) 		responseMap.get("endDt")	== null ? null : (LocalDateTime) 	responseMap.get("endDt");
 			this.noticeYn			= (String) 		responseMap.get("noticeYn")			== null ? null : (String) 	responseMap.get("noticeYn");
 			this.secretYn			= (String) 		responseMap.get("secretYn")			== null ? null : (String) 	responseMap.get("secretYn");
 			this.useYn				= (String) 		responseMap.get("useYn")			== null ? null : (String) 	responseMap.get("useYn");
@@ -143,8 +145,6 @@ public class PostDto {
 		private String secretYn;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String useYn;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String delYn;
 		
         public Map<String, Object> toMap() throws Exception {
             return new ObjectMapper().convertValue(this, Map.class);
@@ -153,11 +153,23 @@ public class PostDto {
 	
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class SetPostForViewCountReq {
+	public static class SetPostByDelYnReq {
 		@NotNull(message = "게시글 고유번호가 비어있습니다.")
 		private Integer postSeq;
 		@NotNull(message = "유저 고유번호가 비어있습니다.")
 		private Integer memberSeq;
+		private String delYn;
+		
+        public Map<String, Object> toMap() throws Exception {
+            return new ObjectMapper().convertValue(this, Map.class);
+        }
+	}  
+	
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class SetPostForViewCountReq {
+		@NotNull(message = "게시글 고유번호가 비어있습니다.")
+		private Integer postSeq;
 		
         public Map<String, Object> toMap() throws Exception {
             return new ObjectMapper().convertValue(this, Map.class);

@@ -67,7 +67,7 @@ public class BoardController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping
-	public void logicalRemoveBoard(@RequestBody @Valid final BoardDto.SetBoardReq req) throws Exception {
+	public void logicalRemoveBoard(@RequestBody @Valid final BoardDto.SetBoardByDelYnReq req) throws Exception {
 		this.boardService.logicalRemoveBoard(req.toMap());
 	}
 	

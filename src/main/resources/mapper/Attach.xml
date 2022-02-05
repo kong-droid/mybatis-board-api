@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="attach">
+
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+
+	<sql id="getSql">
+			SELECT 
+				attach_seq
+				, real_name
+				, uuid_name
+				, file_type
+				, file_size
+				, file_path
+				, CONCAT(file_path, '/', uuid_name) as full_path
+				, tb_name
+				, tb_seq
+				, tb_type
+				, created_dt
+				, created_no
+		FROM attach
+		WHERE 1=1
+	</sql>
+	
+	<sql id="getWhere">
+		<if test="attachSeq != null and !attachSeq.equals('')">
+			AND attach_seq= #{attachSeq}
+		</if>
+		<if test="tbName != null and !tbName.equals('')">
+			AND tb_name= #{tbName}
+		</if>
+		<if test="tbSeq != null and !tbSeq.equals('')">
+			AND tb_seq= #{tbSeq}
+		</if>
+		<if test="tbType != null and !tbType.equals('')">
+			AND tb_type= #{tbType}
+		</if>
+	</sql>
+	
+	<select id="getAttaches" resultMap="camelCaseMap">
+		/** attach.getAttaches **/
+		<include refid="getSql"/>
+		<include refid="getWhere"/>		
+		ORDER BY attach_seq desc
+	</select>
+		
+	<insert id="addAttach">
+		/** attach.addAttach **/
+		INSERT INTO attach ( 
+			real_name
+			, uuid_name
+			, file_type
+			, file_size
+			, file_path
+			, tb_name
+			, tb_seq
+			, tb_type
+			, created_dt
+			, created_no
+		) VALUES (
+			#{realName}
+			, #{uuidName}
+			, #{fileType}
+			, #{fileSize}
+			, #{filePath}
+			, #{tbName}
+			, #{tbSeq}
+			, #{tbType}
+			, NOW()
+			, #{memberSeq}
+		)
+
+		<selectKey keyProperty="attachNo" order="AFTER" resultType="int">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<delete id="removeAttach">
+		/** attach.removeAttach **/
+		DELETE FROM attach
+		WHERE attach_seq= #{attachSeq}
+	</delete>
+</mapper>

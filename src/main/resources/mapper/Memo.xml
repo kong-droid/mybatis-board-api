@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memo">
+
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+
+	<sql id="getSql">
+		SELECT 
+			memo_seq
+			, member_fk
+			, memo_date
+			, content
+			, remark
+			, created_dt
+			, created_no
+			, updated_dt
+			, updated_no
+		FROM memo
+		WHERE 1=1
+	</sql>
+	
+	<sql id="getWhere">
+		<if test="memoSeq != null and !memoSeq.equals('')">
+			AND memo_seq= #{memoSeq}
+		</if>
+		<if test="memberSeq != null and !memberSeq.equals('')">
+			AND member_fk= #{memberSeq}
+		</if>
+		<if test="content != null and !content.equals('')">
+			AND content like CONCAT('%', #{content}, '%')
+		</if>
+		<if test="memoDate != null and !memoDate.equals('')">
+			AND memo_date= #{memoDate}
+		</if>
+	</sql>
+	
+	<select id="getMemos" resultMap="camelCaseMap">
+		/** memo.getMemos **/
+		<include refid="getSql"/>
+		<include refid="getWhere"/>		
+		ORDER BY memo_seq desc
+  		<if test="startRow != null and !startRow.equals('')">
+  			limit #{startRow}, #{size}
+  		</if>
+	</select>
+	
+	<select id="getMemosCnt" resultMap="camelCaseMap">
+		/** memo.getMemosCnt **/
+		select count(*) as cnt from (
+			<include refid="getSql"/>
+			<include refid="getWhere"/>			
+    	) tb
+	</select>
+	
+	<insert id="addMemo">
+		/** memo.addMemo **/
+		INSERT INTO memo (
+			memo_seq
+			, member_fk
+			, memo_date
+			, content
+			, remark
+			, created_dt
+			, created_no
+		) VALUES (
+			#{memoSeq}
+			, #{memberSeq}
+			, #{memoDate}
+			, #{content}
+			, #{remark}
+			, NOW()
+			, #{memberSeq}
+		)
+	</insert>
+	
+	<update id="setMemo">
+		/** memo.setMemo **/
+		UPDATE memo 
+		<set>
+			<if test="memoDate != null and !memoDate.equals('')"> memo_date= #{memoDate},</if>
+			<if test="content != null and !content.equals('')"> content= #{content},</if>
+			<if test="remark != null and !remark.equals('')"> remark= #{remark},</if>
+			updated_dt= NOW(), 
+			updated_no= #{memberSeq}
+		</set>
+		WHERE memo_seq= #{memoSeq}
+	</update>
+	
+	<delete id="removeMemo">
+		/** memo.removeMemo **/
+		DELETE FROM memo
+  		WHERE memo_seq= #{memoSeq}
+	</delete>
+</mapper>

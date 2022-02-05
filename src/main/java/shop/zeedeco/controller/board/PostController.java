@@ -67,7 +67,7 @@ public class PostController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping
-	public void logicalRemovePost(@RequestBody @Valid final  PostDto.SetPostReq req) throws Exception {
+	public void logicalRemovePost(@RequestBody @Valid final  PostDto.SetPostByDelYnReq req) throws Exception {
 		this.postService.logicalRemovePost(req.toMap());
 	}
 	

@@ -12,6 +12,7 @@
 			, remark
 			, start_dt
 			, end_dt
+			, comment_yn
 			, use_yn
 			, del_yn
 			, created_dt
@@ -37,6 +38,9 @@
 		</if>
 		<if test="endDt != null and !endDt.equals('')">
 			AND end_dt= #{endDt}
+		</if>
+		<if test="commentYn != null and !commentYn.equals('')">
+			AND comment_yn= #{commentYn}
 		</if>
 		<if test="useYn != null and !useYn.equals('')">
 			AND use_yn= #{useYn}
@@ -72,6 +76,7 @@
 			, remark
 			, start_dt
 			, end_dt
+			, comment_yn
 			, use_yn
 			, del_yn
 			, created_dt
@@ -82,10 +87,11 @@
 			, #{remark}
 			, #{startDt}
 			, #{endDt}
+			, #{commentYn}
 			, #{useYn}
 			, #{delYn}
-			, #{memberSeq}
 			, NOW()
+			, #{memberSeq}
 		)
 	</insert>
 	
@@ -98,6 +104,7 @@
 			<if test="remark != null and !remark.equals('')"> remark= #{remark},</if>
 			<if test="startDt != null and !startDt.equals('')"> start_dt= #{startDt},</if>
 			<if test="endDt != null and !endDt.equals('')"> end_dt= #{endDt},</if>
+			<if test="commentYn != null and !commentYn.equals('')"> comment_yn= #{commentYn},</if>
 			<if test="useYn != null and !useYn.equals('')"> use_yn= #{useYn},</if>
 			<if test="delYn != null and !delYn.equals('')"> del_yn= #{delYn},</if>
 			updated_dt= NOW(),

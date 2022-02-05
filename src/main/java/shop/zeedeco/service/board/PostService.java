@@ -68,9 +68,9 @@ public class PostService {
     	if(effectRow < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
     }
     
-    public void physicalRemovePost(int boardSeq) throws Exception {
+    public void physicalRemovePost(int postSeq) throws Exception {
     	Map<String, Object> requestMap = new HashMap<>();
-    	requestMap.put("boardSeq", boardSeq);
+    	requestMap.put("postSeq", postSeq);
     	int effectRow = this.dao.dbDelete("post.removePost", requestMap);
     	if(effectRow < 0) throw new BadRequestException("물리적 삭제를 실패했습니다.");
     }

@@ -140,8 +140,7 @@
 		/** post.setPostForViewCount **/
 		UPDATE post SET
 			view_count= view_count + 1,
-			updated_dt= NOW(),
-			updated_no= #{memberSeq}	
+			updated_dt= NOW()
 		WHERE post_seq= #{postSeq}
 	</update>
 	
