@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reservation">
+
+	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"/>
+
+	<!-- 
+		<select id="getReservation" resultMap="camelCaseMap"></select>
+	 -->
+	 
+	<insert id="addReservation">
+		/** reservation.addReservation **/
+		INSERT INTO reservation (
+			member_fk
+			, product_detail_fk
+			, comment
+			, remark
+			, cancel_yn
+			, del_yn
+			, created_dt
+			, created_no
+		) VALUES (
+			#{memberSeq}
+			, #{productDetailSeq}
+			, #{comment}
+			, #{remark}
+			, #{cancelYn}
+			, #{delYn}
+			, NOW()
+			, #{memberSeq} 
+		)
+	</insert>
+	
+	<update id="setReservation">
+		/** reservation.setReservation **/
+		UPDATE reservation
+		<set>
+			<if test="comment != null and !comment.equals('')">comment= #{comment}, </if>
+			<if test="comment != null and !comment.equals('')">remark= #{remark}, </if>
+			<if test="comment != null and !comment.equals('')">cancel_yn= #{cancelYn}, </if>
+			<if test="comment != null and !comment.equals('')">del_yn= #{delYn}, </if>
+			updated_dt=NOW(), 
+			updated_no= #{memberSeq}
+		</set>
+		WHERE reservation_seq= #{reservationSeq}
+	</update>
+	
+	<delete id="removeReservation">
+		/** reservation.removeReservation **/
+		DELETE FROM reservation
+		WHERE reservation_seq= #{reservationSeq}
+	</delete>	
+</mapper>

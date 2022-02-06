@@ -55,16 +55,14 @@
 	<insert id="addMemo">
 		/** memo.addMemo **/
 		INSERT INTO memo (
-			memo_seq
-			, member_fk
+			member_fk
 			, memo_date
 			, content
 			, remark
 			, created_dt
 			, created_no
 		) VALUES (
-			#{memoSeq}
-			, #{memberSeq}
+			#{memberSeq}
 			, #{memoDate}
 			, #{content}
 			, #{remark}

@@ -7,7 +7,10 @@ spring:
   banner:
     location: "classpath:banner.txt" 
     charset: UTF-8
-      
+  servlet:
+    multipart:
+      enabled: true
+              
 mybatis:
   mapper-locations: mapper/*.xml
   configuration:
@@ -19,3 +22,6 @@ server:
 properties:
   aesKey: zeedeco1234!@#$%
    
+file:
+  upload:
+    location: D:/upload
