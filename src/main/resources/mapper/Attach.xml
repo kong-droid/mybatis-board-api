@@ -70,7 +70,7 @@
 			, #{memberSeq}
 		)
 
-		<selectKey keyProperty="attachNo" order="AFTER" resultType="int">
+		<selectKey keyProperty="attachSeq" order="AFTER" resultType="int">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>

@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/zeedeco?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&allowMultiQueries=true&autoreconnect=true
+    username: root
+    password: 1234
+  banner:
+    location: "classpath:banner.txt" 
+    charset: UTF-8
+  servlet:
+    multipart:
+      enabled: true
+              
+mybatis:
+  mapper-locations: mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 1000
+  
+properties:
+  aesKey: zeedeco1234!@#$%
+   
+file:
+  upload:
+    location: /data

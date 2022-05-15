@@ -62,6 +62,29 @@ public class AttachDto {
         }
     }
 
+    @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ViewAddAttachRes {
+        private Integer attachSeq;
+        private String fullPath;
+        
+        public ViewAddAttachRes(Map<String, Object> responseMap) {
+            this.attachSeq	= (Integer) responseMap.get("attachSeq") 		== null ? null : (Integer) responseMap.get("attachSeq");
+            this.fullPath	= (String) responseMap.get("fullPath")			== null ? null : (String) responseMap.get("fullPath");
+       }
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Getter
+    public static class ViewAddAttachesRes {
+        private List<AttachDto.ViewAddAttachRes> attached;
+
+        public ViewAddAttachesRes(List <AttachDto.ViewAddAttachRes> attached) {
+            this.attached       = attached;
+        }
+    }
+    
     @ToString
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -42,8 +42,10 @@ public class AttachController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public void addAttach(@ModelAttribute @Valid AttachDto.AddAttachReq req) throws Exception {
-		this.attachService.addAttach(req);
+	public AttachDto.ViewAddAttachesRes addAttach(@ModelAttribute @Valid AttachDto.AddAttachReq req) throws Exception {
+		Map<String, Object> responseMap = attachService.addAttach(req);
+		List<Map<String, Object>> attached = (List<Map<String, Object>>) responseMap.get("attached");
+		return new AttachDto.ViewAddAttachesRes(attached.stream().map(AttachDto.ViewAddAttachRes::new).collect(Collectors.toList()));	
 	} 
 	
 	@ResponseStatus(HttpStatus.OK)

@@ -37,8 +37,9 @@ public class FileUtil {
 	
 	public static String calcPath(String uploadPath) {
 		
-		File dirPath = new File(uploadPath); //기본경로 패스가 없으면 만들기.
+		File dirPath = new File(uploadPath); 
 
+		// 기본경로 패스가 없으면 만들어준다.
 		if (!dirPath.exists()) {
 			dirPath.mkdir();
 		}
@@ -68,22 +69,5 @@ public class FileUtil {
 		}
 		return uploadPath;
 	}
-
-	private static void makeDirs(String uploadPath, String... paths) {
-		if (new File(paths[paths.length - 1]).exists()) {
-			return;
-		}
-		
-		if(paths != null) {
-			String strPath = paths[paths.length - 1];
-
-			File dirPath = new File(uploadPath + "/" + strPath);
-
-			if (!dirPath.exists()) {
-				dirPath.mkdirs();
-			}
-		}
-	}
-
 }
 

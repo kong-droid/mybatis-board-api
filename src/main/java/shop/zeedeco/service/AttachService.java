@@ -1,5 +1,6 @@
 package shop.zeedeco.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,10 @@ public class AttachService {
     }
     
 	@Transactional
-    public void addAttach(AttachDto.AddAttachReq req) throws Exception {
-        for(MultipartFile maps : req.getFiles()) {            
+    public Map<String, Object> addAttach(AttachDto.AddAttachReq req) throws Exception {
+		Map<String, Object> responsesMap = new HashMap<>();
+		ArrayList attached = new ArrayList<>();
+		for(MultipartFile maps : req.getFiles()) {            
             String calPath = FileUtil.calcPath(uploadPath);
             String saveName = FileUtil.uploadFile(calPath, maps.getOriginalFilename(), maps.getBytes());
             Map<String, Object> requestMap = new HashMap<>();
@@ -47,9 +50,20 @@ public class AttachService {
             requestMap.put("tbSeq",         	req.getTbSeq());
             requestMap.put("tbType",         	req.getTbType());
             requestMap.put("memberSeq",         req.getMemberSeq());
+            
             int effectRow = dao.dbInsert("attach.addAttach", requestMap);
-            if (effectRow < 0) throw new BadRequestException("저장에 실패했습니다.");
+            
+            if (effectRow < 0) {
+            	throw new BadRequestException("저장에 실패했습니다.");
+            } else {
+            	Map<String, Object> responseMap = new HashMap<>();
+            	responseMap.put("attachSeq",	requestMap.get("attachSeq"));
+            	responseMap.put("fullPath", 	(String)requestMap.get("filePath") + (String)requestMap.get("uuidName"));
+            	attached.add(responseMap);
+            }       
         }
+		responsesMap.put("attached", attached);
+		return responsesMap;
     }
 
     public void physicalRemoveAttach(int attachSeq) throws Exception {
