@@ -49,10 +49,11 @@ public class AuthService {
     public void setPassword(Map<String, Object> requestMap) throws Exception {
     	Map<String, Object> chkMap = new HashMap<>();
     	chkMap.put("memberSeq", requestMap.get("memberSeq"));
+    	chkMap.put("password", requestMap.get("password"));
     	
     	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", chkMap);
     	if(responseMap != null) {
-    	    int effectRow = dao.dbUpdate("member.setMember", requestMap);
+    	    int effectRow = dao.dbUpdate("member.setMember", chkMap);
     	    if(effectRow < 0) new BadRequestException("비밀번호 수정에 실패했습니다.");  		
     	} else {
     		new ResourceNotFoundException("유저 정보를 찾을 수 없습니다. ");
