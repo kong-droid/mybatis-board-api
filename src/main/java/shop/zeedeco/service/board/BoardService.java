@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.RequiredArgsConstructor;
 import shop.zeedeco.dao.CustomDao;
@@ -29,7 +30,7 @@ public class BoardService {
         List<Map<String, Object>> boards = dao.dbDetails("board.getBoards", requestMap);
         Map<String, Object> listCount = dao.dbDetail("board.getBoardsCnt", requestMap);
         Integer totalCount = Integer.parseInt(String.valueOf(listCount.get("cnt")));
-        if(boards != null) {
+        if(!CollectionUtils.isEmpty(boards)) {
             responseMap.put("boards", boards);
             responseMap.put("totalCount", totalCount);
         } else {
@@ -57,8 +58,7 @@ public class BoardService {
     }
     
     public void logicalRemoveBoard(Map<String, Object> requestMap) throws Exception {
-    	int effectRow = this.dao.dbUpdate("board.setBoard", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
+    	if(this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
     }
     
     public void physicalRemoveBoard(int boardSeq) throws Exception {

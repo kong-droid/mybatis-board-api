@@ -35,10 +35,10 @@ public class MemberDto {
 		private List<MemberDetailDto.ViewMemberDetailRes> details;
 		
 		public ViewMemberRes(Map<String, Object> responseMap) {
-			this.memberSeq			= (Integer) 	responseMap.get("memberSeq") 		== null ? null : (Integer) 	responseMap.get("memberSeq");
-			this.id					= (String) 		responseMap.get("id") 		 		== null ? null : (String) 	responseMap.get("id");
-			this.name				= (String) 		responseMap.get("name")  			== null ? null : (String) 	responseMap.get("name");
-			this.role				= (String) 		responseMap.get("role")				== null ? null : (String) 	responseMap.get("role");
+			this.memberSeq			= (Integer) 	responseMap.get("memberSeq");
+			this.id					= (String) 		responseMap.get("id");
+			this.name				= (String) 		responseMap.get("name");
+			this.role				= (String) 		responseMap.get("role");
 			this.profile			= (String) 		responseMap.get("profile")			== null ? null : (String) 	responseMap.get("profile");
 			this.email				= (String) 		responseMap.get("email")			== null ? null : (String) 	responseMap.get("email");
 			this.phone				= (String) 		responseMap.get("phone")			== null ? null : (String) 	responseMap.get("phone");
