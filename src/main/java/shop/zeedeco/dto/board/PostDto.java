@@ -72,6 +72,16 @@ public class PostDto {
         }
     }
  
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MessageRes {
+        private String message;
+
+        public MessageRes( String message ) {
+            this.message 	= message;
+        }
+    }
+    
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ViewPostReq {
@@ -150,21 +160,7 @@ public class PostDto {
             return new ObjectMapper().convertValue(this, Map.class);
         }
 	}   
-	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class SetPostByDelYnReq {
-		@NotNull(message = "게시글 고유번호가 비어있습니다.")
-		private Integer postSeq;
-		@NotNull(message = "유저 고유번호가 비어있습니다.")
-		private Integer memberSeq;
-		private String delYn;
 		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}  
-	
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class SetPostForViewCountReq {

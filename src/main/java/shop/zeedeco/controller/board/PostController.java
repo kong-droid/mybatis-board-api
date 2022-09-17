@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import shop.zeedeco.dto.board.PostDto;
+import shop.zeedeco.exception.BadRequestException;
 import shop.zeedeco.service.board.PostService;
 
 
@@ -66,14 +68,20 @@ public class PostController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping
-	public void logicalRemovePost(@RequestBody @Valid final  PostDto.SetPostByDelYnReq req) throws Exception {
-		this.postService.logicalRemovePost(req.toMap());
+	@PatchMapping("/{postSeq}/{memberSeq}")
+	public PostDto.MessageRes logicalRemovePost(
+		 @Valid @PathVariable @Positive(message = "postSeq는 양수여야 함") int postSeq
+		, @Valid @PathVariable @Positive(message = "memberSeq는 양수여야 함") int memberSeq
+	) throws Exception {
+		return new PostDto.MessageRes(this.postService.removePost(postSeq, memberSeq, false));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping("/{postSeq}")
-	public void physicalRemovePost(@PathVariable @Valid int postSeq) throws Exception {
-		this.postService.physicalRemovePost(postSeq);
+	@DeleteMapping("/{postSeq}/{memberSeq}")
+	public PostDto.MessageRes physicalRemovePost(
+		 @Valid @PathVariable @Positive(message = "postSeq는 양수여야 함") int postSeq
+		, @Valid @PathVariable @Positive(message = "memberSeq는 양수여야 함") int memberSeq
+	) throws BadRequestException {
+		return new PostDto.MessageRes(this.postService.removePost(postSeq, memberSeq, true));
 	}
 }
