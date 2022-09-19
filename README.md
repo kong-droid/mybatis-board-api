@@ -1,4 +1,4 @@
-#zeedeco-api
+# rest-api
 
 ## 배포
 1. 운영 : Dspring.profiles.active=prod ( jar 압축 시... java -jar -Dspring.profiles.active=prod jar zeedeco-api.jar
