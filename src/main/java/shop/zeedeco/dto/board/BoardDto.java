@@ -62,28 +62,41 @@ public class BoardDto {
         }
     }
     
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class HandleBoardRes {
+        private Integer boardSeq;
+
+        public HandleBoardRes( Integer boardSeq ) {
+            this.boardSeq 	= boardSeq;
+        }
+    }
+    
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ViewBoardReq {
 		private String title;
 		private String content;
-		private String startDt;
-		private String endDt;
+		private String keyword;
+		private String startedStartDt;
+		private String endedStartDt;
+		private String startedEndDt;
+		private String endedEndDt;
+		private String createdStartDt;
+		private String createdEndDt;
+		private String updatedStartDt;
+		private String updatedEndDt;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String commentYn;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String useYn;
 		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
 		private String delYn;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
 	}  
 	
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class AddBoardReq {
+	public static class HandleBoardReq {
 		@NotEmpty(message = "게시판 제목이 비어있습니다.")
 		private String title;
 		@NotEmpty(message = "게시판 정보가 비어있습니다.")
@@ -99,48 +112,6 @@ public class BoardDto {
 		private String delYn;
 		@NotNull(message = "유저 고유번호가 비어있습니다.")
 		private int memberSeq;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
 	}   
-	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class SetBoardReq {
-		@NotNull(message = "게시판 고유번호가 비어있습니다.")
-		private int boardSeq;
-		@NotEmpty(message = "게시판 제목이 비어있습니다.")
-		private String title;
-		@NotEmpty(message = "게시판 정보가 비어있습니다.")
-		private String content;
-		private String remark;
-		private String startDt;
-		private String endDt;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String commentYn;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String useYn;
-		@NotNull(message = "유저 고유번호가 비어있습니다.")
-		private int memberSeq;
 		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}  
-	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class SetBoardByDelYnReq {
-		@NotNull(message = "게시판 고유번호가 비어있습니다.")
-		private int boardSeq;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String delYn;
-		@NotNull(message = "유저 고유번호가 비어있습니다.")
-		private int memberSeq;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}  
 }

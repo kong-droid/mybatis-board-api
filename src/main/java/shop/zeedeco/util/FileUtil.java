@@ -1,24 +1,34 @@
 package shop.zeedeco.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
-
 import org.springframework.util.FileCopyUtils;
-
-import lombok.extern.java.Log;
 
 /**
  * @author user : KMH
  * 22.02.05
  * 파일 관리
  * **/
-@Log
 public class FileUtil {
 	
+	public static String removeFiles(List<String> realPath) throws IOException {
+		realPath.forEach(path -> {
+			File file = new File(path);
+			if(file.exists()) {
+				file.deleteOnExit();
+			} else {
+				new NoSuchFileException(path, "404", "해당경로의 파일을 찾을 수 없습니다.");
+			}
+		});
+		return "remove files";
+	}
 
-	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws Exception {
+	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws IOException {
 		
 		//확장자 추출
 		int pos = originalName.lastIndexOf(".");
@@ -69,5 +79,7 @@ public class FileUtil {
 		}
 		return uploadPath;
 	}
+	
+	
 }
 

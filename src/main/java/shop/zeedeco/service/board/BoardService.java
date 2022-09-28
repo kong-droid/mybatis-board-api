@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -18,7 +19,7 @@ public class BoardService {
 	
 	private final CustomDao dao;
 	
-    public Map<String, Object> getBoards(Map<String, Object> requestMap, Integer page, Integer size) throws Exception {
+    public Map<String, Object> getBoards( Map<String, Object> requestMap, Integer page, Integer size ) throws InternalResourceException {
         
     	Map<String, Object> responseMap = new HashMap<>();
         
@@ -39,32 +40,43 @@ public class BoardService {
         return responseMap;
     }
 
-    public Map<String, Object> getBoard(int boardSeq) throws Exception {
+    public Map<String, Object> getBoard(int boardSeq) throws InternalResourceException {
     	Map<String, Object> requestMap = new HashMap<>();
     	requestMap.put("boardSeq", boardSeq);
     	Map<String, Object> responseMap = dao.dbDetail("board.getBoards", requestMap);
-    	if(responseMap == null) new ResourceNotFoundException("게시판 상세정보를 찾을 수 없습니다.");
+    	if(CollectionUtils.isEmpty(responseMap)) new ResourceNotFoundException("게시판 상세정보를 찾을 수 없습니다.");
     	return responseMap;
     }
 
-    public void addBoard(Map<String, Object> requestMap) throws Exception {
-    	int effectRow = this.dao.dbInsert("board.addBoard", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("게시판 등록을 실패했습니다.");
+    public Integer handleBoard ( Map<String, Object> requestMap, Integer boardSeq ) throws InternalResourceException {
+    	if(boardSeq == null) {
+    		if (this.dao.dbInsert("board.addBoard", requestMap) < 0) throw new BadRequestException("게시판 등록에 실패했습니다.");
+    		boardSeq = Integer.parseInt(String.valueOf(requestMap.get("boardSeq")));
+    	} else {
+    		if (this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("게시판 수정에 실패했습니다.");
+    	}
+    	return boardSeq;
     }
     
-    public void setBoard(Map<String, Object> requestMap) throws Exception {
-    	int effectRow = this.dao.dbUpdate("board.setBoard", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("게시판 수정을 실패했습니다.");
-    }
-    
-    public void logicalRemoveBoard(Map<String, Object> requestMap) throws Exception {
-    	if(this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
-    }
-    
-    public void physicalRemoveBoard(int boardSeq) throws Exception {
+    public void handleRemoveBoard ( Integer boardSeq, Integer memberSeq, boolean isPhysical ) throws InternalResourceException {
     	Map<String, Object> requestMap = new HashMap<>();
     	requestMap.put("boardSeq", boardSeq);
-    	int effectRow = this.dao.dbDelete("board.removeBoard", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("물리적 삭제를 실패했습니다.");
+    	Map<String, Object> responseMap = dao.dbDetail("board.getBoards", requestMap);
+    	if(!CollectionUtils.isEmpty(responseMap)) {
+    		if(responseMap.get("createdNo") == memberSeq) {
+    	    	if(isPhysical) {
+    	    		if(this.dao.dbDelete("board.removeBoard", requestMap) < 0 ) throw new BadRequestException("물리적 삭제를 실패했습니다.");
+    	    	} else {
+    	    		requestMap.put("delYn", "Y");
+    	    		requestMap.put("memberSeq", memberSeq);
+    	    		if(this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
+    	    	}
+    		} else {
+    			throw new BadRequestException("게시글 등록자가 아닙니다.");
+    		}
+    	} else {
+    		new ResourceNotFoundException("삭제할 게시글 정보가 없습니다.");
+    	}
     }
+    
 }

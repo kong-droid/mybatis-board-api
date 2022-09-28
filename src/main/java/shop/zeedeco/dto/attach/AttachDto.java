@@ -92,9 +92,6 @@ public class AttachDto {
         private String tbName;
         private Integer tbSeq;
         private String tbType;
-        public Map<String, Object> toMap() {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
     }
 
     @ToString

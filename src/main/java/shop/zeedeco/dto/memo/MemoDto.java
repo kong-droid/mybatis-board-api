@@ -39,15 +39,15 @@ public class MemoDto {
             this.memoDate   = (String) responseMap.get("memoDate")			== null ? null : (String) responseMap.get("memoDate");
             this.content	= (String) responseMap.get("content")			== null ? null : (String) responseMap.get("content");
             this.remark		= (String) responseMap.get("remark")			== null ? null : (String) responseMap.get("remark");
-            this.createdNo   = (Integer) responseMap.get("createdNo")		== null ? null : (Integer) responseMap.get("createdNo");
-            this.createdDt   = (LocalDateTime) responseMap.get("createdDt") == null ? null : (LocalDateTime) responseMap.get("createdDt");
-            this.updatedNo   = (Integer) responseMap.get("updatedNo")		== null ? null : (Integer) responseMap.get("updatedNo");
-            this.updatedDt   = (LocalDateTime) responseMap.get("updatedDt") == null ? null : (LocalDateTime) responseMap.get("updatedDt");
+            this.createdNo  = (Integer) responseMap.get("createdNo")		== null ? null : (Integer) responseMap.get("createdNo");
+            this.createdDt  = (LocalDateTime) responseMap.get("createdDt") == null ? null : (LocalDateTime) responseMap.get("createdDt");
+            this.updatedNo  = (Integer) responseMap.get("updatedNo")		== null ? null : (Integer) responseMap.get("updatedNo");
+            this.updatedDt  = (LocalDateTime) responseMap.get("updatedDt") == null ? null : (LocalDateTime) responseMap.get("updatedDt");
         } 
     }
 
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ViewMemosRes {
         private List<MemoDto.ViewMemoRes> memos;
 
@@ -56,43 +56,30 @@ public class MemoDto {
         }
     }
 
-    @ToString
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class HandleMemoRes {
+    	private Integer memoSeq;
+    	
+        public HandleMemoRes(Integer memoSeq) {
+            this.memoSeq = memoSeq;
+        }
+        
+    }
+    
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ViewMemoReq {
         private Integer memberSeq;
         private String memoDate;
         private String content;
-        
-        public Map<String, Object> toMap() {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-    }
-
-    @ToString
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class AddMemoReq {
-    	@NotNull(message = "유저 고유번호 값이 없습니다.")
-        private Integer memberSeq;
-    	@NotEmpty(message = "메모 작성일 값이 없습니다.")
-        private String memoDate;
-    	@NotEmpty(message = "메모 내용 값이 없습니다.")
-        private String content;
-        private String remark;
-        
-        public Map<String, Object> toMap() {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
+        private String createdStartDt;
+        private String createdEndDt;
     }
     
-    @ToString
     @Getter
-    @Setter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class SetMemoReq {
-    	@NotNull(message = "메모 고유번호 값이 없습니다.")
-        private Integer memoSeq;
+    public static class HandleMemoReq {
     	@NotNull(message = "유저 고유번호 값이 없습니다.")
         private Integer memberSeq;
     	@NotEmpty(message = "메모 작성일 값이 없습니다.")
@@ -100,9 +87,7 @@ public class MemoDto {
     	@NotEmpty(message = "메모 내용 값이 없습니다.")
         private String content;
         private String remark;
-        
-        public Map<String, Object> toMap() {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
+
     }
+
 }

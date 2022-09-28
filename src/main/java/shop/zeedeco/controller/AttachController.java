@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shop.zeedeco.dto.attach.AttachDto;
 import shop.zeedeco.service.AttachService;
+import shop.zeedeco.util.MapUtil;
 
 
 @Slf4j
@@ -35,7 +36,7 @@ public class AttachController {
 	public AttachDto.ViewAttachesRes getAttaches(
 			@RequestBody @Valid final AttachDto.ViewAttachReq req
 	) throws Exception {
-		Map<String, Object> responseMap = attachService.getAttaches(req.toMap());
+		Map<String, Object> responseMap = attachService.getAttaches(MapUtil.toMap(req));
 		List<Map<String, Object>> attaches = (List<Map<String, Object>>) responseMap.get("attaches");
 		return new AttachDto.ViewAttachesRes(attaches.stream().map(AttachDto.ViewAttachRes::new).collect(Collectors.toList()));
 	}

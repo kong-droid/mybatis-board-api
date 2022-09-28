@@ -33,11 +33,27 @@
 		<if test="content != null and !content.equals('')">
 			AND content like CONCAT('%', #{content}, '%')
 		</if>
-		<if test="startDt != null and !startDt.equals('')">
-			AND start_dt= #{startDt}
+		<if test="keyword != null and !keyword.equals('')">
+			AND title like CONCAT('%', #{keyword}, '%')
+			OR content like CONCAT('%', #{keyword}, '%')
 		</if>
-		<if test="endDt != null and !endDt.equals('')">
-			AND end_dt= #{endDt}
+		<if test="(startedStartDt != null and !startedStartDt.equals('')) and (endedStartDt == null or endedStartDt.equals(''))">
+			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startedStartDt}
+		</if>
+		<if test="(startedStartDt == null or startedStartDt.equals('')) and (endedStartDt != null and !endedStartDt.equals(''))">
+			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endedStartDt}
+		</if>
+		<if test="(startedStartDt != null and !startedStartDt.equals('')) and (endedStartDt != null and !endedStartDt.equals(''))">
+			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{startedStartDt} AND #{endedStartDt}
+		</if>
+		<if test="(startedEndDt != null and !startedEndDt.equals('')) and (endedEndDt == null or endedEndDt.equals(''))">
+			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startedEndDt}
+		</if>
+		<if test="(startedEndDt == null or startedEndDt.equals('')) and (endedEndDt != null and !endedEndDt.equals(''))">
+			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endedEndDt}
+		</if>
+		<if test="(startedEndDt != null and !startedEndDt.equals('')) and (endedEndDt != null and !endedEndDt.equals(''))">
+			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{startedEndDt} AND #{endedEndDt}
 		</if>
 		<if test="commentYn != null and !commentYn.equals('')">
 			AND comment_yn= #{commentYn}
@@ -47,7 +63,25 @@
 		</if>
 		<if test="delYn != null and !delYn.equals('')">
 			AND del_yn= #{delYn}
-		</if>												
+		</if>
+		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt == null or createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{createdStartDt}
+		</if>
+		<if test="(createdStartDt == null or createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{createdEndDt}
+		</if>
+		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{createdStartDt} AND #{createdEndDt}
+		</if>
+		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt == null or updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{updatedStartDt}
+		</if>
+		<if test="(updatedStartDt == null or updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{updatedEndDt}
+		</if>
+		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{(updatedStartDt} AND #{(updatedEndDt}
+		</if>															
 	</sql>
 	
 	<select id="getBoards" resultMap="camelCaseMap">
@@ -68,7 +102,7 @@
     	) tb
 	</select>
 	
-	<insert id="addBoard">
+	<insert id="addBoard" useGeneratedKeys="true" keyProperty="boardSeq">
 		/** board.addBoard **/
 		INSERT INTO board (
 			title

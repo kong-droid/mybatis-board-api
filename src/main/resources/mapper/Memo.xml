@@ -32,6 +32,24 @@
 		<if test="memoDate != null and !memoDate.equals('')">
 			AND memo_date= #{memoDate}
 		</if>
+		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt == null or createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{createdStartDt}
+		</if>
+		<if test="(createdStartDt == null or createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{createdEndDt}
+		</if>
+		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
+			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{createdStartDt} AND #{createdEndDt}
+		</if>
+		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt == null or updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{updatedStartDt}
+		</if>
+		<if test="(updatedStartDt == null or updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{updatedEndDt}
+		</if>
+		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
+			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{(updatedStartDt} AND #{(updatedEndDt}
+		</if>		
 	</sql>
 	
 	<select id="getMemos" resultMap="camelCaseMap">
@@ -52,7 +70,7 @@
     	) tb
 	</select>
 	
-	<insert id="addMemo">
+	<insert id="addMemo" useGeneratedKeys="true" keyProperty="memoSeq">
 		/** memo.addMemo **/
 		INSERT INTO memo (
 			member_fk
