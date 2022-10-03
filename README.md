@@ -5,8 +5,7 @@
 2. 로컬 : Run >configuration 에 들어가서 profile을 local 설정, Dspring.profiles.active=local
 
 ## 비고
-1. 관리자, 사용자와 연결할 API
-2. 산출물 추후 깃헙 내 링크 공개 예정
+1. /swagger-ui.html --> 스웨거 주소 적용 
 
 ## 개인 Notion
 - www.notion.so/tulip-spoonbill-238 
