@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shop.zeedeco.dto.memo.MemoDto;
@@ -26,17 +30,18 @@ import shop.zeedeco.dto.memo.MemoDto.HandleMemoRes;
 import shop.zeedeco.service.MemoService;
 import shop.zeedeco.util.MapUtil;
 
-@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/memo")
+@Tag(name = "memo-controller", description = "메모 API")
 public class MemoController {
 	
 	private final MemoService memoService;
 	
-	@ResponseStatus(value = HttpStatus.OK)
 	@PostMapping("/r")
+	@Operation(summary = "메모 조회")
+	@ResponseStatus(value = HttpStatus.OK)
 	public MemoDto.ViewMemosRes getMemos (
 		@RequestBody @Valid final MemoDto.ViewMemoReq req
 	) throws Exception {
@@ -45,32 +50,41 @@ public class MemoController {
 		return new MemoDto.ViewMemosRes(memos.stream().map(MemoDto.ViewMemoRes::new).collect(Collectors.toList()));
 	}
 	
-	@ResponseStatus(value = HttpStatus.OK)
+	
 	@GetMapping("/r/{memoSeq}")
-	public MemoDto.ViewMemoRes getMemo (@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") Integer memoSeq) {
+	@Operation(summary = "메모 개별조회")
+	@ResponseStatus(value = HttpStatus.OK)
+	public MemoDto.ViewMemoRes getMemo (
+		@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq
+	) {
 		return new MemoDto.ViewMemoRes(memoService.getMemo(memoSeq));
 	} 
 	
-	@ResponseStatus(value = HttpStatus.CREATED, reason = "메모를 저장했습니다.")
+	
 	@PostMapping("/a")
+	@Operation(summary = "메모 등록")
+	@ResponseStatus(value = HttpStatus.CREATED)
 	public HandleMemoRes addMemo (
 		@RequestBody @Valid final MemoDto.HandleMemoReq req
 	) {
 		return new MemoDto.HandleMemoRes(memoService.handleMemo(MapUtil.toMap(req), null));
 	} 
 
-	@ResponseStatus(value = HttpStatus.OK, reason = "메모를 수정했습니다.")
 	@PostMapping("/s/{memoSeq}")
+	@Operation(summary = "메모 수정")
+	@ResponseStatus(value = HttpStatus.OK)
 	public HandleMemoRes setMemo (
-		@PathVariable @Positive(message = "memoSeq는 양수여야 합니다. ") @Valid Integer memoSeq
+		@PathVariable @Positive(message = "memoSeq는 양수여야 합니다. ") @Valid @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq
 		, @RequestBody @Valid final MemoDto.HandleMemoReq req
 	) {
 		return new MemoDto.HandleMemoRes(memoService.handleMemo(MapUtil.toMap(req), memoSeq));
 	} 
-	
+	@PostMapping("/d/{memoSeq}")	
+	@Operation(summary = "메모 삭제")
 	@ResponseStatus(value = HttpStatus.OK, reason = "메모를 삭제했습니다.")
-	@PostMapping("/d/{memoSeq}")
-	public void physicalRemoveMemo(@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Valid Integer memoSeq) {
+	public void physicalRemoveMemo (
+		@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Valid @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq) 
+	{
 		this.memoService.physicalRemoveMemo(memoSeq);
 	} 
 }

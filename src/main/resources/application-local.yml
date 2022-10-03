@@ -10,7 +10,10 @@ spring:
   servlet:
     multipart:
       enabled: true
-              
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+      
 mybatis:
   mapper-locations: mapper/*.xml
   configuration:
