@@ -19,64 +19,51 @@ public class BoardService {
 	
 	private final CustomDao dao;
 	
-    public Map<String, Object> getBoards( Map<String, Object> requestMap, Integer page, Integer size ) throws InternalResourceException {
-        
-    	Map<String, Object> responseMap = new HashMap<>();
-        
-        if(page != null && size != null) {
-        	requestMap.put("startRow", page * size);
-            requestMap.put("size", size);
-        }
-        
-        List<Map<String, Object>> boards = dao.dbDetails("board.getBoards", requestMap);
-        Map<String, Object> listCount = dao.dbDetail("board.getBoardsCnt", requestMap);
-        Integer totalCount = Integer.parseInt(String.valueOf(listCount.get("cnt")));
-        if(!CollectionUtils.isEmpty(boards)) {
-            responseMap.put("boards", boards);
-            responseMap.put("totalCount", totalCount);
-        } else {
-        	new ResourceNotFoundException("데이터가 없습니다.");
-        }
+    public Map<String, Object> getBoards( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
+    	Map<String, Object> responseMap = !isDouble ? dao.dbDetail("board.getBoards", requestMap) : new HashMap<>();
+    	if(isDouble) {
+    	    Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");    	    
+    	    if(!CollectionUtils.isEmpty(searchMap)) {
+    	        if(searchMap.get("page") != null && searchMap.get("size") != null) {
+    	            searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
+    	        }
+    	    }   
+            responseMap.put("boards", dao.dbDetails("board.getBoards", requestMap));
+            responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("board.getBoardsCnt", requestMap).get("cnt"))));
+    	}
         return responseMap;
     }
 
-    public Map<String, Object> getBoard(int boardSeq) throws InternalResourceException {
-    	Map<String, Object> requestMap = new HashMap<>();
-    	requestMap.put("boardSeq", boardSeq);
-    	Map<String, Object> responseMap = dao.dbDetail("board.getBoards", requestMap);
-    	if(CollectionUtils.isEmpty(responseMap)) new ResourceNotFoundException("게시판 상세정보를 찾을 수 없습니다.");
-    	return responseMap;
+    public Map<String, Object> handleBoard ( Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct ) throws InternalResourceException {
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        switch (whatAct) {
+            case "regist":
+            case "modify":
+                if(dao.dbInsert(isAdd ? "board.addBoard" : "board.setBoard" , requestMap) < 0) throw new BadRequestException("Invalid Error");
+                break;
+            case "remove":
+                Map<String, Object> rmvReqMap = new HashMap<>();
+                Map<String, Object> handle = ( Map<String, Object> ) requestMap.get("handle");
+                rmvReqMap.put("boardSeq", requestMap.get("boardSeq"));
+                Map<String, Object> rmvResMap = this.getBoards(rmvReqMap, false);
+                if(!CollectionUtils.isEmpty(rmvResMap)) {
+                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
+                        if(isPhysical) {
+                            if(this.dao.dbDelete("board.removeBoard", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                        } else {
+                            handle.put("delYn", "Y");
+                            if(this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("Invalid Error");
+                        }
+                    } else {
+                        throw new BadRequestException("Invalid Error");
+                    }
+                } else {
+                    new ResourceNotFoundException("Invalid Error");
+                }
+                break;
+        }
+        responseMap.put("boardSeq", requestMap.get("boardSeq"));
+        return responseMap;
     }
 
-    public Integer handleBoard ( Map<String, Object> requestMap, Integer boardSeq ) throws InternalResourceException {
-    	if(boardSeq == null) {
-    		if (this.dao.dbInsert("board.addBoard", requestMap) < 0) throw new BadRequestException("게시판 등록에 실패했습니다.");
-    		boardSeq = Integer.parseInt(String.valueOf(requestMap.get("boardSeq")));
-    	} else {
-    		if (this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("게시판 수정에 실패했습니다.");
-    	}
-    	return boardSeq;
-    }
-    
-    public void handleRemoveBoard ( Integer boardSeq, Integer memberSeq, boolean isPhysical ) throws InternalResourceException {
-    	Map<String, Object> requestMap = new HashMap<>();
-    	requestMap.put("boardSeq", boardSeq);
-    	Map<String, Object> responseMap = dao.dbDetail("board.getBoards", requestMap);
-    	if(!CollectionUtils.isEmpty(responseMap)) {
-    		if(responseMap.get("createdNo") == memberSeq) {
-    	    	if(isPhysical) {
-    	    		if(this.dao.dbDelete("board.removeBoard", requestMap) < 0 ) throw new BadRequestException("물리적 삭제를 실패했습니다.");
-    	    	} else {
-    	    		requestMap.put("delYn", "Y");
-    	    		requestMap.put("memberSeq", memberSeq);
-    	    		if(this.dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("논리적 삭제를 실패했습니다.");
-    	    	}
-    		} else {
-    			throw new BadRequestException("게시글 등록자가 아닙니다.");
-    		}
-    	} else {
-    		new ResourceNotFoundException("삭제할 게시글 정보가 없습니다.");
-    	}
-    }
-    
 }

@@ -7,12 +7,15 @@
 	<sql id="getSql">
 		SELECT 
 			board_seq
+			, type_cd
+			, lang_cd
 			, title
 			, content
 			, remark
-			, start_dt
-			, end_dt
+			, period_start_dt
+			, period_end_dt
 			, comment_yn
+			, attachment_yn
 			, use_yn
 			, del_yn
 			, created_dt
@@ -24,64 +27,79 @@
 	</sql>
 	
 	<sql id="getWhere">
-		<if test="boardSeq != null and !board.equals('')">
+		<if test="boardSeq != null and !boardSeq.equals('')">
 			AND board_seq= #{boardSeq}
-		</if>
-		<if test="title != null and !title.equals('')">
-			AND title like CONCAT('%', #{title}, '%')
-		</if>
-		<if test="content != null and !content.equals('')">
-			AND content like CONCAT('%', #{content}, '%')
-		</if>
-		<if test="keyword != null and !keyword.equals('')">
-			AND title like CONCAT('%', #{keyword}, '%')
-			OR content like CONCAT('%', #{keyword}, '%')
-		</if>
-		<if test="(startedStartDt != null and !startedStartDt.equals('')) and (endedStartDt == null or endedStartDt.equals(''))">
-			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startedStartDt}
-		</if>
-		<if test="(startedStartDt == null or startedStartDt.equals('')) and (endedStartDt != null and !endedStartDt.equals(''))">
-			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endedStartDt}
-		</if>
-		<if test="(startedStartDt != null and !startedStartDt.equals('')) and (endedStartDt != null and !endedStartDt.equals(''))">
-			AND DATE_FORMAT(start_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{startedStartDt} AND #{endedStartDt}
-		</if>
-		<if test="(startedEndDt != null and !startedEndDt.equals('')) and (endedEndDt == null or endedEndDt.equals(''))">
-			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startedEndDt}
-		</if>
-		<if test="(startedEndDt == null or startedEndDt.equals('')) and (endedEndDt != null and !endedEndDt.equals(''))">
-			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endedEndDt}
-		</if>
-		<if test="(startedEndDt != null and !startedEndDt.equals('')) and (endedEndDt != null and !endedEndDt.equals(''))">
-			AND DATE_FORMAT(end_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{startedEndDt} AND #{endedEndDt}
-		</if>
+		</if>	
 		<if test="commentYn != null and !commentYn.equals('')">
 			AND comment_yn= #{commentYn}
 		</if>
-		<if test="useYn != null and !useYn.equals('')">
-			AND use_yn= #{useYn}
+		<if test="attachmentYn != null and !attachmentYn.equals('')">
+			AND attachment_yn= #{attachmentYn}
+		</if>					
+		<if test="search != null">
+			<if test="search.typeCd != null and !search.typeCd.equals('')">
+				AND type_cd= #{search.typeCd}
+			</if>
+			<if test="search.langCd != null and !search.langCd.equals('')">
+				AND lang_cd= #{search.langCd}
+			</if>
+			<if test="search.memberSeq != null and !search.memberSeq.equals('')">
+				AND created_no= #{search.memberSeq}
+			</if>
+			<if test="search.content != null and !search.content.equals('')">
+				AND content like CONCAT('%', #{search.content}, '%')
+			</if>
+			<if test="search.remark != null and !search.remark.equals('')">
+				AND remark like CONCAT('%', #{search.remark}, '%')
+			</if>			
+			<if test="search.keyword != null and !search.keyword.equals('')">
+				AND title like CONCAT('%', #{search.keyword}, '%')
+				OR content like CONCAT('%', #{search.keyword}, '%')
+				OR remark like CONCAT('%', #{search.keyword}, '%')
+			</if>
+			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt == null or search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedStartDt}
+			</if>
+			<if test="(search.periodStartedStartDt == null or search.periodStartedStartDt.equals('')) and (search.periodEndedStartDtt != null and !search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedStartDt}
+			</if>
+			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt != null and !search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedStartDt} AND #{search.periodEndedStartDt}
+			</if>
+			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt == null or search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedEndDt}
+			</if>
+			<if test="(search.periodStartedEndDt == null or search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedEndDt}
+			</if>
+			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedEndDt} AND #{search.periodEndedEndDt}
+			</if>
+			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt == null or search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.createdStartDt}
+			</if>
+			<if test="(search.createdStartDt == null or search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.createdEndDt}
+			</if>
+			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.createdStartDt} AND #{search.createdEndDt}
+			</if>
+			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt == null or search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.updatedStartDt}
+			</if>
+			<if test="(search.updatedStartDt == null or search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.updatedEndDt}
+			</if>
+			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.updatedStartDt} AND #{search.updatedEndDt}
+			</if>
+			<if test="search.useYn != null and !search.useYn.equals('')">
+				AND use_yn= #{search.useYn}
+			</if>
+			<if test="search.delYn != null and !search.delYn.equals('')">
+				AND del_yn= #{search.delYn}
+			</if>
 		</if>
-		<if test="delYn != null and !delYn.equals('')">
-			AND del_yn= #{delYn}
-		</if>
-		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt == null or createdEndDt.equals(''))">
-			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{createdStartDt}
-		</if>
-		<if test="(createdStartDt == null or createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
-			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{createdEndDt}
-		</if>
-		<if test="(createdStartDt != null and !createdStartDt.equals('')) and (createdEndDt != null and !createdEndDt.equals(''))">
-			AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{createdStartDt} AND #{createdEndDt}
-		</if>
-		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt == null or updatedEndDt.equals(''))">
-			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{updatedStartDt}
-		</if>
-		<if test="(updatedStartDt == null or updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
-			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{updatedEndDt}
-		</if>
-		<if test="(updatedStartDt != null and !updatedStartDt.equals('')) and (updatedEndDt != null and !updatedEndDt.equals(''))">
-			AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{(updatedStartDt} AND #{(updatedEndDt}
-		</if>															
 	</sql>
 	
 	<select id="getBoards" resultMap="camelCaseMap">
@@ -89,43 +107,49 @@
 		<include refid="getSql"/>
 		<include refid="getWhere"/>
 		ORDER BY board_seq desc
-  		<if test="startRow != null and !startRow.equals('')">
-  			limit #{startRow}, #{size}
-  		</if>
+		<if test="search != null">
+		  	<if test="search.startRow != null and !search.startRow.equals('')">limit #{search.startRow}, #{search.size}</if>
+		</if>
+
 	</select>
 	
 	<select id="getBoardsCnt" resultMap="camelCaseMap">
 		/** board.getBoardsCnt **/
-		select count(*) as cnt from (
-			<include refid="getSql"/>
-			<include refid="getWhere"/>			
-    	) tb
+		select count(*) as cnt 
+		from board where 1=1
+		<include refid="getWhere"/>
 	</select>
 	
 	<insert id="addBoard" useGeneratedKeys="true" keyProperty="boardSeq">
 		/** board.addBoard **/
 		INSERT INTO board (
-			title
+			type_cd
+			, lang_cd
+			, title
 			, content
 			, remark
-			, start_dt
-			, end_dt
+			, period_start_dt
+			, period_end_dt
 			, comment_yn
+			, attachment_yn
 			, use_yn
 			, del_yn
 			, created_dt
 			, created_no
 		) VALUES (
-			#{title}
-			, #{content}
-			, #{remark}
-			, #{startDt}
-			, #{endDt}
+			#{handle.typeCd}
+			, #{handle.langCd}
+			, #{title}
+			, #{handle.content}
+			, #{handle.remark}
+			, #{handle.periodStartDt}
+			, #{handle.periodEndDt}
 			, #{commentYn}
-			, #{useYn}
-			, #{delYn}
+			, #{attachmentYn}
+			, #{handle.useYn}
+			, #{handle.delYn}
 			, NOW()
-			, #{memberSeq}
+			, #{handle.memberSeq}
 		)
 	</insert>
 	
@@ -134,15 +158,20 @@
 		UPDATE board
 		<set>
 			<if test="title != null and !title.equals('')"> title= #{title},</if>
-			<if test="content != null and !content.equals('')"> content= #{content},</if>
-			<if test="remark != null and !remark.equals('')"> remark= #{remark},</if>
-			<if test="startDt != null and !startDt.equals('')"> start_dt= #{startDt},</if>
-			<if test="endDt != null and !endDt.equals('')"> end_dt= #{endDt},</if>
+			<if test="attachmentYn != null and !attachmentYn.equals('')"> attachment_yn= #{attachmentYn},</if>
 			<if test="commentYn != null and !commentYn.equals('')"> comment_yn= #{commentYn},</if>
-			<if test="useYn != null and !useYn.equals('')"> use_yn= #{useYn},</if>
-			<if test="delYn != null and !delYn.equals('')"> del_yn= #{delYn},</if>
-			updated_dt= NOW(),
-			updated_no= #{memberSeq}	
+			<if test="handle != null">
+				<if test="handle.typeCd != null and !handle.typeCd.equals('')"> type_cd= #{handle.typeCd},</if>
+				<if test="handle.langCd != null and !handle.langCd.equals('')"> lang_cd= #{handle.langCd},</if>
+				<if test="handle.content != null and !handle.content.equals('')"> content= #{handle.content},</if>
+				<if test="handle.remark != null and !handle.remark.equals('')"> remark= #{handle.remark},</if>
+				<if test="handle.periodStartDt != null and !handle.periodStartDt.equals('')"> period_start_dt= #{periodStartDt},</if>
+				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{periodEndDt},</if>			
+				<if test="handle.useYn != null and !handle.useYn.equals('')"> use_yn= #{handle.useYn},</if>
+				<if test="handle.delYn != null and !handle.delYn.equals('')"> del_yn= #{handle.delYn},</if>
+				updated_no= #{handle.memberSeq},
+			</if>
+			updated_dt= NOW()
 		</set>
 		WHERE board_seq= #{boardSeq}
 	</update>

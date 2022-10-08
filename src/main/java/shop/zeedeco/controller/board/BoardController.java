@@ -1,5 +1,6 @@
 package shop.zeedeco.controller.board;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,81 +12,80 @@ import javax.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import shop.zeedeco.dto.board.BoardDto;
-import shop.zeedeco.dto.board.BoardDto.HandleBoardRes;
+import shop.zeedeco.response.ApiResult;
 import shop.zeedeco.service.board.BoardService;
 import shop.zeedeco.util.MapUtil;
 
 @Validated
 @RestController
 @RequestMapping("/board")
+@Tag(name = "board-controller", description = "게시판")
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
 	
-	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/r")
-	public BoardDto.ViewBoardsRes getBoards(
-			@RequestBody @Valid final BoardDto.ViewBoardReq req,
-			@RequestParam @PositiveOrZero Integer page,
-			@RequestParam @PositiveOrZero Integer size
+	@Operation(summary = "게시판 목록")
+    public ApiResult getBoards (
+		@RequestBody @Valid final BoardDto req
 	) {
-		Map<String, Object> responseMap = boardService.getBoards(MapUtil.toMap(req), page, size);
-		List<Map<String, Object>> boards = (List<Map<String, Object>>) responseMap.get("boards");
-		Integer totalCount = (Integer) responseMap.get("totalCount");
-		return new BoardDto.ViewBoardsRes(boards.stream().map(BoardDto.ViewBoardRes::new).collect(Collectors.toList()), totalCount);
+		return ApiResult.successBuilder(boardService.getBoards(MapUtil.toMap(req), true));
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/r/{boardSeq}")
-	public BoardDto.ViewBoardRes getBoard(@PathVariable @Valid int boardSeq) {
-		Map<String, Object> responseMap = boardService.getBoard(boardSeq);
-		return new BoardDto.ViewBoardRes(responseMap);
+	@Operation(summary = "게시판 조회")
+    public ApiResult getBoard ( 
+        @PathVariable @Positive(message = "boardSeq는 양수여야 합니다.") @Parameter(description = "게시판 고유번호", example = "1") Integer boardSeq
+    ) {
+	    Map<String, Object> requestMap = new HashMap<String, Object>();
+	    requestMap.put("boardSeq", boardSeq);
+	    return ApiResult.successBuilder(boardService.getBoards(requestMap, false));
 	}
 	
-	@ResponseStatus(value = HttpStatus.CREATED, reason = "저장되었습니다.")
 	@PostMapping("/a")
-	public BoardDto.HandleBoardRes addBoard(@RequestBody @Valid final BoardDto.HandleBoardReq req) {
-		return new BoardDto.HandleBoardRes(boardService.handleBoard(MapUtil.toMap(req), null));
+	@Operation(summary = "게시판 등록")
+	public ApiResult addBoard (
+        @RequestBody @Valid final BoardDto req
+    ) {
+	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), true, false, "regist"));
 	}
 	
-	@ResponseStatus(value = HttpStatus.OK, reason = "수정되었습니다.")
-	@PostMapping("/s")
-	public BoardDto.HandleBoardRes setBoard(
-		@PathVariable @Valid @Positive(message = "boardSeq는 양수여야합니다. ") Integer boardSeq
-		, @RequestBody @Valid final BoardDto.HandleBoardReq req) {
-		return new BoardDto.HandleBoardRes(boardService.handleBoard(MapUtil.toMap(req), boardSeq));
+	@PostMapping("/m")
+	@Operation(summary = "게시판 수정")
+    public ApiResult setBoard (
+        @RequestBody @Valid final BoardDto req
+    ) {        
+	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "modify"));
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/d-l/{memberSeq}/{boardSeq}")
-	public void logicalRemoveBoard (
-		@PathVariable @Valid @Positive(message = "boardSeq는 양수여야합니다. ") Integer boardSeq
-		, @PathVariable @Valid @Positive(message = "memberSeq는 양수여야합니다. ") Integer memberSeq
-	) {
-		boardService.handleRemoveBoard(boardSeq, memberSeq, false);
+	@PostMapping("/d-l")
+	@Operation(summary = "게시판 물리적 삭제")
+    public ApiResult logicalRemoveBoard (
+        @RequestBody @Valid final BoardDto req    
+    ) {
+	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, true, "remove"));
 	}	
 	
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/d-p/{memberSeq}/{boardSeq}")
-	public void physicalRemoveBoard (
-		@PathVariable @Valid @Positive(message = "boardSeq는 양수여야합니다. ") Integer boardSeq
-		, @PathVariable @Valid @Positive(message = "memberSeq는 양수여야합니다. ") Integer memberSeq
-	) {
-		boardService.handleRemoveBoard(boardSeq, memberSeq, true);
+	@PostMapping("/d-p")
+	@Operation(summary = "게시판 논리적 삭제")
+    public ApiResult physicalRemoveBoard (
+        @RequestBody @Valid final BoardDto req
+    ) {
+	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "remove"));
 	}
 	
 }
