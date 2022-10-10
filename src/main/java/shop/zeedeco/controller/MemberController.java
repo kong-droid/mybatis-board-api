@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import shop.zeedeco.dto.member.MemberDto;
+import shop.zeedeco.response.ApiResult;
 import shop.zeedeco.service.MemberService;
+import shop.zeedeco.util.MapUtil;
 
 @Slf4j
 @Validated
@@ -36,40 +38,37 @@ public class MemberController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/list")
-	public MemberDto.ViewMembersRes getMembers(
-			@RequestBody @Valid final MemberDto.ViewMemberReq req,
+	public ApiResult getMembers(
+			@RequestBody @Valid final MemberDto req,
 			@RequestParam @PositiveOrZero Integer page,
 			@RequestParam @PositiveOrZero Integer size
 	) throws Exception {
-		Map<String, Object> responseMap = memberService.getMembers(req.toMap(), page, size);
-		List<Map<String, Object>> members = (List<Map<String, Object>>) responseMap.get("members");
-		Integer totalCount = (Integer) responseMap.get("totalCount");
-		return new MemberDto.ViewMembersRes(members.stream().map(MemberDto.ViewMemberRes::new).collect(Collectors.toList()), totalCount);
+		return ApiResult.successBuilder(memberService.getMembers(MapUtil.toMap(req), page, size));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{memberSeq}")
-	public MemberDto.ViewMemberRes getMember(@PathVariable @Valid int memberSeq) throws Exception {
+	public ApiResult getMember(@PathVariable @Valid int memberSeq) throws Exception {
 		Map<String, Object> responseMap = memberService.getMember(memberSeq);
-		return new MemberDto.ViewMemberRes(responseMap);
+		return ApiResult.successBuilder(responseMap);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public void addMember(@RequestBody @Valid final MemberDto.AddMemberReq req) throws Exception {
-		this.memberService.addMember(req.toMap());
+	public void addMember(@RequestBody @Valid final MemberDto req) throws Exception {
+		this.memberService.addMember(MapUtil.toMap(req));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping
-	public void setMember(@RequestBody @Valid final MemberDto.SetMemberReq req) throws Exception {
-		this.memberService.setMember(req.toMap());
+	public void setMember(@RequestBody @Valid final MemberDto req) throws Exception {
+		this.memberService.setMember(MapUtil.toMap(req));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping
-	public void logicalRemoveMember(@RequestBody @Valid final MemberDto.LogicalRemoveMemberReq req) throws Exception {
-		this.memberService.logicalRemoveMember(req.toMap());
+	public void logicalRemoveMember(@RequestBody @Valid final MemberDto req) throws Exception {
+		this.memberService.logicalRemoveMember(MapUtil.toMap(req));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

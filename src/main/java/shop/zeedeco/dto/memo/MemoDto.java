@@ -17,7 +17,7 @@ import shop.zeedeco.dto.common.CommonSearchDto;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "Meno")
+@Schema(description = "메모")
 public class MemoDto {
 
     @Schema(description = "메모 고유번호", example = "1", required = true)
@@ -30,7 +30,7 @@ public class MemoDto {
     @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
     private CommonHandleDto handle;
     
-    @Schema(description = "공통 겅샘 파라미터", required = false)
+    @Schema(description = "공통 검색 파라미터", required = false)
     private CommonSearchDto search;
     
 }

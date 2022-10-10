@@ -1,68 +1,32 @@
 package shop.zeedeco.dto.member;
 
-import java.time.LocalDateTime;
-import java.util.Map;
+import javax.validation.constraints.Positive;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.AccessLevel;
-import lombok.Getter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import shop.zeedeco.dto.common.CommonHandleDto;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@Schema(description = "회원정보 상세")
 public class MemberDetailDto {
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ViewMemberDetailRes {
-		private Integer detailSeq;
-		private Integer memberSeq;
-		private String category;
-		private String content;
-		private String remark;
-		private LocalDateTime createdDt;
-		private Integer createdNo;
-		
-		public ViewMemberDetailRes(Map<String, Object> responseMap) {
-			this.detailSeq			= (Integer) 		responseMap.get("detailSeq");
-			this.memberSeq			= (Integer) 		responseMap.get("memberSeq");
-			this.category			= (String) 			responseMap.get("category");
-			this.content			= (String) 			responseMap.get("content");
-			this.remark				= (String) 			responseMap.get("remark");
-			this.createdDt			= (LocalDateTime) 	responseMap.get("createdDt") == null ? null : (LocalDateTime) 	responseMap.get("createdDt");
-			this.createdNo			= (Integer) 		responseMap.get("createdNo");
-		}
-	}
-	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class AddMemberDetailReq {
-		@NotNull(message = "유저고유번호 값이 없습니다.")
-		private Integer memberSeq;
-		private Integer detailSeq;
-		@NotEmpty(message = "카테고리가 없습니다.")
-		private String category;
-		@NotEmpty(message = "내용이 없습니다.")
-		private String content;
-		private String remark;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}
+    @Schema(description = "회원정보 상세 고유번호", example = "1", required = true)
+    @Positive(message = "detailSeq는 양수여야 합니다.")
+    private Integer detailSeq;
+    
+    @Schema(description = "self_introduce", example = "자기소개를 입력하세요.", required = true)
+    private String category;
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class RemoveMemberDetailReq {
-		@NotNull(message = "상세고유번호 값이 없습니다.")
-		private Integer detailSeq;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}
+    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
+    private CommonHandleDto handle;
+   
 }

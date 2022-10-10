@@ -1,150 +1,59 @@
 package shop.zeedeco.dto.member;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.AccessLevel;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import shop.zeedeco.dto.common.CommonHandleDto;
+import shop.zeedeco.dto.common.CommonSearchDto;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@Schema(description = "회원정보")
 public class MemberDto {
 	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ViewMemberRes {
-		private Integer memberSeq;
-		private String id;
-		private String name;
-		private String role;
-		private String profile;
-		private String email;
-		private String phone;
-		private String addr;
-		private String remark;
-		private String socialYn;
-		private String delYn;
-		private LocalDateTime createdDt;
-		private LocalDateTime updatedDt;
-		private Integer updatedNo;
-		private List<MemberDetailDto.ViewMemberDetailRes> details;
-		
-		public ViewMemberRes(Map<String, Object> responseMap) {
-			this.memberSeq			= (Integer) 	responseMap.get("memberSeq");
-			this.id					= (String) 		responseMap.get("id");
-			this.name				= (String) 		responseMap.get("name");
-			this.role				= (String) 		responseMap.get("role");
-			this.profile			= (String) 		responseMap.get("profile")			== null ? null : (String) 	responseMap.get("profile");
-			this.email				= (String) 		responseMap.get("email")			== null ? null : (String) 	responseMap.get("email");
-			this.phone				= (String) 		responseMap.get("phone")			== null ? null : (String) 	responseMap.get("phone");
-			this.addr				= (String) 		responseMap.get("addr")				== null ? null : (String) 	responseMap.get("addr");
-			this.remark				= (String) 		responseMap.get("remark")			== null ? null : (String) 	responseMap.get("remark");
-			this.socialYn			= (String) 		responseMap.get("socialYn")			== null ? null : (String) 	responseMap.get("socialYn");
-			this.delYn				= (String) 		responseMap.get("delYn")			== null ? null : (String) 	responseMap.get("delYn");
-			this.createdDt			= (LocalDateTime) 	responseMap.get("createdDt") 	== null ? null : (LocalDateTime) 	responseMap.get("createdDt");
-			this.updatedDt			= (LocalDateTime) 	responseMap.get("updatedDt") 	== null ? null : (LocalDateTime) 	responseMap.get("updatedDt");
-			this.updatedNo			= (Integer) 	responseMap.get("updatedNo")		== null ? null : (Integer) 	responseMap.get("updatedNo");
-			this.details			= (List<MemberDetailDto.ViewMemberDetailRes>) responseMap.get("details") == null ? null : (List<MemberDetailDto.ViewMemberDetailRes>) responseMap.get("details");
-		}
-	}
-	
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class ViewMembersRes {
-        private List<ViewMemberRes> members;
-        private Integer totalCount;
-
-        public ViewMembersRes(List<ViewMemberRes> members, Integer totalCount) {
-            this.members = members;
-            this.totalCount = totalCount;
-        }
-    }
-
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ViewMemberReq {
-		private String id;
-		private String name;
-		private String role;
-		private String email;
-		private String phone;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String delYn;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String socialYn;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}    
+    @Schema(description = "회원 아이디", example = "tester", required = true)
+    private String id;
     
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class AddMemberReq {
-		private Integer memberSeq;
-		@NotEmpty(message = "아이디 값이 없습니다.")
-		private String id;
-		@NotEmpty(message = "패스워드 값이 없습니다.")
-		private String password;
-		@NotEmpty(message = "이름 값이 없습니다.")
-		private String name;
-		@NotEmpty(message = "유저유형 값이 없습니다.")
-		private String role;
-		private String profile;
-		@Email(message = "이메일 값이 유효하지 않습니다.")
-		private String email;
-		@NotEmpty(message = "핸드폰 값이 없습니다.")
-		private String phone;
-		private String addr;
-		private String remark;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String socialYn;
-		private List<MemberDetailDto.AddMemberDetailReq> details;
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}
-
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class SetMemberReq {
-		@NotNull(message = "유저고유번호 값이 없습니다.")
-		private Integer memberSeq;
-		@NotEmpty(message = "이름 값이 없습니다.")
-		private String name;
-		@NotEmpty(message = "유저유형 값이 없습니다.")
-		private String role;
-		private String profile;
-		@Email(message = "이메일 값이 유효하지 않습니다.")
-		private String email;
-		@NotEmpty(message = "핸드폰 값이 없습니다.")
-		private String phone;
-		private String addr;
-		private String remark;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String socialYn;
-		private List<MemberDetailDto.AddMemberDetailReq> details;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}
-	
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class LogicalRemoveMemberReq {
-		@NotNull(message = "유저고유번호 값이 없습니다.")
-		private Integer memberSeq;
-		@Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-		private String delYn;
-		
-        public Map<String, Object> toMap() throws Exception {
-            return new ObjectMapper().convertValue(this, Map.class);
-        }
-	}
+    @Schema(description = "회원명", example = "테스터", required = true)
+    private String name;
+    
+    @Schema(description = "회원 유형", example = "<h3>회원유형</h3><br>일반회원 : ROLE_USER<br>관리자 : ROLE_ADMIN", required = true)
+    private String role;
+    
+    @Schema(description = "회원 프로필", example = "data/profile/20220101/profile.jpg", required = false)
+    private String profile;
+    
+    @Schema(description = "이메일", example = "tester@gmail.com", required = true)
+    @Email(message = "email 형식이 맞지않습니다.")
+    private String email;
+    
+    @Schema(description = "모바일번호", example = "01000001234", required = false)
+    private String phone;
+    
+    @Schema(description = "주소", example = "서울특별시 중구 어딘가", required = false)
+    private String addr;
+    
+    @Schema(description = "소셜 로그인 사용여부", required = false)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
+    private String socialYn;
+    
+    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
+    private CommonHandleDto handle;
+    
+    @Schema(description = "공통 검색 파라미터", required = false)
+    private CommonSearchDto search;
+    
+    List<MemberDetailDto> details;
 }

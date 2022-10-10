@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import shop.zeedeco.dto.auth.AuthDto;
 import shop.zeedeco.dto.member.MemberDto;
+import shop.zeedeco.response.ApiResult;
 import shop.zeedeco.service.AuthService;
 
 @Slf4j
@@ -32,9 +33,9 @@ public class AuthController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/login")
-	public MemberDto.ViewMemberRes getAuth(@RequestBody @Valid final AuthDto.ViewAuthReq req) throws Exception {
+	public ApiResult getAuth(@RequestBody @Valid final AuthDto.ViewAuthReq req) throws Exception {
 		Map<String, Object> responseMap = authService.getAuth(req.toMap());
-		return new MemberDto.ViewMemberRes(responseMap);
+		return ApiResult.successBuilder(responseMap);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
