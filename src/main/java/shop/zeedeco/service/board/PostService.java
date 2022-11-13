@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -16,64 +17,61 @@ import shop.zeedeco.exception.ResourceNotFoundException;
 @RequiredArgsConstructor
 public class PostService {
 	
-	private final CustomDao dao;
+    private final CustomDao dao;
 	
-    public Map<String, Object> getPosts(Map<String, Object> requestMap, Integer page, Integer size) throws Exception {
-        
-    	Map<String, Object> responseMap = new HashMap<>();
-        
-    	requestMap.put("delYn", "N");
-        if(page != null && size != null) {
-        	requestMap.put("startRow", page * size);
-            requestMap.put("size", size);
-        }
-        
-        List<Map<String, Object>> posts = dao.dbDetails("post.getPosts", requestMap);
-        Map<String, Object> listCount = dao.dbDetail("post.getPostsCnt", requestMap);
-        Integer totalCount = Integer.parseInt(String.valueOf(listCount.get("cnt")));
-        if(!CollectionUtils.isEmpty(posts)) {
-            responseMap.put("posts", posts);
-            responseMap.put("totalCount", totalCount);
+    
+    public Map<String, Object> getPosts( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
+        Map<String, Object> responseMap = !isDouble ? dao.dbDetail("post.getPosts", requestMap) : new HashMap<>();
+        if(isDouble) {
+            Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");         
+            if(!CollectionUtils.isEmpty(searchMap)) {
+                if(searchMap.get("page") != null && searchMap.get("size") != null) {
+                    searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
+                }
+            }   
+            responseMap.put("posts", dao.dbDetails("post.getPosts", requestMap));
+            responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
         } else {
-        	new ResourceNotFoundException("데이터가 없습니다.");
+            // 조회수
+            this.setPostForViewCount(requestMap);
         }
         return responseMap;
     }
-
-    public Map<String, Object> getPost(int postSeq) throws Exception {
-    	Map<String, Object> requestMap = new HashMap<>();
-    	requestMap.put("postSeq", postSeq);
-    	// 조회수
-    	this.setPostForViewCount(requestMap);
-    	Map<String, Object> responseMap = dao.dbDetail("post.getPosts", requestMap);
-    	if(CollectionUtils.isEmpty(responseMap)) new ResourceNotFoundException("게시글을 찾을 수 없습니다.");
-    	return responseMap;
-    }
-
-    public void addPost(Map<String, Object> requestMap) throws Exception {
-    	int effectRow = this.dao.dbInsert("post.addPost", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("게시글 등록을 실패했습니다.");
-    }
     
-    public void setPost(Map<String, Object> requestMap) throws Exception {
-    	int effectRow = this.dao.dbUpdate("post.setPost", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("게시글 수정을 실패했습니다.");
+    public Map<String, Object> handlePost ( Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct ) throws InternalResourceException {
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        switch (whatAct) {
+            case "regist":
+            case "modify":
+                if(dao.dbInsert(isAdd ? "post.addPost" : "post.setPost" , requestMap) < 0) throw new BadRequestException("Invalid Error");
+                break;
+            case "remove":
+                Map<String, Object> rmvReqMap = new HashMap<>();
+                Map<String, Object> handle = ( Map<String, Object> ) requestMap.get("handle");
+                rmvReqMap.put("postSeq", requestMap.get("postSeq"));
+                Map<String, Object> rmvResMap = this.getPosts(rmvReqMap, false);
+                if(!CollectionUtils.isEmpty(rmvResMap)) {
+                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
+                        if(isPhysical) {
+                            if(this.dao.dbDelete("post.removePost", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                        } else {
+                            handle.put("delYn", "Y");
+                            if(this.dao.dbUpdate("post.setPost", requestMap) < 0) throw new BadRequestException("Invalid Error");
+                        }
+                    } else {
+                        throw new BadRequestException("Invalid Error");
+                    }
+                } else {
+                    new ResourceNotFoundException("Invalid Error");
+                }
+                break;
+        }
+        responseMap.put("postSeq", requestMap.get("postSeq"));
+        return responseMap;
     }
-  
-    public void setPostForViewCount(Map<String, Object> requestMap) throws Exception {
+
+    public void setPostForViewCount(Map<String, Object> requestMap) throws InternalResourceException {
     	int effectRow = this.dao.dbUpdate("post.setPostForViewCount", requestMap);
     	if(effectRow < 0) throw new BadRequestException("게시글 조회수 수정에 실패했습니다.");
     }
-    
-    public String removePost ( int postSeq, int mamberSeq, boolean isPhysical ) throws BadRequestException {
-    	Map<String, Object> requestMap = new HashMap<>();
-    	
-    	requestMap.put("postSeq", postSeq);
-    	requestMap.put("mamberSeq", mamberSeq);
-    	if(!isPhysical) requestMap.put("delYn", "Y");
-    	
-    	if((!isPhysical ? this.dao.dbUpdate("post.setPost", requestMap) : this.dao.dbDelete("post.removePost", requestMap)) < 0 ) throw new BadRequestException(!isPhysical ? "논리적 삭제를 실패했습니다." : "물리적 삭제를 실패했습니다.");
-    	return "게시글이 삭제되었습니다.";
-    }
-
 }

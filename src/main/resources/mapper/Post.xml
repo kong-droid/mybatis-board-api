@@ -13,8 +13,8 @@
 			, title
 			, content
 			, remark
-			, start_dt
-			, end_dt
+			, period_start_dt
+			, period_end_dt
 			, notice_yn
 			, secret_yn
 			, use_yn
@@ -32,32 +32,75 @@
 		<if test="postSeq != null and !postSeq.equals('')">
 			AND post_seq= #{postSeq}
 		</if>
-		<if test="boardFk != null and !boardFk.equals('')">
-			AND board_fk= #{boardFk}
+		<if test="boardSeq != null and !boardSeq.equals('')">
+			AND board_fk= #{boardSeq}
 		</if>
 		<if test="title != null and !title.equals('')">
 			AND title like CONCAT('%', #{title}, '%')
-		</if>
-		<if test="content != null and !content.equals('')">
-			AND content like CONCAT('%', #{content}, '%')
-		</if>
-		<if test="startDt != null and !startDt.equals('')">
-			AND start_dt= #{startDt}
-		</if>
-		<if test="endDt != null and !endDt.equals('')">
-			AND end_dt= #{endDt}
 		</if>
 		<if test="noticeYn != null and !noticeYn.equals('')">
 			AND notice_yn= #{noticeYn}
 		</if>
 		<if test="secretYn != null and !secretYn.equals('')">
 			AND secret_yn= #{secretYn}
-		</if>
-		<if test="useYn != null and !useYn.equals('')">
-			AND use_yn= #{useYn}
-		</if>
-		<if test="delYn != null and !delYn.equals('')">
-			AND del_yn= #{delYn}
+		</if>		
+		<if test="search != null">
+			<if test="search.memberSeq != null and !search.memberSeq.equals('')">
+				AND created_no= #{search.memberSeq}
+			</if>
+			<if test="search.content != null and !search.content.equals('')">
+				AND content like CONCAT('%', #{search.content}, '%')
+			</if>
+			<if test="search.remark != null and !search.remark.equals('')">
+				AND remark like CONCAT('%', #{search.remark}, '%')
+			</if>			
+			<if test="search.keyword != null and !search.keyword.equals('')">
+				AND title like CONCAT('%', #{search.keyword}, '%')
+				OR content like CONCAT('%', #{search.keyword}, '%')
+				OR remark like CONCAT('%', #{search.keyword}, '%')
+			</if>
+			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt == null or search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedStartDt}
+			</if>
+			<if test="(search.periodStartedStartDt == null or search.periodStartedStartDt.equals('')) and (search.periodEndedStartDtt != null and !search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedStartDt}
+			</if>
+			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt != null and !search.periodEndedStartDt.equals(''))">
+				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedStartDt} AND #{search.periodEndedStartDt}
+			</if>
+			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt == null or search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedEndDt}
+			</if>
+			<if test="(search.periodStartedEndDt == null or search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedEndDt}
+			</if>
+			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
+				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedEndDt} AND #{search.periodEndedEndDt}
+			</if>
+			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt == null or search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.createdStartDt}
+			</if>
+			<if test="(search.createdStartDt == null or search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.createdEndDt}
+			</if>
+			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.createdStartDt} AND #{search.createdEndDt}
+			</if>
+			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt == null or search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.updatedStartDt}
+			</if>
+			<if test="(search.updatedStartDt == null or search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.updatedEndDt}
+			</if>
+			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.updatedStartDt} AND #{search.updatedEndDt}
+			</if>
+			<if test="search.useYn != null and !search.useYn.equals('')">
+				AND use_yn= #{search.useYn}
+			</if>
+			<if test="search.delYn != null and !search.delYn.equals('')">
+				AND del_yn= #{search.delYn}
+			</if>
 		</if>
 	</sql>
 	
@@ -79,7 +122,7 @@
     	) tb
 	</select>
 	
-	<insert id="addPost">
+	<insert id="addPost" useGeneratedKeys="true" keyProperty="postSeq">
 		/** post.addPost **/
 		INSERT INTO post (
 			board_fk
@@ -88,8 +131,8 @@
 			, title
 			, content
 			, remark
-			, start_dt
-			, end_dt
+			, period_start_dt
+			, period_end_dt
 			, notice_yn
 			, secret_yn
 			, use_yn
@@ -98,21 +141,21 @@
 			, created_dt
 			, created_no
 		) VALUES (
-			#{boardFk}
-			, #{memberSeq}
+			#{boardSeq}
+			, #{handle.memberSeq}
 			, #{thumbnail}
 			, #{title}
-			, #{content}
-			, #{remark}
-			, #{startDt}
-			, #{endDt}
+			, #{handle.content}
+			, #{handle.remark}
+			, #{handle.periodStartDt}
+			, #{handle.periodEndDt}
 			, #{noticeYn}
 			, #{secretYn}
 			, #{useYn}
 			, #{delYn}
 			, 0
 			, NOW()
-			, #{memberSeq}
+			, #{handle.memberSeq}
 		)
 	</insert>
 	
@@ -122,16 +165,18 @@
 		<set>
 			<if test="thumbnail != null and !thumbnail.equals('')"> thumbnail= #{thumbnail},</if>
 			<if test="title != null and !title.equals('')"> title= #{title},</if>
-			<if test="content != null and !content.equals('')"> content= #{content},</if>
-			<if test="remark != null and !remark.equals('')"> remark= #{remark},</if>
-			<if test="startDt != null and !startDt.equals('')"> start_dt= #{startDt},</if>
-			<if test="endDt != null and !endDt.equals('')"> end_dt= #{endDt},</if>
-			<if test="useYn != null and !useYn.equals('')"> use_yn= #{useYn},</if>
-			<if test="delYn != null and !delYn.equals('')"> del_yn= #{delYn},</if>
 			<if test="noticeYn != null and !noticeYn.equals('')"> notice_yn= #{noticeYn},</if>
-			<if test="secretYn != null and !secretYn.equals('')"> secret_yn= #{secretYn},</if>		
-			updated_dt= NOW(),
-			updated_no= #{memberSeq}	
+			<if test="secretYn != null and !secretYn.equals('')"> secret_yn= #{secretYn},</if>				
+			<if test="handle != null">
+				<if test="handle.content != null and !handle.content.equals('')"> content= #{handle.content},</if>
+				<if test="handle.remark != null and !handle.remark.equals('')"> remark= #{handle.remark},</if>
+				<if test="handle.periodStartDt != null and !handle.periodStartDt.equals('')"> period_start_dt= #{periodStartDt},</if>
+				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{periodEndDt},</if>			
+				<if test="handle.useYn != null and !handle.useYn.equals('')"> use_yn= #{handle.useYn},</if>
+				<if test="handle.delYn != null and !handle.delYn.equals('')"> del_yn= #{handle.delYn},</if>
+				updated_no= #{handle.memberSeq},
+			</if>	
+			updated_dt= NOW()
 		</set>
 		WHERE post_seq= #{postSeq}
 	</update>
@@ -146,7 +191,7 @@
 	
 	<delete id="removePost">
 		/** post.removePost **/
-		DELETE FROM zeedeco.post
+		DELETE FROM post
 		WHERE post_seq= #{postSeq}
 	</delete>
 </mapper>
