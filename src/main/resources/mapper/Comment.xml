@@ -9,8 +9,8 @@
 			comment_seq
 			, post_fk
 			, member_fk
-			, parents
-			, deps
+			, parents_no
+			, deps_no
 			, comment
 			, created_dt
 			, created_no
@@ -21,17 +21,20 @@
 	</sql>
 	
 	<sql id="getWhere">
-		<if test="postFk != null and !postFk.equals('')">
-			AND post_fk= #{postFk}
+		<if test="postSeq != null and !postSeq.equals('')">
+			AND post_fk= #{postSeq}
 		</if>
-		<if test="memberFk != null and !memberFk.equals('')">
-			AND member_fk= #{memberFk}
+		<if test="commentSeq != null and !commentSeq.equals('')">
+			AND comment_seq= #{commentSeq}
 		</if>		
-		<if test="parents != null and !parents.equals('')">
-			AND parents= #{parents}
+		<if test="memberSeq != null and !memberSeq.equals('')">
+			AND member_fk= #{memberSeq}
+		</if>		
+		<if test="parentsNo != null and !parentsNo.equals('')">
+			AND parents_no= #{parentsNo}
 		</if>
-		<if test="deps != null and !deps.equals('')">
-			AND deps= #{deps}
+		<if test="depsNo != null and !depsNo.equals('')">
+			AND deps_no= #{depsNo}
 		</if>											
 	</sql>
 	
@@ -41,32 +44,24 @@
 		<include refid="getWhere"/>
 	</select>
 	
-	<select id="getCommentsCnt" resultMap="camelCaseMap">
-		/** comment.getCommentsCnt **/
-		select count(*) as cnt from (
-			<include refid="getSql"/>
-			<include refid="getWhere"/>			
-    	) tb
-	</select>
-	
-	<insert id="addComment">
+	<insert id="addComment" useGeneratedKeys="true" keyProperty="commentSeq">
 		/** comment.addComment **/
 		INSERT INTO comment (
 			post_fk
 			, member_fk
-			, parents
-			, deps
+			, parents_no
+			, deps_no
 			, comment
 			, created_dt
 			, created_no
 		) VALUES (
-			#{postFk}
-			, #{memberSeq}
-			, #{parents}
-			, #{deps}
+			#{postSeq}
+			, #{handle.memberSeq}
+			, #{parentsNo}
+			, #{depsNo}
 			, #{comment}
 			, NOW()
-			, #{memberSeq}	
+			, #{handle.memberSeq}	
 		)
 	</insert>
 	
@@ -76,7 +71,7 @@
 		<set>
 			comment= #{comment},
 			updated_dt= NOW(),
-			updated_no= #{memberSeq}	
+			updated_no= #{handle.memberSeq}	
 		</set>
 		WHERE comment_seq= #{commentSeq}
 	</update>

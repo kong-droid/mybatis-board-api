@@ -1,5 +1,6 @@
 package shop.zeedeco.service.board;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,11 @@ import shop.zeedeco.exception.ResourceNotFoundException;
 public class PostService {
 	
     private final CustomDao dao;
-	
+	private final CommentService commentService;
     
     public Map<String, Object> getPosts( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
         Map<String, Object> responseMap = !isDouble ? dao.dbDetail("post.getPosts", requestMap) : new HashMap<>();
+        List<Map<String, Object>> posts = new ArrayList<Map<String,Object>>();
         if(isDouble) {
             Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");         
             if(!CollectionUtils.isEmpty(searchMap)) {
@@ -29,11 +31,24 @@ public class PostService {
                     searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
                 }
             }   
-            responseMap.put("posts", dao.dbDetails("post.getPosts", requestMap));
+            
+            posts = dao.dbDetails("post.getPosts", requestMap);
+            if(!CollectionUtils.isEmpty(posts)) {
+                posts.forEach(post -> {
+                    Map<String, Object> resComMap = new HashMap<String, Object>();
+                    resComMap.put("postSeq", post.get("postSeq"));
+                    post.put("comments", commentService.getComments(resComMap).get("comments"));
+                });
+            }
+            
+            responseMap.put("posts", posts);
             responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
         } else {
             // Á¶È¸¼ö
             this.setPostForViewCount(requestMap);
+            Map<String, Object> resComMap = new HashMap<String, Object>();
+            resComMap.put("postSeq", responseMap.get("postSeq"));
+            responseMap.put("comments", commentService.getComments(resComMap).get("comments"));
         }
         return responseMap;
     }

@@ -26,11 +26,9 @@ public class MemoDto {
     
     @Schema(description = "메모일시", example = "20220101", required = false)
     private String memoDt;
-        
-    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
+    
     private CommonHandleDto handle;
     
-    @Schema(description = "공통 검색 파라미터", required = false)
     private CommonSearchDto search;
     
 }

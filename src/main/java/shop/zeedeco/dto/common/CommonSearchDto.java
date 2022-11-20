@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@Schema(description = "공통 검색 파라미터")
 public class CommonSearchDto {
     
     @Schema(description = "페이지", example = "0", required = false)

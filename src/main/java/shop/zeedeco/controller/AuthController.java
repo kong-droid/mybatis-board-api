@@ -1,53 +1,57 @@
 package shop.zeedeco.controller;
 
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import shop.zeedeco.dto.auth.AuthDto;
-import shop.zeedeco.dto.member.MemberDto;
+import shop.zeedeco.dto.memo.MemoDto;
 import shop.zeedeco.response.ApiResult;
 import shop.zeedeco.service.AuthService;
+import shop.zeedeco.util.MapUtil;
 
-@Slf4j
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth")
+@Tag(name = "auth-controller", description = "인증")
 public class AuthController {
 	
 	@Autowired
 	AuthService authService;
 	
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/login")
-	public ApiResult getAuth(@RequestBody @Valid final AuthDto.ViewAuthReq req) throws Exception {
-		Map<String, Object> responseMap = authService.getAuth(req.toMap());
-		return ApiResult.successBuilder(responseMap);
-	}
+    @PostMapping("/authentication")
+    @Operation(summary = "로그인")
+    public ApiResult authentication (
+        @RequestBody @Valid final AuthDto req
+    ) {
+        return ApiResult.successBuilder(authService.getAuth(MapUtil.toMap(req)));
+    } 
 
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("/duplicate-check")
-	public AuthDto.ViewAuthRes getDuplicate(@RequestParam @Valid String id) throws Exception {
-		Map<String, Object> responseMap = authService.getDuplicate(id);
-		return new AuthDto.ViewAuthRes(responseMap);
-	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping("/password")
-	public void setPassword(@RequestBody @Valid final AuthDto.SetAuthReq req) throws Exception {
-		this.authService.setPassword(req.toMap());
-	} 
+    @PostMapping("/duplicate-check")
+    @Operation(summary = "아이디 중복체크")
+    public ApiResult getMemberByDuplicateCheck (
+        @RequestBody @Valid final AuthDto req
+    ) {
+        return ApiResult.successBuilder(authService.getDuplicate(MapUtil.toMap(req)));
+    } 
+
+    @PostMapping("/change-password")    
+    @Operation(summary = "비밀번호 수정")
+    @ApiResponse(code = 200, message = "valid")
+    public void setPassword (
+        @RequestBody @Valid final AuthDto req        
+    ) {
+       authService.setPassword(MapUtil.toMap(req));
+    } 
 }

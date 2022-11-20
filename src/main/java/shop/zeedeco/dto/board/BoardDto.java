@@ -1,6 +1,7 @@
 package shop.zeedeco.dto.board;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -21,6 +22,7 @@ import shop.zeedeco.dto.common.CommonSearchDto;
 public class BoardDto {
     
     @Schema(description = "게시판 고유번호", example = "1", required = false)
+    @Positive(message = "boardSeq는 양수여야 합니다.")
     private Integer boardSeq;
 
     @Schema(description = "게시판 제목", example = "공지사항", required = true)
@@ -34,10 +36,8 @@ public class BoardDto {
     @Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
     private String commentYn;
         
-    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
     private CommonHandleDto handle;
     
-    @Schema(description = "공통 겅샘 파라미터", required = false)
     private CommonSearchDto search;
 	
 }

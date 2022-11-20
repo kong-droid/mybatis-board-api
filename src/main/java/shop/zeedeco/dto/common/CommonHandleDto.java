@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@Schema(description = "공통 입력/수정/삭제 파라미터")
 public class CommonHandleDto {
     
     @Schema(description = "언어코드", example = "KR", required = false)

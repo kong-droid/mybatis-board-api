@@ -43,9 +43,7 @@ public class PostDto {
     @Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
     private String secretYn;
     
-    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
     private CommonHandleDto handle;
     
-    @Schema(description = "공통 겅샘 파라미터", required = false)
     private CommonSearchDto search;
 }

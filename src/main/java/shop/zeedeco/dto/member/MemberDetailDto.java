@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import shop.zeedeco.dto.common.CommonHandleDto;
+import shop.zeedeco.dto.common.CommonSearchDto;
 
 @Data
 @Builder
@@ -26,7 +27,6 @@ public class MemberDetailDto {
     @Schema(description = "self_introduce", example = "자기소개를 입력하세요.", required = true)
     private String category;
 
-    @Schema(description = "공통 입력/수정/삭제 파라미터", required = false)
     private CommonHandleDto handle;
    
 }

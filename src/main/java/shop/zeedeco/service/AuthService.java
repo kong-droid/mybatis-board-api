@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.ResourceAccessException;
 import lombok.RequiredArgsConstructor;
 import shop.zeedeco.dao.CustomDao;
@@ -17,46 +18,43 @@ public class AuthService {
 	private final CustomDao dao;
 	private final MemberEnDecoder memberEnDecoder;
 	
-    public Map<String, Object> getAuth(Map<String, Object> requestMap) throws Exception {
+    public Map<String, Object> getAuth(Map<String, Object> requestMap) {
     	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", requestMap);
     	List<Map<String, Object>> details = null;
     	
-        if(responseMap != null) {
+        if(!CollectionUtils.isEmpty(responseMap)) {
         	details = dao.dbDetails("member.getMemberDetails", requestMap);
         	this.memberEnDecoder.decodeMember(responseMap);
         	responseMap.put("details", details);
         } else {
-        	new ResourceAccessException("로그인에 실패했습니다. ");
+        	new ResourceAccessException("Invalid Error");
         }
              
         return responseMap;
     }
     
-    public Map<String, Object> getDuplicate(String id) throws Exception {
-    	Map<String, Object> requestMap = new HashMap<>();
+    public Map<String, Object> getDuplicate(Map<String, Object> requestMap) {
     	Map<String, Object> resultMap = new HashMap<>();
-    	requestMap.put("id", id);
     	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", requestMap);
-        if(responseMap != null) {
-        	resultMap.put("duplicateCheck", "중복된 계정입니다.");
+        if(!CollectionUtils.isEmpty(responseMap)) {
+        	resultMap.put("message", "already exists");
         } else {
-        	resultMap.put("duplicateCheck", "사용하실 수 있는 계정입니다.");
+        	resultMap.put("message", "available");
         }
              
         return resultMap;
     }
     
-    public void setPassword(Map<String, Object> requestMap) throws Exception {
+    public void setPassword(Map<String, Object> requestMap) {
     	Map<String, Object> chkMap = new HashMap<>();
     	chkMap.put("memberSeq", requestMap.get("memberSeq"));
-    	chkMap.put("password", requestMap.get("password"));
-    	
+    	chkMap.put("oldPassword", requestMap.get("oldPassword"));
+    	chkMap.put("newPassword", requestMap.get("newPassword"));
     	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", chkMap);
-    	if(responseMap != null) {
-    	    int effectRow = dao.dbUpdate("member.setMember", chkMap);
-    	    if(effectRow < 0) new BadRequestException("비밀번호 수정에 실패했습니다.");  		
+    	if(!CollectionUtils.isEmpty(responseMap)) {
+    	    if(dao.dbUpdate("member.setMember", chkMap) < 0) new BadRequestException("Invalid Error");  		
     	} else {
-    		new ResourceNotFoundException("유저 정보를 찾을 수 없습니다. ");
+    		new ResourceNotFoundException("Invalid Error");
     	}   
     }
     
