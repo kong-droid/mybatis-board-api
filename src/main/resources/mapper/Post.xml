@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="post">
 
-	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+	<resultMap type="shop.api.rest.util.CamelCaseMap" id="camelCaseMap"></resultMap>
 
 	<sql id="getSql">
 		SELECT 
@@ -109,9 +109,9 @@
 		<include refid="getSql"/>
 		<include refid="getWhere"/>		
 		ORDER BY post_seq desc
-  		<if test="startRow != null and !startRow.equals('')">
-  			limit #{startRow}, #{size}
-  		</if>
+		<if test="search != null">
+		  	<if test="search.startRow != null and !search.startRow.equals('')">limit #{search.startRow}, #{search.size}</if>
+		</if>
 	</select>
 	
 	<select id="getPostsCnt" resultMap="camelCaseMap">

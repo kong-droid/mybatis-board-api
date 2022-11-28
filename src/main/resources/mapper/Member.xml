@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
-	<resultMap type="shop.zeedeco.util.CamelCaseMap" id="camelCaseMap"></resultMap>
+	<resultMap type="shop.api.rest.util.CamelCaseMap" id="camelCaseMap"></resultMap>
   	<!-- member -->
   	<sql id="memberSql">
   		SELECT 
@@ -15,7 +15,6 @@
   		   , phone
   		   , addr
   		   , remark
-  		   , social_yn
   		   , del_yn
   		   , created_dt
   		   , updated_dt
@@ -46,17 +45,49 @@
   			</if>
   			<if test="phone != null and !phone.equals('')">
   				and phone= #{phone}
-  			</if>
-  			<if test="socialYn != null and !socialYn.equals('')">
-  				and social_yn= #{socialYn}
-  			</if>
-  			<if test="delYn != null and !delYn.equals('')">
-  				and del_yn= #{delYn}
-  			</if>
-  			<if test="memberSeq != null and !memberSeq.equals('')">
-  				and member_seq= #{memberSeq}
-  			</if>
-  		</where>
+  			</if>	
+			<if test="search != null">
+				<if test="search.memberSeq != null and !search.memberSeq.equals('')">
+					AND member_seq= #{search.memberSeq}
+				</if>
+				<if test="search.remark != null and !search.remark.equals('')">
+					AND remark like CONCAT('%', #{search.remark}, '%')
+				</if>			
+				<if test="search.keyword != null and !search.keyword.equals('')">
+					AND name like CONCAT('%', #{search.keyword}, '%')
+					OR email like CONCAT('%', #{search.keyword}, '%')
+					OR id like CONCAT('%', #{search.keyword}, '%')
+					OR remark like CONCAT('%', #{search.keyword}, '%')
+				</if>
+				<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt == null or search.createdEndDt.equals(''))">
+					AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.createdStartDt}
+				</if>
+				<if test="(search.createdStartDt == null or search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+					AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.createdEndDt}
+				</if>
+				<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
+					AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.createdStartDt} AND #{search.createdEndDt}
+				</if>
+				<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt == null or search.updatedEndDt.equals(''))">
+					AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.updatedStartDt}
+				</if>
+				<if test="(search.updatedStartDt == null or search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+					AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.updatedEndDt}
+				</if>
+				<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
+					AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.updatedStartDt} AND #{search.updatedEndDt}
+				</if>
+				<if test="search.delYn != null and !search.delYn.equals('')">
+					AND del_yn= #{search.delYn}
+				</if>
+			</if>  	
+			<if test="search == null">
+				<if test="memberSeq != null and !memberSeq.equals('')">
+					AND member_seq= #{memberSeq}
+					AND del_yn = 'N'
+				</if>
+			</if>  				
+		</where>	
   	</sql>
   	
   	<select id="getMembers" resultMap="camelCaseMap">
@@ -64,9 +95,9 @@
   		<include refid="memberSql"/>
 		<include refid="memberSqlWhere"/>
   		ORDER BY member_seq desc
-  		<if test="startRow != null and !startRow.equals('')">
-  			limit #{startRow}, #{size}
-  		</if>
+		<if test="search != null">
+		  	<if test="search.startRow != null and !search.startRow.equals('')">limit #{search.startRow}, #{search.size}</if>
+		</if>
   	</select>
   
     <select id="getMembersCnt" resultMap="camelCaseMap">
@@ -75,7 +106,7 @@
 		<include refid="memberSqlWhere"/>
   	</select>
   		
-  	<insert id="addMember">
+  	<insert id="addMember" useGeneratedKeys="true" keyProperty="memberSeq">
   		/** member.addMember **/
   		INSERT INTO member ( 
 	  		id
@@ -100,13 +131,9 @@
   			, #{phone}
   			, #{addr}
   			, #{remark}
-  			, #{socialYn}
   			, 'N'
   			, NOW()
   		)
-  		<selectKey keyProperty="memberSeq" resultType="Integer" order="AFTER">
-  			 SELECT LAST_INSERT_ID()
-  		</selectKey>
   	</insert>
   	
   	<update id="setMember">
@@ -120,21 +147,22 @@
   			<if test="email != null and !email.equals('')">email= #{email},</if>
   			<if test="phone != null and !phone.equals('')">phone= #{phone},</if>
   			<if test="addr != null and !addr.equals('')">addr= #{addr},</if>
-  			<if test="remark != null and !remark.equals('')">remark= #{remark},</if>
-  			<if test="socialYn != null and !socialYn.equals('')">social_yn= #{socialYn},</if>
-  			<if test="delYn != null and !delYn.equals('')">del_yn= #{delYn},</if>
+  			<if test="handle!= null">
+	  			<if test="handle.remark != null and !handle.remark.equals('')">remark= #{handle.remark},</if>
+	  			<if test="handle.delYn != null and !handle.delYn.equals('')">del_yn= #{handle.delYn},</if>  			
+  			</if>			
   			updated_dt= NOW(), 
-  			updated_no=	#{memberSeq}
+  			updated_no=	#{handle.memberSeq}
   		</set>
   		<where>
-  			member_seq= #{memberSeq}
+  			member_seq= #{handle.memberSeq}
   		</where> 
   	</update>
   	
   	<delete id="removeMember">
   		/** member.removeMember **/
   		DELETE FROM member
-		WHERE member_seq= #{memberSeq}
+		WHERE member_seq= #{handle.memberSeq}
   	</delete>
   	
   	<!-- member-detail -->
@@ -153,7 +181,8 @@
   	<select id="getMemberDetails" resultMap="camelCaseMap">
   		/** member.getMemberDetails **/
   		<include refid="memberDetailSql"/>
-  		WHERE member_fk= #{memberSeq}
+  		<if test="search != null">WHERE member_fk= #{search.memberSeq}</if>
+  		<if test="search == null">WHERE member_fk= #{memberSeq}</if>
   	</select>
   	
   	<insert id="addMemberDetail">
@@ -166,12 +195,12 @@
   			, created_dt
   			, created_no
   		) VALUES (
-  			#{memberSeq}
+  			#{handle.memberSeq}
   			, #{category}
-  			, #{content}
-  			, #{remark}
+  			, #{handle.content}
+  			, #{handle.remark}
   			, NOW()
-  			, #{memberSeq}
+  			, #{handle.memberSeq}
   		)
   		
   	</insert>
@@ -179,7 +208,7 @@
   	<delete id="removeMemberDetail">
   		/** member.removeMemberDetail **/
   		DELETE FROM member_detail
-		WHERE member_fk= #{memberSeq}		
+		WHERE member_fk= #{handle.memberSeq}		
   	</delete>
 
 </mapper>
