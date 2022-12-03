@@ -13,12 +13,14 @@ import lombok.RequiredArgsConstructor;
 import shop.api.rest.dao.CustomDao;
 import shop.api.rest.exception.BadRequestException;
 import shop.api.rest.exception.ResourceNotFoundException;
+import shop.api.rest.service.MemberService;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 	
 	private final CustomDao dao;
+	private final MemberService memberService;
 	
     @SuppressWarnings("unchecked")
     public Map<String, Object> getComments( Map<String, Object> requestMap) throws InternalResourceException {
@@ -27,7 +29,12 @@ public class CommentService {
         ArrayList<Map<String, Object>> chlid = new ArrayList<>();
         List<Map<String, Object>> comments = dao.dbDetails("comment.getComments", requestMap);
         if (!CollectionUtils.isEmpty(comments)) {
+            
             comments.forEach(comment -> {
+                Map<String, Object> reqMap = new HashMap<>();
+                reqMap.put("memberSeq", comment.get("createdNo"));
+                comment.put("memberInfo", memberService.getMembers(reqMap, false));
+                
                 if((Integer) comment.get("depsNo") == 1 && (Integer) comment.get("parentsNo") == 0 ) {
                     parents.add(comment);
                 }

@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shop.api.rest.dto.attach.AttachDto;
+import shop.api.rest.response.ApiResult;
 import shop.api.rest.service.AttachService;
 import shop.api.rest.util.MapUtil;
 
@@ -40,21 +41,15 @@ public class AttachController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/r")
 	@Operation(summary = "파일 목록")
-	public AttachDto.ViewAttachesRes getAttaches(
-			@RequestBody @Valid final AttachDto.ViewAttachReq req
-	) {
-		Map<String, Object> responseMap = attachService.getAttaches(MapUtil.toMap(req));
-		List<Map<String, Object>> attaches = (List<Map<String, Object>>) responseMap.get("attaches");
-		return new AttachDto.ViewAttachesRes(attaches.stream().map(AttachDto.ViewAttachRes::new).collect(Collectors.toList()));
+	public ApiResult getAttaches (@RequestBody @Valid final AttachDto.ViewAttachReq req) {
+		return ApiResult.successBuilder(attachService.getAttaches(MapUtil.toMap(req)));
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/a")
 	@Operation(summary = "파일 등록")
-	public AttachDto.ViewAddAttachesRes addAttach(@ModelAttribute @Valid AttachDto.AddAttachReq req) throws IOException {
-		Map<String, Object> responseMap = attachService.addAttach(req);
-		List<Map<String, Object>> attached = (List<Map<String, Object>>) responseMap.get("attached");
-		return new AttachDto.ViewAddAttachesRes(attached.stream().map(AttachDto.ViewAddAttachRes::new).collect(Collectors.toList()));	
+	public ApiResult addAttach(@ModelAttribute @Valid AttachDto.AddAttachReq req) throws IOException {
+	    return ApiResult.successBuilder(attachService.addAttach(req));
 	} 
 	
 	@ApiResponse(code = 200, message = "valid")

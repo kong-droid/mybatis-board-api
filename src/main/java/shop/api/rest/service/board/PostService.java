@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import shop.api.rest.dao.CustomDao;
 import shop.api.rest.exception.BadRequestException;
 import shop.api.rest.exception.ResourceNotFoundException;
+import shop.api.rest.service.MemberService;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +21,10 @@ public class PostService {
 	
     private final CustomDao dao;
 	private final CommentService commentService;
-    
+	private final MemberService memberService;
+	
     public Map<String, Object> getPosts( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
-        Map<String, Object> responseMap = !isDouble ? dao.dbDetail("post.getPosts", requestMap) : new HashMap<>();
+        Map<String, Object> responseMap = new HashMap<>();
         List<Map<String, Object>> posts = new ArrayList<Map<String,Object>>();
         if(isDouble) {
             Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");         
@@ -35,6 +37,11 @@ public class PostService {
             posts = dao.dbDetails("post.getPosts", requestMap);
             if(!CollectionUtils.isEmpty(posts)) {
                 posts.forEach(post -> {
+                    Map<String, Object> reqMap = new HashMap<>();
+                    reqMap.put("memberSeq", post.get("createdNo"));
+                    post.put("memberInfo", memberService.getMembers(reqMap, false));
+                    
+                    
                     Map<String, Object> resComMap = new HashMap<String, Object>();
                     resComMap.put("postSeq", post.get("postSeq"));
                     post.put("comments", commentService.getComments(resComMap).get("comments"));
@@ -44,11 +51,19 @@ public class PostService {
             responseMap.put("posts", posts);
             responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
         } else {
+            responseMap = dao.dbDetail("post.getPosts", requestMap); 
             // Á¶È¸¼ö
-            this.setPostForViewCount(requestMap);
-            Map<String, Object> resComMap = new HashMap<String, Object>();
-            resComMap.put("postSeq", responseMap.get("postSeq"));
-            responseMap.put("comments", commentService.getComments(resComMap).get("comments"));
+            if(!CollectionUtils.isEmpty(responseMap)) {
+                this.setPostForViewCount(requestMap);
+                
+                Map<String, Object> reqMap = new HashMap<>();
+                reqMap.put("memberSeq", responseMap.get("createdNo"));
+                responseMap.put("memberInfo", memberService.getMembers(reqMap, false));
+                
+                Map<String, Object> resComMap = new HashMap<String, Object>();
+                resComMap.put("postSeq", responseMap.get("postSeq"));
+                responseMap.put("comments", commentService.getComments(resComMap).get("comments"));
+            }
         }
         return responseMap;
     }

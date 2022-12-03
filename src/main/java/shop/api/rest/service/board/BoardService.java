@@ -12,15 +12,17 @@ import lombok.RequiredArgsConstructor;
 import shop.api.rest.dao.CustomDao;
 import shop.api.rest.exception.BadRequestException;
 import shop.api.rest.exception.ResourceNotFoundException;
+import shop.api.rest.service.MemberService;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 	
 	private final CustomDao dao;
+	private final MemberService memberService;
 	
     public Map<String, Object> getBoards( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
-    	Map<String, Object> responseMap = !isDouble ? dao.dbDetail("board.getBoards", requestMap) : new HashMap<>();
+    	Map<String, Object> responseMap = new HashMap<>();
     	if(isDouble) {
     	    Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");    	    
     	    if(!CollectionUtils.isEmpty(searchMap)) {
@@ -28,8 +30,25 @@ public class BoardService {
     	            searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
     	        }
     	    }   
-            responseMap.put("boards", dao.dbDetails("board.getBoards", requestMap));
+    	    
+    	    List<Map<String, Object>> boards = dao.dbDetails("board.getBoards", requestMap);
+    	    if(!CollectionUtils.isEmpty(boards)) {
+    	        boards.forEach(board -> {
+    	            Map<String, Object> reqMap = new HashMap<>();
+    	            reqMap.put("memberSeq", board.get("createdNo"));
+    	            board.put("memberInfo", memberService.getMembers(reqMap, false));
+    	        });
+    	    }
+    	    
+            responseMap.put("boards", boards);
             responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("board.getBoardsCnt", requestMap).get("cnt"))));
+    	} else {
+    	    responseMap = dao.dbDetail("board.getBoards", requestMap);
+            if(!CollectionUtils.isEmpty(responseMap)) {
+                Map<String, Object> reqMap = new HashMap<>();
+                reqMap.put("memberSeq", responseMap.get("createdNo"));
+                responseMap.put("memberInfo", memberService.getMembers(reqMap, false));
+            }
     	}
         return responseMap;
     }

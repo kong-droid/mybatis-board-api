@@ -21,7 +21,7 @@ public class FileUtil {
 		realPath.forEach(path -> {
 			File file = new File(String.valueOf(path.get("fullPath")));
 			if(file.exists()) {
-				file.deleteOnExit();
+			    file.delete();
 			} else {
 				new NoSuchFileException(String.valueOf(path.get("fullPath")), "404", "해당경로의 파일을 찾을 수 없습니다.");
 			}
