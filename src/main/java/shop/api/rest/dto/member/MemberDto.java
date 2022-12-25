@@ -26,10 +26,13 @@ public class MemberDto {
     @Schema(description = "회원 아이디", example = "tester", required = true)
     private String id;
     
+    @Schema(description = "회원 비밀번호", example = "1234", required = true)
+    private String password;
+    
     @Schema(description = "회원명", example = "테스터", required = true)
     private String name;
     
-    @Schema(description = "회원 유형", example = "<h3>회원유형</h3><br>일반회원 : ROLE_USER<br>관리자 : ROLE_ADMIN", required = true)
+    @Schema(description = "<h3>회원유형</h3><br>일반회원 : ROLE_USER<br>관리자 : ROLE_ADMIN", example = "ROLE_ADMIN", required = true)
     private String role;
     
     @Schema(description = "회원 프로필", example = "data/profile/20220101/profile.jpg", required = false)
@@ -44,10 +47,6 @@ public class MemberDto {
     
     @Schema(description = "주소", example = "서울특별시 중구 어딘가", required = false)
     private String addr;
-    
-    @Schema(description = "소셜 로그인 사용여부", required = false)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' 또는 'N' 이 입력되어야 합니다.")
-    private String socialYn;
     
     private CommonHandleDto handle;
     

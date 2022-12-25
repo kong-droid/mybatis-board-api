@@ -118,7 +118,6 @@
 	  		, phone
 	  		, addr
 	  		, remark
-	  		, social_yn
 	  		, del_yn
 	  		, created_dt
 	  	) VALUES (

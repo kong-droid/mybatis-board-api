@@ -56,7 +56,9 @@ public class MemberService {
                 List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
                 if(!CollectionUtils.isEmpty(details)) {
                     details.forEach(detail -> {
-                        if(dao.dbInsert("member.addMemberDetail", requestMap) < 0) new BadRequestException("Invalid Error");
+                        Map<String, Object> handleMap= (Map<String, Object>) detail.get("handle");
+                        handleMap.put("memberSeq", requestMap.get("memberSeq"));
+                        if(dao.dbInsert("member.addMemberDetail", detail) < 0) new BadRequestException("Invalid Error");
                     });
                 }
                 break;
