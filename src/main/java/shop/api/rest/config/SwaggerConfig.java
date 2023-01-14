@@ -20,7 +20,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket autoApiConfig() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
+		        .select()
 				.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.any())
