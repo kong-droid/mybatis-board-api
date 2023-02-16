@@ -1,12 +1,18 @@
 package shop.api.rest.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -60,16 +66,37 @@ public class AttachService {
             	throw new BadRequestException("Invalid Error");
             } else {
             	Map<String, Object> responseMap = new HashMap<>();
-            	responseMap.put("attachSeq",	requestMap.get("attachSeq"));
-            	responseMap.put("fullPath", 	(String)requestMap.get("filePath") + (String)requestMap.get("uuidName"));
+            	responseMap.put("attachSeq", requestMap.get("attachSeq"));
+            	responseMap.put("realName",  maps.getOriginalFilename());
+            	responseMap.put("fullPath",  (String)requestMap.get("filePath") + (String)requestMap.get("uuidName"));
             	attached.add(responseMap);
             }       
         }
 		responsesMap.put("attached", attached);
 		return responsesMap;
     }
+	
+    public ResponseEntity<InputStreamResource> downloadFile(int attachSeq) throws FileNotFoundException {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("attachSeq", attachSeq);
+        Map<String, Object> attach = dao.dbDetail("attach.getAttaches", requestMap);
 
-    public void physicalRemoveAttach(int attachSeq) {
+        if(CollectionUtils.isEmpty(attach)) {
+            throw new ResourceNotFoundException("Not Found");
+        } else {
+            String fullPath         = String.valueOf(attach.get("fullPath"));
+            String originalFileName = FileUtil.transUtf8FileName(String.valueOf(attach.get("realPath")));
+            File file = new File(fullPath);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"")
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream;"))
+                .body(resource);
+        }
+    }
+	
+    public int physicalRemoveAttach(int attachSeq) {
     	Map<String, Object> requestMap = new HashMap<>();        
     	requestMap.put("attachSeq", attachSeq);
     	List<Map<String, Object>> attaches = dao.dbDetails("attach.getAttaches", requestMap);
@@ -85,6 +112,7 @@ public class AttachService {
                     }
     	        }
     	    }
+    	    return attachSeq;
     	} else {
     	    throw new ResourceNotFoundException("Invalid Error");
     	}

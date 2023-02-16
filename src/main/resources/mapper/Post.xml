@@ -151,8 +151,8 @@
 			, #{handle.periodEndDt}
 			, #{noticeYn}
 			, #{secretYn}
-			, #{useYn}
-			, #{delYn}
+			, #{handle.useYn}
+			, #{handle.delYn}
 			, 0
 			, NOW()
 			, #{handle.memberSeq}
@@ -170,8 +170,8 @@
 			<if test="handle != null">
 				<if test="handle.content != null and !handle.content.equals('')"> content= #{handle.content},</if>
 				<if test="handle.remark != null and !handle.remark.equals('')"> remark= #{handle.remark},</if>
-				<if test="handle.periodStartDt != null and !handle.periodStartDt.equals('')"> period_start_dt= #{periodStartDt},</if>
-				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{periodEndDt},</if>			
+				<if test="handle.periodStartDt != null and !handle.periodStartDt.equals('')"> period_start_dt= #{handle.periodStartDt},</if>
+				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{handle.periodEndDt},</if>			
 				<if test="handle.useYn != null and !handle.useYn.equals('')"> use_yn= #{handle.useYn},</if>
 				<if test="handle.delYn != null and !handle.delYn.equals('')"> del_yn= #{handle.delYn},</if>
 				updated_no= #{handle.memberSeq},

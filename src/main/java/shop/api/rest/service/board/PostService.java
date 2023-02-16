@@ -102,6 +102,6 @@ public class PostService {
 
     public void setPostForViewCount(Map<String, Object> requestMap) throws InternalResourceException {
     	int effectRow = this.dao.dbUpdate("post.setPostForViewCount", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("게시글 조회수 수정에 실패했습니다.");
+    	if(effectRow < 0) throw new BadRequestException("Invalid Error");
     }
 }

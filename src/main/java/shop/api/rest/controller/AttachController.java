@@ -1,13 +1,17 @@
 package shop.api.rest.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +60,15 @@ public class AttachController {
 	@ApiResponse(code = 200, message = "valid")
 	@PostMapping("/d-p/{attachSeq}")
 	@Operation(summary = "파일 삭제")
-	public void physicalRemoveAttach(@Valid @PathVariable int attachSeq) {
-		this.attachService.physicalRemoveAttach(attachSeq);
+	public ApiResult physicalRemoveAttach(@Valid @PathVariable int attachSeq) {
+	    return ApiResult.successBuilder(attachService.physicalRemoveAttach(attachSeq));
 	} 
+	
+	@ResponseStatus(HttpStatus.OK)
+    @PostMapping("/r/{attachSeq}")
+    @Operation(summary = "파일 다운로드")
+    public ResponseEntity<InputStreamResource> downloadFile (@Positive(message = "attachSeq는 양수여야 합니다.") @PathVariable @Schema(example = "1", description = "파일 고유번호") int attachSeq) throws FileNotFoundException {
+        return attachService.downloadFile(attachSeq);
+    }
+	
 }

@@ -2,6 +2,8 @@ package shop.api.rest.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -23,7 +25,7 @@ public class FileUtil {
 			if(file.exists()) {
 			    file.delete();
 			} else {
-				new NoSuchFileException(String.valueOf(path.get("fullPath")), "404", "해당경로의 파일을 찾을 수 없습니다.");
+				new NoSuchFileException(String.valueOf(path.get("fullPath")), "404", "Not Found");
 			}
 		});
 		return "remove files";
@@ -62,7 +64,7 @@ public class FileUtil {
 		String datePath = File.separator + new DecimalFormat("00").format(cal.get(Calendar.DATE));
 		String replaceUploadPath = uploadPath.replace(File.separatorChar, '/');
 
-		return makeDir(replaceUploadPath, yearPath, monthPath, datePath);
+		return makeDir(replaceUploadPath, yearPath + monthPath + datePath);
 	}
 	
 	private static String makeDir(String uploadPath, String... paths) {
@@ -81,6 +83,10 @@ public class FileUtil {
 		return uploadPath;
 	}
 	
-	
+	// 파일명 (UTF-8 전환)
+    public static String transUtf8FileName(String fileName) {
+        byte[] transFileName = fileName.getBytes(StandardCharsets.UTF_8);
+        return URLEncoder.encode(new String(transFileName, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+    }
 }
 
