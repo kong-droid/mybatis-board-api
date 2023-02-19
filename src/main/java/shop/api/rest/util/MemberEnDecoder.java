@@ -13,6 +13,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author KMH
@@ -25,7 +26,7 @@ public class MemberEnDecoder {
 	@Autowired
 	Aes256Util aes256Util;
     public Map<String, Object> encodeMember(Map<String, Object> requestMap) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException  {
-    	if(requestMap.get("email") != null) requestMap.put("email", aes256Util.aesEncode((String) requestMap.get("email")));
+        if(requestMap.get("email") != null) requestMap.put("email", aes256Util.aesEncode((String) requestMap.get("email")));
     	if(requestMap.get("phone") != null)requestMap.put("phone", aes256Util.aesEncode((String) requestMap.get("phone")));
     	if(requestMap.get("addr") != null && !requestMap.get("addr").equals("")) requestMap.put("addr", aes256Util.aesEncode((String) requestMap.get("addr")));
         return requestMap;
@@ -33,9 +34,11 @@ public class MemberEnDecoder {
     
     /** º¹È£È­ **/
     public Map<String, Object> decodeMember(Map<String, Object> responseMap) {
-        if(responseMap.get("email") != null) responseMap.put("email", aes256Util.aesDecode((String) responseMap.get("email")));
-        if(responseMap.get("phone") != null) responseMap.put("phone", aes256Util.aesDecode((String) responseMap.get("phone")));
-    	if(responseMap.get("addr") != null && !responseMap.get("addr").equals("")) responseMap.put("addr", aes256Util.aesDecode((String) responseMap.get("addr")));
+        if(!CollectionUtils.isEmpty(responseMap)) {
+            if(responseMap.get("email") != null) responseMap.put("email", aes256Util.aesDecode((String) responseMap.get("email")));
+            if(responseMap.get("phone") != null) responseMap.put("phone", aes256Util.aesDecode((String) responseMap.get("phone")));
+            if(responseMap.get("addr") != null && !responseMap.get("addr").equals("")) responseMap.put("addr", aes256Util.aesDecode((String) responseMap.get("addr")));    
+        }
         return responseMap;
     }
 
