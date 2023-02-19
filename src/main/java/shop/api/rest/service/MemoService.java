@@ -17,7 +17,7 @@ public class MemoService {
     public Map<String, Object> getMemos(Map<String, Object> requestMap, boolean isDouble) throws BadRequestException {
         Map<String, Object> responseMap = isDouble ? new HashMap<>() : dao.dbDetail("memo.getMemos", requestMap);  
         if(isDouble) {
-            responseMap.put("menos", dao.dbDetails("memo.getMemos", requestMap));
+            responseMap.put("memos", dao.dbDetails("memo.getMemos", requestMap));
         }
     	return responseMap;
     }

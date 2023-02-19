@@ -86,7 +86,7 @@
 			, created_dt
 			, created_no
 		) VALUES (
-			#{memberSeq}
+			#{handle.memberSeq}
 			, #{memoDt}
 			, #{handle.content}
 			, #{handle.remark}
