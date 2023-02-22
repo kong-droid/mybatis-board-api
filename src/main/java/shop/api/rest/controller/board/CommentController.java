@@ -20,14 +20,14 @@ import shop.api.rest.util.MapUtil;
 @Validated
 @RestController
 @RequestMapping("/comment")
-@Tag(name = "comment-controller", description = "´ñ±Û")
+@Tag(name = "comment-controller", description = "ëŒ“ê¸€")
 public class CommentController {
 	
 	@Autowired
 	private CommentService commentService;
 	
     @PostMapping("/a")
-    @Operation(summary = "´ñ±Û µî·Ï")
+    @Operation(summary = "ëŒ“ê¸€ ë“±ë¡")
     public ApiResult addComment (
         @RequestBody @Valid final CommentDto req
     ) {
@@ -35,7 +35,7 @@ public class CommentController {
     }
     
     @PostMapping("/m")
-    @Operation(summary = "´ñ±Û ¼öÁ¤")
+    @Operation(summary = "ëŒ“ê¸€ ìˆ˜ì •")
     public ApiResult setComment (
         @RequestBody @Valid final CommentDto req
     ) {        
@@ -43,7 +43,7 @@ public class CommentController {
     }
     
     @PostMapping("/d")
-    @Operation(summary = "´ñ±Û »èÁ¦")
+    @Operation(summary = "ëŒ“ê¸€ ì‚­ì œ")
     public ApiResult removeComment (
         @RequestBody @Valid final CommentDto req    
     ) {

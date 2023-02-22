@@ -3,7 +3,6 @@ package shop.api.rest.dto.member;
 import java.util.List;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -20,32 +19,32 @@ import shop.api.rest.dto.common.CommonSearchDto;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "È¸¿øÁ¤º¸")
+@Schema(description = "íšŒì›ì •ë³´")
 public class MemberDto {
 	
-    @Schema(description = "È¸¿ø ¾ÆÀÌµğ", example = "tester", required = true)
+    @Schema(description = "íšŒì› ì•„ì´ë””", example = "tester", required = true)
     private String id;
     
-    @Schema(description = "È¸¿ø ºñ¹Ğ¹øÈ£", example = "1234", required = true)
+    @Schema(description = "íšŒì› ë¹„ë°€ë²ˆí˜¸", example = "1234", required = true)
     private String password;
     
-    @Schema(description = "È¸¿ø¸í", example = "Å×½ºÅÍ", required = true)
+    @Schema(description = "íšŒì›ëª…", example = "í…ŒìŠ¤í„°", required = true)
     private String name;
     
-    @Schema(description = "<h3>È¸¿øÀ¯Çü</h3><br>ÀÏ¹İÈ¸¿ø : ROLE_USER<br>°ü¸®ÀÚ : ROLE_ADMIN", example = "ROLE_ADMIN", required = true)
+    @Schema(description = "<h3>íšŒì›ìœ í˜•</h3><br>ì¼ë°˜íšŒì› : ROLE_USER<br>ê´€ë¦¬ì : ROLE_ADMIN", example = "ROLE_ADMIN", required = true)
     private String role;
     
-    @Schema(description = "È¸¿ø ÇÁ·ÎÇÊ", example = "data/profile/20220101/profile.jpg", required = false)
+    @Schema(description = "íšŒì› í”„ë¡œí•„", example = "data/profile/20220101/profile.jpg", required = false)
     private String profile;
     
-    @Schema(description = "ÀÌ¸ŞÀÏ", example = "tester@gmail.com", required = true)
-    @Email(message = "email Çü½ÄÀÌ ¸ÂÁö¾Ê½À´Ï´Ù.")
+    @Schema(description = "ì´ë©”ì¼", example = "tester@gmail.com", required = true)
+    @Email(message = "email í˜•ì‹ì´ ë§ì§€ì•ŠìŠµë‹ˆë‹¤.")
     private String email;
     
-    @Schema(description = "¸ğ¹ÙÀÏ¹øÈ£", example = "01000001234", required = false)
+    @Schema(description = "ëª¨ë°”ì¼ë²ˆí˜¸", example = "01000001234", required = false)
     private String phone;
     
-    @Schema(description = "ÁÖ¼Ò", example = "¼­¿ïÆ¯º°½Ã Áß±¸ ¾îµò°¡", required = false)
+    @Schema(description = "ì£¼ì†Œ", example = "ì„œìš¸íŠ¹ë³„ì‹œ ì¤‘êµ¬ ì–´ë”˜ê°€", required = false)
     private String addr;
     
     private CommonHandleDto handle;

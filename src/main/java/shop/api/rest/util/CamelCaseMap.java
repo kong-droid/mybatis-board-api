@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 /**
  * @author KMH 
  * 2021.12.27
- * sqlÀÇ ÇÊµå°ª snakeÇü½ÄÀ» camel·Î º¯°æÇÔ
+ * sqlì˜ í•„ë“œê°’ snakeí˜•ì‹ì„ camelë¡œ ë³€ê²½í•¨
  **/
 public class CamelCaseMap extends HashMap<String, Object> {
 	

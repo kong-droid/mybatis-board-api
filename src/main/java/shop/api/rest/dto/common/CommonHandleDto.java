@@ -15,39 +15,39 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "°øÅë ÀÔ·Â/¼öÁ¤/»èÁ¦ ÆÄ¶ó¹ÌÅÍ")
+@Schema(description = "ê³µí†µ ì…ë ¥/ìˆ˜ì •/ì‚­ì œ íŒŒë¼ë¯¸í„°")
 public class CommonHandleDto {
     
-    @Schema(description = "¾ğ¾îÄÚµå", example = "KR", required = false)
+    @Schema(description = "ì–¸ì–´ì½”ë“œ", example = "KR", required = false)
     private String langCd;
     
-    @Schema(description = "Å¸ÀÔÄÚµå", example = "notice", required = false)
+    @Schema(description = "íƒ€ì…ì½”ë“œ", example = "notice", required = false)
     private String typeCd;
     
-    @Schema(description = "³»¿ë", example = "³»¿ëÀ» ÀÔ·ÂÇØº¸¼¼¿ä.", required = true)
+    @Schema(description = "ë‚´ìš©", example = "ë‚´ìš©ì„ ì…ë ¥í•´ë³´ì„¸ìš”.", required = true)
     private String content;
     
-    @Schema(description = "ºñ°í", example = "ºñ°í¸¦ ÀÔ·ÂÇÒ ÀÏÀÌ ÀÖÀ»±î¿ä?", required = false)
+    @Schema(description = "ë¹„ê³ ", example = "ë¹„ê³ ë¥¼ ì…ë ¥í•  ì¼ì´ ìˆì„ê¹Œìš”?", required = false)
     private String remark;
     
-    @Schema(description = "°Ô½Ã ½ÃÀÛÀÏ", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ê²Œì‹œ ì‹œì‘ì¼", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodStartDt;
 
-    @Schema(description = "°Ô½Ã Á¾·áÀÏ", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ê²Œì‹œ ì¢…ë£Œì¼", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodEndDt;
     
-    @Schema(description = "»ç¿ë¿©ºÎ", example = "Y", required = true)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ì‚¬ìš©ì—¬ë¶€", example = "Y", required = true)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String useYn;
     
-    @Schema(description = "»èÁ¦¿©ºÎ", example = "N", required = true)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ì‚­ì œì—¬ë¶€", example = "N", required = true)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String delYn;
 
-    @Schema(description = "À¯Àú °íÀ¯¹øÈ£", example = "1", required = true)
-    @Positive(message = "memberSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ìœ ì € ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @Positive(message = "memberSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer memberSeq;
     
 }

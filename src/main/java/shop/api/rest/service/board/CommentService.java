@@ -18,10 +18,10 @@ import shop.api.rest.service.MemberService;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-	
-	private final CustomDao dao;
-	private final MemberService memberService;
-	
+    
+    private final CustomDao dao;
+    private final MemberService memberService;
+    
     @SuppressWarnings("unchecked")
     public Map<String, Object> getComments( Map<String, Object> requestMap) throws InternalResourceException {
         Map<String, Object> responseMap = new HashMap<>();

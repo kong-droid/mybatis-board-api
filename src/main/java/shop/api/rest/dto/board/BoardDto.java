@@ -21,19 +21,19 @@ import shop.api.rest.dto.common.CommonSearchDto;
 @Schema(description = "Board")
 public class BoardDto {
     
-    @Schema(description = "°Ô½ÃÆÇ °íÀ¯¹øÈ£", example = "1", required = false)
-    @Positive(message = "boardSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê²Œì‹œíŒ ê³ ìœ ë²ˆí˜¸", example = "1", required = false)
+    @Positive(message = "boardSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer boardSeq;
 
-    @Schema(description = "°Ô½ÃÆÇ Á¦¸ñ", example = "°øÁö»çÇ×", required = true)
+    @Schema(description = "ê²Œì‹œíŒ ì œëª©", example = "ê³µì§€ì‚¬í•­", required = true)
     private String title;
     
-    @Schema(description = "°Ô½ÃÆÇ ÆÄÀÏÃ·ºÎ¿©ºÎ", example = "N", required = true)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê²Œì‹œíŒ íŒŒì¼ì²¨ë¶€ì—¬ë¶€", example = "N", required = true)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String attachmentYn;
     
-    @Schema(description = "´ñ±Û¿©ºÎ", example = "Y", required = true)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ëŒ“ê¸€ì—¬ë¶€", example = "Y", required = true)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String commentYn;
         
     private CommonHandleDto handle;

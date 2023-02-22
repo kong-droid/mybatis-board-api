@@ -24,13 +24,13 @@ public class AttachDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ViewAttachReq {
         
-        @Schema(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å×ÀÌºí", example = "post")
+        @Schema(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° í…Œì´ë¸”", example = "post")
         private String tbName;
         
-        @Schema(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å×ÀÌºí °íÀ¯¹øÈ£", example = "10")
+        @Schema(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° í…Œì´ë¸” ê³ ìœ ë²ˆí˜¸", example = "10")
         private Integer tbSeq;
         
-        @Schema(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å¸ÀÔ", example = "post contents image")
+        @Schema(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° íƒ€ì…", example = "post contents image")
         private String tbType;
     }
 
@@ -40,24 +40,24 @@ public class AttachDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class AddAttachReq {
         
-        @NotEmpty(message = "tbNameÀÌ ºñ¾îÀÖÀ½. ")
-    	@Parameter(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å×ÀÌºí", example = "post")
+        @NotEmpty(message = "tbNameì´ ë¹„ì–´ìˆìŒ. ")
+    	@Parameter(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° í…Œì´ë¸”", example = "post")
         private String tbName;
         
-        @NotEmpty(message = "tbSeqÀÌ ºñ¾îÀÖÀ½. ")
-        @Parameter(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å×ÀÌºí °íÀ¯¹øÈ£", example = "10")
+        @NotEmpty(message = "tbSeqì´ ë¹„ì–´ìˆìŒ. ")
+        @Parameter(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° í…Œì´ë¸” ê³ ìœ ë²ˆí˜¸", example = "10")
         private String tbSeq;
         
-        @NotEmpty(message = "tbTypeÀÌ ºñ¾îÀÖÀ½. ")
-        @Parameter(description = "ÆÄÀÏÃ·ºÎ ÂüÁ¶ Å¸ÀÔ", example = "post contents image")
+        @NotEmpty(message = "tbTypeì´ ë¹„ì–´ìˆìŒ. ")
+        @Parameter(description = "íŒŒì¼ì²¨ë¶€ ì°¸ì¡° íƒ€ì…", example = "post contents image")
         private String tbType;
         
-        @NotNull(message = "memberSeq°¡ ºñ¾îÀÖÀ½. ")
-        @Positive(message = "memberSeq´Â ¾ç¼ö¿©¾ßÇÔ. ")
-        @Parameter(description = "È¸¿ø °íÀ¯¹øÈ£", example = "1")
+        @NotNull(message = "memberSeqê°€ ë¹„ì–´ìˆìŒ. ")
+        @Positive(message = "memberSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼í•¨. ")
+        @Parameter(description = "íšŒì› ê³ ìœ ë²ˆí˜¸", example = "1")
         private Integer memberSeq;
         
-        @NotNull(message = "files°¡ ºñ¾îÀÖÀ½. ")
+        @NotNull(message = "filesê°€ ë¹„ì–´ìˆìŒ. ")
         private List<MultipartFile> files;
     }
 

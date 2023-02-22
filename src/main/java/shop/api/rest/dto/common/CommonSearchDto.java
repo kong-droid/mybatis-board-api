@@ -17,82 +17,82 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "°øÅë °Ë»ö ÆÄ¶ó¹ÌÅÍ")
+@Schema(description = "ê³µí†µ ê²€ìƒ‰ íŒŒë¼ë¯¸í„°")
 public class CommonSearchDto {
     
-    @Schema(description = "ÆäÀÌÁö", example = "0", required = false)
-    @PositiveOrZero(message = "page´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "í˜ì´ì§€", example = "0", required = false)
+    @PositiveOrZero(message = "pageëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer page;
 
-    @Schema(description = "ÆäÀÌÁö »çÀÌÁî", example = "20", required = false)
-    @Positive(message = "size´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "í˜ì´ì§€ ì‚¬ì´ì¦ˆ", example = "20", required = false)
+    @Positive(message = "sizeëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer size;
     
-    @Schema(description = "³»¿ë", example = "³»¿ëÀ» ÀÔ·ÂÇØº¸¼¼¿ä.", required = true)
+    @Schema(description = "ë‚´ìš©", example = "ë‚´ìš©ì„ ì…ë ¥í•´ë³´ì„¸ìš”.", required = true)
     private String content;
     
-    @Schema(description = "ºñ°í", example = "ºñ°í¸¦ ÀÔ·ÂÇÒ ÀÏÀÌ ÀÖÀ»±î¿ä?", required = false)
+    @Schema(description = "ë¹„ê³ ", example = "ë¹„ê³ ë¥¼ ì…ë ¥í•  ì¼ì´ ìˆì„ê¹Œìš”?", required = false)
     private String remark;
     
-    @Schema(description = "ÅëÇÕ°Ë»ö Å°¿öµå", example = "°Ë»ö¾î¸¦ ÀÔ·ÂÇØº¸¼¼¿ä.", required = false)
+    @Schema(description = "í†µí•©ê²€ìƒ‰ í‚¤ì›Œë“œ", example = "ê²€ìƒ‰ì–´ë¥¼ ì…ë ¥í•´ë³´ì„¸ìš”.", required = false)
     private String keyword;
     
-    @Schema(description = "¾ğ¾îÄÚµå", example = "KR", required = false)
+    @Schema(description = "ì–¸ì–´ì½”ë“œ", example = "KR", required = false)
     private String langCd;
     
-    @Schema(description = "Å¸ÀÔÄÚµå", example = "notice", required = false)
+    @Schema(description = "íƒ€ì…ì½”ë“œ", example = "notice", required = false)
     private String typeCd;
     
-    @Schema(description = "°Ô½Ã ½ÃÀÛÀÏ ½ÃÀÛ¹üÀ§", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ê²Œì‹œ ì‹œì‘ì¼ ì‹œì‘ë²”ìœ„", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodStartedStartDt;
     
-    @Schema(description = "°Ô½Ã ½ÃÀÛÀÏ Á¾·á¹üÀ§", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ê²Œì‹œ ì‹œì‘ì¼ ì¢…ë£Œë²”ìœ„", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodEndedStartDt;
     
-    @Schema(description = "°Ô½Ã Á¾·áÀÏ ½ÃÀÛ¹üÀ§", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ê²Œì‹œ ì¢…ë£Œì¼ ì‹œì‘ë²”ìœ„", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodStartedEndDt;
     
-    @Schema(description = "°Ô½Ã ½ÃÀÛÀÏ Á¾·á¹üÀ§", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ê²Œì‹œ ì‹œì‘ì¼ ì¢…ë£Œë²”ìœ„", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodEndedEndDt;
     
-    @Schema(description = "µî·ÏÀÏ °Ë»ö ½ÃÀÛ¹üÀ§", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ë“±ë¡ì¼ ê²€ìƒ‰ ì‹œì‘ë²”ìœ„", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String createdStartDt;
     
-    @Schema(description = "µî·ÏÀÏ °Ë»ö Á¾·á¹üÀ§", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ë“±ë¡ì¼ ê²€ìƒ‰ ì¢…ë£Œë²”ìœ„", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String createdEndDt;
     
-    @Schema(description = "¼öÁ¤ÀÏ °Ë»ö ½ÃÀÛ¹üÀ§", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ìˆ˜ì •ì¼ ê²€ìƒ‰ ì‹œì‘ë²”ìœ„", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String updatedStartDt;
     
-    @Schema(description = "¼öÁ¤ÀÏ °Ë»ö Á¾·á¹üÀ§", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ìˆ˜ì •ì¼ ê²€ìƒ‰ ì¢…ë£Œë²”ìœ„", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String updatedEndDt;
         
-    @Schema(description = "°Ô½Ã ½ÃÀÛÀÏ", example = "2022-01-01 00:00:00", required = false)
+    @Schema(description = "ê²Œì‹œ ì‹œì‘ì¼", example = "2022-01-01 00:00:00", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodStartDt;
 
-    @Schema(description = "°Ô½Ã Á¾·áÀÏ", example = "2022-12-31 23:59:59", required = false)
+    @Schema(description = "ê²Œì‹œ ì¢…ë£Œì¼", example = "2022-12-31 23:59:59", required = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd tt:mm:hh", iso = DateTimeFormat.ISO.DATE_TIME)
     private String periodEndDt;
     
-    @Schema(description = "»ç¿ë¿©ºÎ", example = "Y", required = false)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ì‚¬ìš©ì—¬ë¶€", example = "Y", required = false)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String useYn;
     
-    @Schema(description = "»èÁ¦¿©ºÎ", example = "N", required = false)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ì‚­ì œì—¬ë¶€", example = "N", required = false)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String delYn;
 
-    @Schema(description = "À¯Àú °íÀ¯¹øÈ£", example = "1", required = false)
-    @Positive(message = "memberSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ìœ ì € ê³ ìœ ë²ˆí˜¸", example = "1", required = false)
+    @Positive(message = "memberSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer memberSeq;
     
 }

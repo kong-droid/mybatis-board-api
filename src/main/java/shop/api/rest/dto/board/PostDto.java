@@ -21,26 +21,26 @@ import shop.api.rest.dto.common.CommonSearchDto;
 @Schema(description = "Post")
 public class PostDto {
 	
-    @Schema(description = "°Ô½Ã±Û °íÀ¯¹øÈ£", required = true)
-    @Positive(message = "postSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê²Œì‹œê¸€ ê³ ìœ ë²ˆí˜¸", required = true)
+    @Positive(message = "postSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer postSeq;
     
-    @Schema(description = "°Ô½ÃÆÇ °íÀ¯¹øÈ£", required = true)
-    @Positive(message = "boardSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê²Œì‹œíŒ ê³ ìœ ë²ˆí˜¸", required = true)
+    @Positive(message = "boardSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer boardSeq;
     
-    @Schema(description = "°Ô½Ã±Û ½æ³×ÀÏ", required = false)
+    @Schema(description = "ê²Œì‹œê¸€ ì¸ë„¤ì¼", required = false)
     private String thumbnail;
     
-    @Schema(description = "°Ô½Ã±Û Á¦¸ñ", required = true)
+    @Schema(description = "ê²Œì‹œê¸€ ì œëª©", required = true)
     private String title;
     
-    @Schema(description = "°øÁö»çÇ× ¿©ºÎ", required = false)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê³µì§€ì‚¬í•­ ì—¬ë¶€", required = false)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String noticeYn;
     
-    @Schema(description = "ºñ¹Ğ±Û ¿©ºÎ", required = false)
-    @Pattern(regexp = "^(Y|N)$", message = "'Y' ¶Ç´Â 'N' ÀÌ ÀÔ·ÂµÇ¾î¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ë¹„ë°€ê¸€ ì—¬ë¶€", required = false)
+    @Pattern(regexp = "^(Y|N)$", message = "'Y' ë˜ëŠ” 'N' ì´ ì…ë ¥ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.")
     private String secretYn;
     
     private CommonHandleDto handle;

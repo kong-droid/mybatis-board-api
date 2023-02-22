@@ -21,23 +21,23 @@ import shop.api.rest.dto.common.CommonSearchDto;
 @Schema(description = "Comment")
 public class CommentDto {
 	
-    @Schema(description = "´ñ±Û °íÀ¯¹øÈ£", example = "1", required = false)
-    @Positive(message = "commentSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ëŒ“ê¸€ ê³ ìœ ë²ˆí˜¸", example = "1", required = false)
+    @Positive(message = "commentSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer commentSeq;
     
-    @Schema(description = "°Ô½Ã±Û °íÀ¯¹øÈ£", example = "1", required = true)
-    @Positive(message = "postSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ê²Œì‹œê¸€ ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @Positive(message = "postSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer postSeq;
     
-    @Schema(description = "ºÎ¸ğ ´ñ±Û °íÀ¯¹øÈ£", example = "1", required = true)
-    @PositiveOrZero(message = "parentsNo´Â 0ÀÌ°Å³ª ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ë¶€ëª¨ ëŒ“ê¸€ ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @PositiveOrZero(message = "parentsNoëŠ” 0ì´ê±°ë‚˜ ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer parentsNo;
     
-    @Schema(description = "´ñ±Û µª½º", example = "1", required = true)
-    @Positive(message = "depsNo´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ëŒ“ê¸€ ëìŠ¤", example = "1", required = true)
+    @Positive(message = "depsNoëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer depsNo;
     
-    @Schema(description = "´ñ±Û", example = "´ñ±Û ³»¿ëÀ» ÀÔ·ÂÇÏ¼¼¿ä", required = true)
+    @Schema(description = "ëŒ“ê¸€", example = "ëŒ“ê¸€ ë‚´ìš©ì„ ì…ë ¥í•˜ì„¸ìš”", required = true)
     private String comment;
     
     private CommonHandleDto handle;

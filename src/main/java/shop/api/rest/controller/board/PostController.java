@@ -27,14 +27,14 @@ import shop.api.rest.util.MapUtil;
 @Validated
 @RestController
 @RequestMapping("/post")
-@Tag(name = "post-controller", description = "°Ô½Ã±Û")
+@Tag(name = "post-controller", description = "ê²Œì‹œê¸€")
 public class PostController {
 	
 	@Autowired
 	private PostService postService;
 	
     @PostMapping("/r")
-    @Operation(summary = "°Ô½Ã±Û ¸ñ·Ï")
+    @Operation(summary = "ê²Œì‹œê¸€ ëª©ë¡")
     public ApiResult getPosts (
         @RequestBody @Valid final PostDto req
     ) {
@@ -42,9 +42,9 @@ public class PostController {
     }
     
     @GetMapping("/r/{postSeq}")
-    @Operation(summary = "°Ô½Ã±Û Á¶È¸")
+    @Operation(summary = "ê²Œì‹œê¸€ ì¡°íšŒ")
     public ApiResult getPost ( 
-        @PathVariable @Positive(message = "postSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.") @Parameter(description = "°Ô½Ã±Û °íÀ¯¹øÈ£", example = "1") Integer postSeq
+        @PathVariable @Positive(message = "postSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.") @Parameter(description = "ê²Œì‹œê¸€ ê³ ìœ ë²ˆí˜¸", example = "1") Integer postSeq
     ) {
         Map<String, Object> requestMap = new HashMap<String, Object>();
         requestMap.put("postSeq", postSeq);
@@ -52,7 +52,7 @@ public class PostController {
     }
     
     @PostMapping("/a")
-    @Operation(summary = "°Ô½Ã±Û µî·Ï")
+    @Operation(summary = "ê²Œì‹œê¸€ ë“±ë¡")
     public ApiResult addPost (
         @RequestBody @Valid final PostDto req
     ) {
@@ -60,7 +60,7 @@ public class PostController {
     }
     
     @PostMapping("/m")
-    @Operation(summary = "°Ô½Ã±Û ¼öÁ¤")
+    @Operation(summary = "ê²Œì‹œê¸€ ìˆ˜ì •")
     public ApiResult setPost (
         @RequestBody @Valid final PostDto req
     ) {        
@@ -68,7 +68,7 @@ public class PostController {
     }
     
     @PostMapping("/d-l")
-    @Operation(summary = "°Ô½Ã±Û ³í¸®Àû »èÁ¦")
+    @Operation(summary = "ê²Œì‹œê¸€ ë…¼ë¦¬ì  ì‚­ì œ")
     public ApiResult logicalRemovePost (
         @RequestBody @Valid final PostDto req    
     ) {
@@ -76,7 +76,7 @@ public class PostController {
     }   
     
     @PostMapping("/d-p")
-    @Operation(summary = "°Ô½Ã±Û ¹°¸®Àû »èÁ¦")
+    @Operation(summary = "ê²Œì‹œê¸€ ë¬¼ë¦¬ì  ì‚­ì œ")
     public ApiResult physicalRemovePost (
         @RequestBody @Valid final PostDto req
     ) {

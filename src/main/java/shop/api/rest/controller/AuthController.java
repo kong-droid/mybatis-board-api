@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import shop.api.rest.dto.auth.AuthDto;
-import shop.api.rest.dto.memo.MemoDto;
 import shop.api.rest.response.ApiResult;
 import shop.api.rest.service.AuthService;
 import shop.api.rest.util.MapUtil;
@@ -24,14 +23,14 @@ import shop.api.rest.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-@Tag(name = "auth-controller", description = "ÀÎÁõ")
+@Tag(name = "auth-controller", description = "ì¸ì¦")
 public class AuthController {
 	
 	@Autowired
 	AuthService authService;
 	
     @PostMapping("/authentication")
-    @Operation(summary = "·Î±×ÀÎ")
+    @Operation(summary = "ë¡œê·¸ì¸")
     public ApiResult authentication (
         @RequestBody @Valid final AuthDto req
     ) {
@@ -39,7 +38,7 @@ public class AuthController {
     } 
 
     @PostMapping("/duplicate-check")
-    @Operation(summary = "¾ÆÀÌµğ Áßº¹Ã¼Å©")
+    @Operation(summary = "ì•„ì´ë”” ì¤‘ë³µì²´í¬")
     public ApiResult getMemberByDuplicateCheck (
         @RequestBody @Valid final AuthDto req
     ) {
@@ -47,7 +46,7 @@ public class AuthController {
     } 
 
     @PostMapping("/change-password")    
-    @Operation(summary = "ºñ¹Ğ¹øÈ£ ¼öÁ¤")
+    @Operation(summary = "ë¹„ë°€ë²ˆí˜¸ ìˆ˜ì •")
     @ApiResponse(code = 200, message = "valid")
     public void setPassword (
         @RequestBody @Valid final AuthDto req        

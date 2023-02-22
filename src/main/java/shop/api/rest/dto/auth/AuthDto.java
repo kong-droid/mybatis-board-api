@@ -16,26 +16,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "È¸¿øÁ¤º¸")
+@Schema(description = "íšŒì›ì •ë³´")
 public class AuthDto {
 
-    @Schema(description = "À¯Àú °íÀ¯¹øÈ£", example = "1", required = true)
-    @Positive(message = "memberSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ìœ ì € ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @Positive(message = "memberSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer memberSeq;
     
-    @Schema(description = "À¯Àú ¾ÆÀÌµğ", example = "admin")
+    @Schema(description = "ìœ ì € ì•„ì´ë””", example = "admin")
     private String id;
     
-    @Schema(description = "ºñ¹Ğ¹øÈ£", example = "amugae1234$%")
-//    @Pattern(message = "ºñ¹Ğ¹øÈ£´Â ¿µ¼Ò¹®ÀÚ, ¼ıÀÚ, Æ¯¼ö¹®ÀÚ(!@#$%^&*)¸¦ Æ÷ÇÔÇÑ 6~20ÀÚÀÌ³»¿©¾ß ÇÕ´Ï´Ù.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Schema(description = "ë¹„ë°€ë²ˆí˜¸", example = "amugae1234$%")
+//    @Pattern(message = "ë¹„ë°€ë²ˆí˜¸ëŠ” ì˜ì†Œë¬¸ì, ìˆ«ì, íŠ¹ìˆ˜ë¬¸ì(!@#$%^&*)ë¥¼ í¬í•¨í•œ 6~20ìì´ë‚´ì—¬ì•¼ í•©ë‹ˆë‹¤.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String password;
     
-    @Schema(description = "»õ ºñ¹Ğ¹øÈ£", example = "amugae1234$%")
-//    @Pattern(message = "ºñ¹Ğ¹øÈ£´Â ¿µ¼Ò¹®ÀÚ, ¼ıÀÚ, Æ¯¼ö¹®ÀÚ(!@#$%^&*)¸¦ Æ÷ÇÔÇÑ 6~20ÀÚÀÌ³»¿©¾ß ÇÕ´Ï´Ù.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Schema(description = "ìƒˆ ë¹„ë°€ë²ˆí˜¸", example = "amugae1234$%")
+//    @Pattern(message = "ë¹„ë°€ë²ˆí˜¸ëŠ” ì˜ì†Œë¬¸ì, ìˆ«ì, íŠ¹ìˆ˜ë¬¸ì(!@#$%^&*)ë¥¼ í¬í•¨í•œ 6~20ìì´ë‚´ì—¬ì•¼ í•©ë‹ˆë‹¤.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String newPassword;
 
-    @Schema(description = "±âÁ¸ ºñ¹Ğ¹øÈ£", example = "amugae5678!@")
-//    @Pattern(message = "ºñ¹Ğ¹øÈ£´Â ¿µ¼Ò¹®ÀÚ, ¼ıÀÚ, Æ¯¼ö¹®ÀÚ(!@#$%^&*)¸¦ Æ÷ÇÔÇÑ 6~20ÀÚÀÌ³»¿©¾ß ÇÕ´Ï´Ù.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Schema(description = "ê¸°ì¡´ ë¹„ë°€ë²ˆí˜¸", example = "amugae5678!@")
+//    @Pattern(message = "ë¹„ë°€ë²ˆí˜¸ëŠ” ì˜ì†Œë¬¸ì, ìˆ«ì, íŠ¹ìˆ˜ë¬¸ì(!@#$%^&*)ë¥¼ í¬í•¨í•œ 6~20ìì´ë‚´ì—¬ì•¼ í•©ë‹ˆë‹¤.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String oldPassword;
     
 }

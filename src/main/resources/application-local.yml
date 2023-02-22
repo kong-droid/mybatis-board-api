@@ -20,7 +20,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 1000
+  port: 2000
   
 properties:
   aesKey: zeedeco1234!@#$%

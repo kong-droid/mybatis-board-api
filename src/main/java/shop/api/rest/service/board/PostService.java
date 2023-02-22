@@ -52,7 +52,7 @@ public class PostService {
             responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
         } else {
             responseMap = dao.dbDetail("post.getPosts", requestMap); 
-            // Á¶È¸¼ö
+            // ï¿½ï¿½È¸ï¿½ï¿½
             if(!CollectionUtils.isEmpty(responseMap)) {
                 this.setPostForViewCount(requestMap);
                 

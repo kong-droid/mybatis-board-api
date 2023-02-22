@@ -24,13 +24,13 @@ import shop.api.rest.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/memo")
-@Tag(name = "memo-controller", description = "¸Ş¸ğ")
+@Tag(name = "memo-controller", description = "ë©”ëª¨")
 public class MemoController {
 	
 	private final MemoService memoService;
 	
 	@PostMapping("/r")
-	@Operation(summary = "¸Ş¸ğ Á¶È¸")
+	@Operation(summary = "ë©”ëª¨ ì¡°íšŒ")
 	public ApiResult getMemos (
 		@RequestBody @Valid final MemoDto req
 	)  {
@@ -39,9 +39,9 @@ public class MemoController {
 	
 	
 	@GetMapping("/r/{memoSeq}")
-	@Operation(summary = "¸Ş¸ğ °³º°Á¶È¸")
+	@Operation(summary = "ë©”ëª¨ ê°œë³„ì¡°íšŒ")
 	public ApiResult getMemo (
-		@PathVariable @Positive(message = "memoSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.") @Parameter(description = "¸Ş¸ğ °íÀ¯¹øÈ£", example = "1") Integer memoSeq
+		@PathVariable @Positive(message = "memoSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.") @Parameter(description = "ë©”ëª¨ ê³ ìœ ë²ˆí˜¸", example = "1") Integer memoSeq
 	) {
 	    Map<String, Object> requestMap = new HashMap<String, Object>();
 	    requestMap.put("memoSeq", memoSeq);
@@ -50,7 +50,7 @@ public class MemoController {
 	
 	
 	@PostMapping("/a")
-	@Operation(summary = "¸Ş¸ğ µî·Ï")
+	@Operation(summary = "ë©”ëª¨ ë“±ë¡")
 	public ApiResult addMemo (
 		@RequestBody @Valid final MemoDto req
 	) {
@@ -58,7 +58,7 @@ public class MemoController {
 	} 
 
     @PostMapping("/m")
-    @Operation(summary = "¸Ş¸ğ ¼öÁ¤")
+    @Operation(summary = "ë©”ëª¨ ìˆ˜ì •")
     public ApiResult setMemo (
         @RequestBody @Valid final MemoDto req
     ) {
@@ -66,9 +66,9 @@ public class MemoController {
     } 
 
 	@PostMapping("/d/{memoSeq}")	
-	@Operation(summary = "¸Ş¸ğ »èÁ¦")
+	@Operation(summary = "ë©”ëª¨ ì‚­ì œ")
 	public ApiResult physicalRemoveMemo (
-        @PathVariable @Positive(message = "memoSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.") @Parameter(description = "¸Ş¸ğ °íÀ¯¹øÈ£", example = "1") Integer memoSeq        
+        @PathVariable @Positive(message = "memoSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.") @Parameter(description = "ë©”ëª¨ ê³ ìœ ë²ˆí˜¸", example = "1") Integer memoSeq        
 	) {
        Map<String, Object> requestMap = new HashMap<String, Object>();
        requestMap.put("memoSeq", memoSeq);

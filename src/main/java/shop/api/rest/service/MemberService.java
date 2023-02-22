@@ -15,7 +15,6 @@ import javax.crypto.NoSuchPaddingException;
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.ResourceAccessException;
 
 import lombok.RequiredArgsConstructor;
 import shop.api.rest.dao.CustomDao;

@@ -26,14 +26,14 @@ import shop.api.rest.util.MapUtil;
 @Validated
 @RestController
 @RequestMapping("/board")
-@Tag(name = "board-controller", description = "°Ô½ÃÆÇ")
+@Tag(name = "board-controller", description = "ê²Œì‹œíŒ")
 public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
 	
 	@PostMapping("/r")
-	@Operation(summary = "°Ô½ÃÆÇ ¸ñ·Ï")
+	@Operation(summary = "ê²Œì‹œíŒ ëª©ë¡")
     public ApiResult getBoards (
 		@RequestBody @Valid final BoardDto req
 	) {
@@ -41,9 +41,9 @@ public class BoardController {
 	}
 	
 	@GetMapping("/r/{boardSeq}")
-	@Operation(summary = "°Ô½ÃÆÇ Á¶È¸")
+	@Operation(summary = "ê²Œì‹œíŒ ì¡°íšŒ")
     public ApiResult getBoard ( 
-        @PathVariable @Positive(message = "boardSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.") @Parameter(description = "°Ô½ÃÆÇ °íÀ¯¹øÈ£", example = "1") Integer boardSeq
+        @PathVariable @Positive(message = "boardSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.") @Parameter(description = "ê²Œì‹œíŒ ê³ ìœ ë²ˆí˜¸", example = "1") Integer boardSeq
     ) {
 	    Map<String, Object> requestMap = new HashMap<String, Object>();
 	    requestMap.put("boardSeq", boardSeq);
@@ -51,7 +51,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/a")
-	@Operation(summary = "°Ô½ÃÆÇ µî·Ï")
+	@Operation(summary = "ê²Œì‹œíŒ ë“±ë¡")
 	public ApiResult addBoard (
         @RequestBody @Valid final BoardDto req
     ) {
@@ -59,7 +59,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/m")
-	@Operation(summary = "°Ô½ÃÆÇ ¼öÁ¤")
+	@Operation(summary = "ê²Œì‹œíŒ ìˆ˜ì •")
     public ApiResult setBoard (
         @RequestBody @Valid final BoardDto req
     ) {        
@@ -67,7 +67,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/d-l")
-	@Operation(summary = "°Ô½ÃÆÇ ³í¸®Àû »èÁ¦")
+	@Operation(summary = "ê²Œì‹œíŒ ë…¼ë¦¬ì  ì‚­ì œ")
     public ApiResult logicalRemoveBoard (
         @RequestBody @Valid final BoardDto req    
     ) {
@@ -75,7 +75,7 @@ public class BoardController {
 	}	
 	
 	@PostMapping("/d-p")
-	@Operation(summary = "°Ô½ÃÆÇ ¹°¸®Àû »èÁ¦")
+	@Operation(summary = "ê²Œì‹œíŒ ë¬¼ë¦¬ì  ì‚­ì œ")
     public ApiResult physicalRemoveBoard (
         @RequestBody @Valid final BoardDto req
     ) {

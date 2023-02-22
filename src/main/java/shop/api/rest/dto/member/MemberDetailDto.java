@@ -10,21 +10,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import shop.api.rest.dto.common.CommonHandleDto;
-import shop.api.rest.dto.common.CommonSearchDto;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "È¸¿øÁ¤º¸ »ó¼¼")
+@Schema(description = "íšŒì›ì •ë³´ ìƒì„¸")
 public class MemberDetailDto {
 
-    @Schema(description = "È¸¿øÁ¤º¸ »ó¼¼ °íÀ¯¹øÈ£", example = "1", required = true)
-    @Positive(message = "detailSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "íšŒì›ì •ë³´ ìƒì„¸ ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @Positive(message = "detailSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer detailSeq;
     
-    @Schema(description = "self_introduce", example = "ÀÚ±â¼Ò°³¸¦ ÀÔ·ÂÇÏ¼¼¿ä.", required = true)
+    @Schema(description = "self_introduce", example = "ìê¸°ì†Œê°œë¥¼ ì…ë ¥í•˜ì„¸ìš”.", required = true)
     private String category;
 
     private CommonHandleDto handle;

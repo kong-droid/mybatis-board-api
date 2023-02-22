@@ -18,7 +18,7 @@ import org.springframework.util.CollectionUtils;
 /**
  * @author KMH
  * 22.02.02
- * ΎΟΘ£Θ­ / ΊΉΘ£Θ­ Ε¬·΅½Ί 
+ * μ•”νΈν™” / λ³µνΈν™” ν΄λμ¤ 
  **/
 @Component
 public class MemberEnDecoder {
@@ -32,7 +32,7 @@ public class MemberEnDecoder {
         return requestMap;
     }
     
-    /** ΊΉΘ£Θ­ **/
+    /** λ³µνΈν™” **/
     public Map<String, Object> decodeMember(Map<String, Object> responseMap) {
         if(!CollectionUtils.isEmpty(responseMap)) {
             if(responseMap.get("email") != null) responseMap.put("email", aes256Util.aesDecode((String) responseMap.get("email")));

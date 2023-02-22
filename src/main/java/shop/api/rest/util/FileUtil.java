@@ -15,7 +15,7 @@ import org.springframework.util.FileCopyUtils;
 /**
  * @author user : KMH
  * 22.02.05
- * ÆÄÀÏ °ü¸®
+ * íŒŒì¼ ê´€ë¦¬
  * **/
 public class FileUtil {
 	
@@ -33,15 +33,15 @@ public class FileUtil {
 
 	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws IOException {
 		
-		//È®ÀåÀÚ ÃßÃâ
+		//í™•ì¥ì ì¶”ì¶œ
 		int pos = originalName.lastIndexOf(".");
 		String ext = originalName.substring(pos + 1);
-		//ÀúÀåÆÄÀÏ¸í »ı¼º (UUID)
+		//ì €ì¥íŒŒì¼ëª… ìƒì„± (UUID)
 		String savedName = UUID.randomUUID().toString().replaceAll("-", "") + "." + ext;
-		//savefullpathName¼³Á¤
+		//savefullpathNameì„¤ì •
 		String uploadedFullPathName = uploadPath + File.separator + savedName;
 		uploadedFullPathName = uploadedFullPathName.substring(uploadPath.length()).replace(File.separatorChar, '/');
-		//ÆÄÀÏ ÀúÀå
+		//íŒŒì¼ ì €ì¥
 		File target = new File(uploadPath, savedName);
 		FileCopyUtils.copy(fileData, target);
 
@@ -52,7 +52,7 @@ public class FileUtil {
 		
 		File dirPath = new File(uploadPath); 
 
-		// ±âº»°æ·Î ÆĞ½º°¡ ¾øÀ¸¸é ¸¸µé¾îÁØ´Ù.
+		// ê¸°ë³¸ê²½ë¡œ íŒ¨ìŠ¤ê°€ ì—†ìœ¼ë©´ ë§Œë“¤ì–´ì¤€ë‹¤.
 		if (!dirPath.exists()) {
 			dirPath.mkdir();
 		}
@@ -83,7 +83,7 @@ public class FileUtil {
 		return uploadPath;
 	}
 	
-	// ÆÄÀÏ¸í (UTF-8 ÀüÈ¯)
+	// íŒŒì¼ëª… (UTF-8 ì „í™˜)
     public static String transUtf8FileName(String fileName) {
         byte[] transFileName = fileName.getBytes(StandardCharsets.UTF_8);
         return URLEncoder.encode(new String(transFileName, StandardCharsets.UTF_8), StandardCharsets.UTF_8);

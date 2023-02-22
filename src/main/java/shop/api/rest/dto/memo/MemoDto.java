@@ -17,14 +17,14 @@ import shop.api.rest.dto.common.CommonSearchDto;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@Schema(description = "¸Ş¸ğ")
+@Schema(description = "ë©”ëª¨")
 public class MemoDto {
 
-    @Schema(description = "¸Ş¸ğ °íÀ¯¹øÈ£", example = "1", required = true)
-    @Positive(message = "memoSeq´Â ¾ç¼ö¿©¾ß ÇÕ´Ï´Ù.")
+    @Schema(description = "ë©”ëª¨ ê³ ìœ ë²ˆí˜¸", example = "1", required = true)
+    @Positive(message = "memoSeqëŠ” ì–‘ìˆ˜ì—¬ì•¼ í•©ë‹ˆë‹¤.")
     private Integer memoSeq;
     
-    @Schema(description = "¸Ş¸ğÀÏ½Ã", example = "20220101", required = false)
+    @Schema(description = "ë©”ëª¨ì¼ì‹œ", example = "20220101", required = false)
     private String memoDt;
     
     private CommonHandleDto handle;
