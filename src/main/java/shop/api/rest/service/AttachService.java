@@ -34,6 +34,12 @@ public class AttachService {
 	@Value("${file.upload.location}")
     private String uploadPath;
 	
+	@Value("${file.upload.connect-path}")
+	private String connectPath;
+	   
+	@Value("${spring.profiles.active}")
+    private String activeProfile;
+	   
     public Map<String, Object> getAttaches(Map<String, Object> requestMap) {
     	Map<String, Object> responseMap = new HashMap<>();        
         List<Map<String, Object>> attaches = dao.dbDetails("attach.getAttaches", requestMap);
@@ -54,7 +60,7 @@ public class AttachService {
             requestMap.put("uuidName",      	saveName.substring(saveName.lastIndexOf("/") + 1));
             requestMap.put("fileType",          maps.getOriginalFilename().substring(maps.getOriginalFilename().lastIndexOf(".") + 1));
             requestMap.put("fileSize",          maps.getBytes().length);
-            requestMap.put("filePath",      	calPath);
+            requestMap.put("filePath",      	activeProfile.equals("local") ? calPath.replace(uploadPath, connectPath) : calPath);
             requestMap.put("tbName", 			req.getTbName());
             requestMap.put("tbSeq",         	req.getTbSeq());
             requestMap.put("tbType",         	req.getTbType());
@@ -68,7 +74,7 @@ public class AttachService {
             	Map<String, Object> responseMap = new HashMap<>();
             	responseMap.put("attachSeq", requestMap.get("attachSeq"));
             	responseMap.put("realName",  maps.getOriginalFilename());
-            	responseMap.put("fullPath",  (String)requestMap.get("filePath") + (String)requestMap.get("uuidName"));
+            	responseMap.put("fullPath",  (String)requestMap.get("filePath") + "/" + (String)requestMap.get("uuidName"));
             	attached.add(responseMap);
             }       
         }

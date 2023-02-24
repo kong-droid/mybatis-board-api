@@ -47,6 +47,7 @@ public class MemberService {
 
     public Map<String, Object> handleMember ( Map<String, Object> requestMap, boolean isAdd, String whatAct ) throws InternalResourceException, InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         Map<String, Object> responseMap = new HashMap<String, Object>();
+        Map<String, Object> handle = new HashMap<String, Object>((Map<String, Object>)requestMap.get("handle"));
         switch (whatAct) {
             case "regist":
             case "modify":
@@ -55,18 +56,17 @@ public class MemberService {
                 List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
                 if(!CollectionUtils.isEmpty(details)) {
                     details.forEach(detail -> {
-                        Map<String, Object> handleMap= (Map<String, Object>) detail.get("handle");
-                        handleMap.put("memberSeq", requestMap.get("memberSeq"));
+                        Map<String, Object> handleMap = (Map<String, Object>) detail.get("handle");
+                        handleMap.put("memberSeq", isAdd ? requestMap.get("memberSeq") : handle.get("memberSeq"));
                         if(dao.dbInsert("member.addMemberDetail", detail) < 0) new BadRequestException("Invalid Error");
                     });
                 }
                 break;
-            case "remove":
-                
+            case "remove":           
                 if(dao.dbDelete("member.removeMember", requestMap) < 0) new BadRequestException("Invalid Error");
                 break;
         }
-        responseMap.put("memberSeq", requestMap.get("memberSeq"));
+        responseMap.put("memberSeq", isAdd ? requestMap.get("memberSeq") : handle.get("memberSeq"));
         return responseMap;
     } 
 }

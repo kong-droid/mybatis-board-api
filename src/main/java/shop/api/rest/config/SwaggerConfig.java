@@ -32,7 +32,7 @@ public class SwaggerConfig {
 		return new ApiInfoBuilder()
 			.title("Kong Free Project")
 			.version("v1.0")
-			.contact(new Contact("Kong", "https://github.com/Mihyang123", "rhdalgid134@gmail.com"))
+			.contact(new Contact("Kong", "https://github.com/kong-driod", "rhdalgid134@gmail.com"))
 			.build();
 	}
 	

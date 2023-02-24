@@ -31,41 +31,50 @@ public class FileUtil {
 		return "remove files";
 	}
 
-	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws IOException {
-		
-		//확장자 추출
-		int pos = originalName.lastIndexOf(".");
-		String ext = originalName.substring(pos + 1);
-		//저장파일명 생성 (UUID)
-		String savedName = UUID.randomUUID().toString().replaceAll("-", "") + "." + ext;
-		//savefullpathName설정
-		String uploadedFullPathName = uploadPath + File.separator + savedName;
-		uploadedFullPathName = uploadedFullPathName.substring(uploadPath.length()).replace(File.separatorChar, '/');
-		//파일 저장
-		File target = new File(uploadPath, savedName);
-		FileCopyUtils.copy(fileData, target);
+    public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws IOException {
 
-		return uploadedFullPathName;
-	}
+        // 1. 확장자
+        int pos     = originalName.lastIndexOf(".");
+        String ext  = originalName.substring(pos + 1);
+
+        // 2. 파일저장명 변경
+        String savedName = UUID.randomUUID().toString().replaceAll("-", "") + "." + ext;
+
+        // 3. 파일 저장경로
+        String uploadedFullPathName = uploadPath + "/" + savedName;
+        uploadedFullPathName = uploadedFullPathName.substring(uploadPath.length());
+
+        // 4. 파일 저장
+        File target = new File(uploadPath, savedName);
+        FileCopyUtils.copy(fileData, target);
+
+        return uploadedFullPathName;
+    }
+
+    public static String uploadFile(String uploadPath, byte[] fileData) throws IOException {
+
+        //저장파일명 생성 (UUID)
+        String savedName = UUID.randomUUID().toString().replaceAll("-", "");
+
+        //파일 저장
+        File target = new File(uploadPath, savedName);
+        FileCopyUtils.copy(fileData, target);
+
+        return savedName;
+    }
 	
-	public static String calcPath(String uploadPath) {
-		
-		File dirPath = new File(uploadPath); 
+    public static String calcPath(String uploadPath) {
 
-		// 기본경로 패스가 없으면 만들어준다.
-		if (!dirPath.exists()) {
-			dirPath.mkdir();
-		}
-		
-		Calendar cal = Calendar.getInstance();
+        //기본경로 패스가 없으면 만들기.
+        File dirPath = new File(uploadPath);
 
-		String yearPath = File.separator + cal.get(Calendar.YEAR);
-		String monthPath = File.separator + new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
-		String datePath = File.separator + new DecimalFormat("00").format(cal.get(Calendar.DATE));
-		String replaceUploadPath = uploadPath.replace(File.separatorChar, '/');
+        if (!dirPath.exists()) {
+            dirPath.mkdir();
+        }
 
-		return makeDir(replaceUploadPath, yearPath + monthPath + datePath);
-	}
+        String replaceUploadPath = uploadPath.replace(File.separatorChar, '/');
+        return makeDir(replaceUploadPath, getFolderDate());
+    }
 	
 	private static String makeDir(String uploadPath, String... paths) {
 		if (new File(paths[paths.length - 1]).exists()) {
@@ -83,10 +92,17 @@ public class FileUtil {
 		return uploadPath;
 	}
 	
+   public static String getFolderDate() {
+        Calendar cal = Calendar.getInstance();
+        String yearPath     = "/" + cal.get(Calendar.YEAR);
+        String monthPath    = new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
+        String datePath     = new DecimalFormat("00").format(cal.get(Calendar.DATE));
+        return yearPath + monthPath + datePath;
+    }
+	   
 	// 파일명 (UTF-8 전환)
     public static String transUtf8FileName(String fileName) {
         byte[] transFileName = fileName.getBytes(StandardCharsets.UTF_8);
         return URLEncoder.encode(new String(transFileName, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 }
-
