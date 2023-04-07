@@ -18,7 +18,7 @@ build : gradle
 ````````````````````````````````````````````````````
 4. 배포 및 실행
 ```````````````````````````````````````````````````````````````````````````````````````````````````````````````
-운영 : Dspring.profiles.active=prod ( jar 압축 시... java -jar -Dspring.profiles.active=prod jar zeedeco-api.jar
+운영 : Dspring.profiles.active=prod ( jar 압축 시... java -jar -Dspring.profiles.active=prod jar rest-api.jar
 로컬 : (이클립스 기준)Run >configuration 에 들어가서 profile을 local 설정, Dspring.profiles.active=local
 ```````````````````````````````````````````````````````````````````````````````````````````````````````````````
 5. [front github link](https://github.com/kong-droid/test-front, "FRONT")
