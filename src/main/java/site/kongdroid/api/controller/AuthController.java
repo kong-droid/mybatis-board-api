@@ -3,7 +3,6 @@ package site.kongdroid.api.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,8 +25,7 @@ import site.kongdroid.api.util.MapUtil;
 @Tag(name = "auth-controller", description = "인증")
 public class AuthController {
 	
-	@Autowired
-	AuthService authService;
+	private final AuthService authService;
 	
     @PostMapping("/authentication")
     @Operation(summary = "로그인")

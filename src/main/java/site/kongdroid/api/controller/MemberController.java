@@ -39,8 +39,7 @@ import site.kongdroid.api.util.MapUtil;
 @Tag(name = "member-controller", description = "회원")
 public class MemberController {
 	
-	@Autowired
-	MemberService memberService;
+	private final MemberService memberService;
 	
     @PostMapping("/r")
     @Operation(summary = "회원 목록")

@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.board.PostDto;
 import site.kongdroid.api.response.ApiResult;
 import site.kongdroid.api.service.board.PostService;
@@ -26,12 +26,12 @@ import site.kongdroid.api.util.MapUtil;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/post")
 @Tag(name = "post-controller", description = "게시글")
 public class PostController {
 	
-	@Autowired
-	private PostService postService;
+	private final PostService postService;
 	
     @PostMapping("/r")
     @Operation(summary = "게시글 목록")

@@ -2,7 +2,6 @@ package site.kongdroid.api.controller.board;
 
 
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.board.CommentDto;
 import site.kongdroid.api.response.ApiResult;
 import site.kongdroid.api.service.board.CommentService;
@@ -19,12 +19,13 @@ import site.kongdroid.api.util.MapUtil;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/comment")
 @Tag(name = "comment-controller", description = "댓글")
 public class CommentController {
 	
-	@Autowired
-	private CommentService commentService;
+	
+	private final CommentService commentService;
 	
     @PostMapping("/a")
     @Operation(summary = "댓글 등록")
