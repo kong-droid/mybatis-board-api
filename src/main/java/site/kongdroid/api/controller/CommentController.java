@@ -1,4 +1,4 @@
-package site.kongdroid.api.controller.board;
+package site.kongdroid.api.controller;
 
 
 import javax.validation.Valid;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.dto.board.CommentDto;
-import site.kongdroid.api.response.ApiResult;
-import site.kongdroid.api.service.board.CommentService;
+import site.kongdroid.api.dto.request.board.CommentDto;
+import site.kongdroid.api.dto.response.ApiResult;
+import site.kongdroid.api.service.CommentService;
 import site.kongdroid.api.util.MapUtil;
 
 
@@ -21,7 +21,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
-@Tag(name = "comment-controller", description = "댓글")
+@Tag(name = "댓글", description = "댓글 관리 API")
 public class CommentController {
 	
 	

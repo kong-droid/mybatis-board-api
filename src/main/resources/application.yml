@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: local
   banner:
     location: "classpath:banner.txt" 
     charset: UTF-8
@@ -8,17 +10,34 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
-
+  
 mybatis:
   mapper-locations: mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
 server:
-  port: 2000
+  port: 8100
 
 properties:
-  aesKey: zeedeco1234!@#$%
+  aesKey: kong1234!@#$%Qwe
+  
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match: 
+  - /**  
+  
+  
     
   
   

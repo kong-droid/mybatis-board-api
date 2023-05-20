@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.auth.AuthDto;
-import site.kongdroid.api.response.ApiResult;
+import site.kongdroid.api.dto.request.auth.AuthDto;
+import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.AuthService;
 import site.kongdroid.api.util.MapUtil;
 
@@ -22,7 +22,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-@Tag(name = "auth-controller", description = "인증")
+@Tag(name = "인증", description = "사용자 인증 관련 API")
 public class AuthController {
 	
 	private final AuthService authService;
@@ -45,7 +45,7 @@ public class AuthController {
 
     @PostMapping("/change-password")    
     @Operation(summary = "비밀번호 수정")
-    @ApiResponse(code = 200, message = "valid")
+    @ApiResponse(responseCode = "200", description = "modified password.")
     public void setPassword (
         @RequestBody @Valid final AuthDto req        
     ) {

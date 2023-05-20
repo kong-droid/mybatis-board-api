@@ -1,4 +1,4 @@
-package site.kongdroid.api.dto.member;
+package site.kongdroid.api.dto.request.member;
 
 import javax.validation.constraints.Positive;
 
@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import site.kongdroid.api.dto.common.CommonHandleDto;
+import site.kongdroid.api.dto.request.common.CommonHandleDto;
 
 @Data
 @Builder

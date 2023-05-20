@@ -1,4 +1,4 @@
-package site.kongdroid.api.controller.board;
+package site.kongdroid.api.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,16 +18,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.dto.board.BoardDto;
-import site.kongdroid.api.response.ApiResult;
-import site.kongdroid.api.service.board.BoardService;
+import site.kongdroid.api.dto.request.board.BoardDto;
+import site.kongdroid.api.dto.response.ApiResult;
+import site.kongdroid.api.service.BoardService;
 import site.kongdroid.api.util.MapUtil;
 
 @Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/board")
-@Tag(name = "board-controller", description = "게시판")
+@Tag(name = "게시판", description = "게시판 관리 API")
 public class BoardController {
 		
 	private final BoardService boardService;

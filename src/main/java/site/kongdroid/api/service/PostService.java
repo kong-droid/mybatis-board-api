@@ -1,4 +1,4 @@
-package site.kongdroid.api.service.board;
+package site.kongdroid.api.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
 import site.kongdroid.api.exception.ResourceNotFoundException;
-import site.kongdroid.api.service.MemberService;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package site.kongdroid.api.dto.common;
+package site.kongdroid.api.dto.request.common;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;

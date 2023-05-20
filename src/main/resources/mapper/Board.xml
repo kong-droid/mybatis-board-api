@@ -37,68 +37,12 @@
 			AND attachment_yn= #{attachmentYn}
 		</if>					
 		<if test="search != null">
-			<if test="search.typeCd != null and !search.typeCd.equals('')">
-				AND type_cd= #{search.typeCd}
-			</if>
-			<if test="search.langCd != null and !search.langCd.equals('')">
-				AND lang_cd= #{search.langCd}
-			</if>
-			<if test="search.memberSeq != null and !search.memberSeq.equals('')">
-				AND created_no= #{search.memberSeq}
-			</if>
-			<if test="search.content != null and !search.content.equals('')">
-				AND content like CONCAT('%', #{search.content}, '%')
-			</if>
-			<if test="search.remark != null and !search.remark.equals('')">
-				AND remark like CONCAT('%', #{search.remark}, '%')
-			</if>			
 			<if test="search.keyword != null and !search.keyword.equals('')">
 				AND title like CONCAT('%', #{search.keyword}, '%')
 				OR content like CONCAT('%', #{search.keyword}, '%')
 				OR remark like CONCAT('%', #{search.keyword}, '%')
 			</if>
-			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt == null or search.periodEndedStartDt.equals(''))">
-				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedStartDt}
-			</if>
-			<if test="(search.periodStartedStartDt == null or search.periodStartedStartDt.equals('')) and (search.periodEndedStartDtt != null and !search.periodEndedStartDt.equals(''))">
-				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedStartDt}
-			</if>
-			<if test="(search.periodStartedStartDt != null and !search.periodStartedStartDt.equals('')) and (search.periodEndedStartDt != null and !search.periodEndedStartDt.equals(''))">
-				AND DATE_FORMAT(period_start_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedStartDt} AND #{search.periodEndedStartDt}
-			</if>
-			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt == null or search.periodEndedEndDt.equals(''))">
-				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.periodStartedEndDt}
-			</if>
-			<if test="(search.periodStartedEndDt == null or search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
-				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.periodEndedEndDt}
-			</if>
-			<if test="(search.periodStartedEndDt != null and !search.periodStartedEndDt.equals('')) and (search.periodEndedEndDt != null and !search.periodEndedEndDt.equals(''))">
-				AND DATE_FORMAT(period_end_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.periodStartedEndDt} AND #{search.periodEndedEndDt}
-			</if>
-			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt == null or search.createdEndDt.equals(''))">
-				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.createdStartDt}
-			</if>
-			<if test="(search.createdStartDt == null or search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
-				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.createdEndDt}
-			</if>
-			<if test="(search.createdStartDt != null and !search.createdStartDt.equals('')) and (search.createdEndDt != null and !search.createdEndDt.equals(''))">
-				AND DATE_FORMAT(created_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.createdStartDt} AND #{search.createdEndDt}
-			</if>
-			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt == null or search.updatedEndDt.equals(''))">
-				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{search.updatedStartDt}
-			</if>
-			<if test="(search.updatedStartDt == null or search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
-				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{search.updatedEndDt}
-			</if>
-			<if test="(search.updatedStartDt != null and !search.updatedStartDt.equals('')) and (search.updatedEndDt != null and !search.updatedEndDt.equals(''))">
-				AND DATE_FORMAT(updated_dt, '%Y-%m-%d %H:%i:%s') BETWEEN #{search.updatedStartDt} AND #{search.updatedEndDt}
-			</if>
-			<if test="search.useYn != null and !search.useYn.equals('')">
-				AND use_yn= #{search.useYn}
-			</if>
-			<if test="search.delYn != null and !search.delYn.equals('')">
-				AND del_yn= #{search.delYn}
-			</if>
+			<include refid="commonSearch.getWhere"/>
 		</if>
 	</sql>
 	

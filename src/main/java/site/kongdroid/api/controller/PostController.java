@@ -1,4 +1,4 @@
-package site.kongdroid.api.controller.board;
+package site.kongdroid.api.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +18,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.dto.board.PostDto;
-import site.kongdroid.api.response.ApiResult;
-import site.kongdroid.api.service.board.PostService;
+import site.kongdroid.api.dto.request.board.PostDto;
+import site.kongdroid.api.dto.response.ApiResult;
+import site.kongdroid.api.service.PostService;
 import site.kongdroid.api.util.MapUtil;
 
 
@@ -28,7 +28,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-@Tag(name = "post-controller", description = "게시글")
+@Tag(name = "게시글", description = "게시글 관리 API")
 public class PostController {
 	
 	private final PostService postService;

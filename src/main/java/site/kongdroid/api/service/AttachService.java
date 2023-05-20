@@ -19,8 +19,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.attach.AttachDto;
 import site.kongdroid.api.dao.CustomDao;
+import site.kongdroid.api.dto.request.attach.AttachDto;
 import site.kongdroid.api.exception.BadRequestException;
 import site.kongdroid.api.exception.ResourceNotFoundException;
 import site.kongdroid.api.util.FileUtil;
@@ -34,8 +34,6 @@ public class AttachService {
 	@Value("${file.upload.location}")
     private String uploadPath;
 	
-	@Value("${file.upload.connect-path}")
-	private String connectPath;
 	   
 	@Value("${spring.profiles.active}")
     private String activeProfile;
@@ -56,15 +54,15 @@ public class AttachService {
             String saveName = FileUtil.uploadFile(calPath, maps.getOriginalFilename(), maps.getBytes());
             Map<String, Object> requestMap = new HashMap<>();
 
-            requestMap.put("realName",          maps.getOriginalFilename());
-            requestMap.put("uuidName",      	saveName.substring(saveName.lastIndexOf("/") + 1));
-            requestMap.put("fileType",          maps.getOriginalFilename().substring(maps.getOriginalFilename().lastIndexOf(".") + 1));
-            requestMap.put("fileSize",          maps.getBytes().length);
-            requestMap.put("filePath",      	activeProfile.equals("local") ? calPath.replace(uploadPath, connectPath) : calPath);
-            requestMap.put("tbName", 			req.getTbName());
-            requestMap.put("tbSeq",         	req.getTbSeq());
-            requestMap.put("tbType",         	req.getTbType());
-            requestMap.put("memberSeq",         req.getMemberSeq());
+            requestMap.put("realName", maps.getOriginalFilename());
+            requestMap.put("uuidName", saveName.substring(saveName.lastIndexOf("/") + 1));
+            requestMap.put("fileType", maps.getOriginalFilename().substring(maps.getOriginalFilename().lastIndexOf(".") + 1));
+            requestMap.put("fileSize", maps.getBytes().length);
+            requestMap.put("filePath", calPath);
+            requestMap.put("tbName", req.getTbName());
+            requestMap.put("tbSeq", req.getTbSeq());
+            requestMap.put("tbType", req.getTbType());
+            requestMap.put("memberSeq", req.getMemberSeq());
             
             int effectRow = dao.dbInsert("attach.addAttach", requestMap);
             
@@ -73,8 +71,8 @@ public class AttachService {
             } else {
             	Map<String, Object> responseMap = new HashMap<>();
             	responseMap.put("attachSeq", requestMap.get("attachSeq"));
-            	responseMap.put("realName",  maps.getOriginalFilename());
-            	responseMap.put("fullPath",  (String)requestMap.get("filePath") + "/" + (String)requestMap.get("uuidName"));
+            	responseMap.put("realName", maps.getOriginalFilename());
+            	responseMap.put("fullPath", String.valueOf(requestMap.get("filePath")) + "/" + String.valueOf(requestMap.get("uuidName")));
             	attached.add(responseMap);
             }       
         }
@@ -90,7 +88,7 @@ public class AttachService {
         if(CollectionUtils.isEmpty(attach)) {
             throw new ResourceNotFoundException("Not Found");
         } else {
-            String fullPath         = String.valueOf(attach.get("fullPath"));
+            String fullPath = String.valueOf(attach.get("fullPath"));
             String originalFileName = FileUtil.transUtf8FileName(String.valueOf(attach.get("realPath")));
             File file = new File(fullPath);
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));

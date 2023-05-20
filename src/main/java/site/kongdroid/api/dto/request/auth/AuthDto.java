@@ -1,4 +1,4 @@
-package site.kongdroid.api.auth;
+package site.kongdroid.api.dto.request.auth;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -27,15 +27,15 @@ public class AuthDto {
     private String id;
     
     @Schema(description = "비밀번호", example = "amugae1234$%")
-//    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String password;
     
     @Schema(description = "새 비밀번호", example = "amugae1234$%")
-//    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String newPassword;
 
     @Schema(description = "기존 비밀번호", example = "amugae5678!@")
-//    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
+    @Pattern(message = "비밀번호는 영소문자, 숫자, 특수문자(!@#$%^&*)를 포함한 6~20자이내여야 합니다.", regexp = "^([0-9a-z!@#$%^&*]{6,20})$")
     private String oldPassword;
     
 }

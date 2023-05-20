@@ -1,4 +1,4 @@
-package site.kongdroid.api.dto.member;
+package site.kongdroid.api.dto.request.member;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import site.kongdroid.api.dto.common.CommonHandleDto;
-import site.kongdroid.api.dto.common.CommonSearchDto;
+import site.kongdroid.api.dto.request.common.CommonHandleDto;
+import site.kongdroid.api.dto.request.common.CommonSearchDto;
 
 @Data
 @Builder

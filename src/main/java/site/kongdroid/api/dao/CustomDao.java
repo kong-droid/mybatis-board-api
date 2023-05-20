@@ -3,8 +3,8 @@ package site.kongdroid.api.dao;
 import java.util.List;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 /**
  * @author KMH 
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
  * CustomDao를 통해 Map을 알맞은 mapper에 주입
  **/
 @Repository
+@RequiredArgsConstructor
 public class CustomDao {
 	
-	@Autowired
-	SqlSession sqlSession;
+	private final SqlSession sqlSession;
 
 	// 목록
 	public List<Map<String, Object>> dbDetails(String mapper, Map<String, Object> map) {

@@ -8,4 +8,3 @@ spring:
 file:
   upload:
     location: /data
-    connect-path: /data

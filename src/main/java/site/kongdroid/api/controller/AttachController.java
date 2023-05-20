@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.attach.AttachDto;
-import site.kongdroid.api.response.ApiResult;
+import site.kongdroid.api.dto.request.attach.AttachDto;
+import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.AttachService;
 import site.kongdroid.api.util.MapUtil;
 
@@ -33,7 +33,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/attach")
-@Tag(name = "attach-controller", description = "파일첨부")
+@Tag(name = "파일첨부", description = "파일첨부 관리 API")
 public class AttachController {
 	
 	private final AttachService attachService;
@@ -52,7 +52,7 @@ public class AttachController {
 	    return ApiResult.successBuilder(attachService.addAttach(req));
 	} 
 	
-	@ApiResponse(code = 200, message = "valid")
+	@ApiResponse(responseCode = "200", description = "delete file.")
 	@PostMapping("/d-p/{attachSeq}")
 	@Operation(summary = "파일 삭제")
 	public ApiResult physicalRemoveAttach(@Valid @PathVariable int attachSeq) {

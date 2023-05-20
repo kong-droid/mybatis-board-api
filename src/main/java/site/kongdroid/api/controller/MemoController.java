@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.dto.memo.MemoDto;
-import site.kongdroid.api.response.ApiResult;
+import site.kongdroid.api.dto.request.memo.MemoDto;
+import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.MemoService;
 import site.kongdroid.api.util.MapUtil;
 
@@ -24,7 +24,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/memo")
-@Tag(name = "memo-controller", description = "메모")
+@Tag(name = "메모", description = "메모 관리 API")
 public class MemoController {
 	
 	private final MemoService memoService;

@@ -13,7 +13,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +26,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import site.kongdroid.api.dto.member.MemberDto;
-import site.kongdroid.api.response.ApiResult;
+import site.kongdroid.api.dto.request.member.MemberDto;
+import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.MemberService;
 import site.kongdroid.api.util.MapUtil;
 
@@ -36,7 +35,7 @@ import site.kongdroid.api.util.MapUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
-@Tag(name = "member-controller", description = "회원")
+@Tag(name = "회원", description = "회원 관리 API")
 public class MemberController {
 	
 	private final MemberService memberService;

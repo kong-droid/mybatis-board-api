@@ -1,4 +1,4 @@
-package site.kongdroid.api.service.board;
+package site.kongdroid.api.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;

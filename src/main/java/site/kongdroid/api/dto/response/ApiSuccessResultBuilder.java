@@ -1,4 +1,4 @@
-package site.kongdroid.api.response;
+package site.kongdroid.api.dto.response;
 
 public class ApiSuccessResultBuilder {
     

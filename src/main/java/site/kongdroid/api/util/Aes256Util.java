@@ -50,11 +50,10 @@ public class Aes256Util {
         return builder.toString();
     }
 
-    // ?��?��?�� 진행
-    public String aesEncode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
+    // encryption
+    public String aesEncode(String str) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-        
-    	//key = value("")?�� 경우 
+
         if("".equals(str) ) {
             return str;
         }
@@ -68,7 +67,7 @@ public class Aes256Util {
         return Base64.encodeBase64String(encrypted);
     }
 
-    // 복호?��
+    // decryption
     public String aesDecode(String str) {
 
         if(str == null || "".equals(str)) {
@@ -84,17 +83,17 @@ public class Aes256Util {
             byte[] byteStr = Base64.decodeBase64(encodedText);
             decrypt = new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         } catch (NoSuchPaddingException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         } catch (InvalidKeyException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         } catch (IllegalBlockSizeException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         } catch (BadPaddingException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         } catch (InvalidAlgorithmParameterException e) {
-            throw new ResourceAccessException("?��?��?���? ?��?��?��?��?��?��.");
+            throw new ResourceAccessException("encryption or decryption failed.");
         }
 
         return decrypt;

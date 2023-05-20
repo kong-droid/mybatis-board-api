@@ -1,4 +1,4 @@
-package site.kongdroid.api.filter;
+package site.kongdroid.api.config;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class SimpleCorsFilter implements Filter {
+public class CorsFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -20,7 +20,7 @@ public class SimpleCorsFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
 
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, OPTIONS");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         res.setHeader("Access-Control-Expose-Headers", "Authorization, X-Total-Count, Link");
         res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept," +
                 " Accept-Encoding, Accept-Language, Host, Referer, Connection, User-Agent, authorization, sw-useragent, sw-version");
