@@ -2,6 +2,7 @@ package site.kongdroid.api.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.board.PostDto;
 import site.kongdroid.api.dto.response.ApiResult;
@@ -33,53 +35,41 @@ public class PostController {
 	
 	private final PostService postService;
 	
-    @PostMapping("/r")
+    @PostMapping("/read")
     @Operation(summary = "게시글 목록")
-    public ApiResult getPosts (
-        @RequestBody @Valid final PostDto req
-    ) {
-        return ApiResult.successBuilder(postService.getPosts(MapUtil.toMap(req), true));
+    public Callable<ApiResult> list(@RequestBody @Valid final PostDto req){
+        return () -> ApiResult.successBuilder(postService.getPosts(MapUtil.toMap(req), true));
     }
     
-    @GetMapping("/r/{postSeq}")
+    @GetMapping("/read/{postSeq}")
     @Operation(summary = "게시글 조회")
-    public ApiResult getPost ( 
-        @PathVariable @Positive(message = "postSeq는 양수여야 합니다.") @Parameter(description = "게시글 고유번호", example = "1") Integer postSeq
-    ) {
-        Map<String, Object> requestMap = new HashMap<String, Object>();
+    public Callable<ApiResult> get(@PathVariable @Positive(message = "postSeq는 양수여야 합니다.") @Parameter(description = "게시글 고유번호", example = "1") Integer postSeq){
+        val requestMap = new HashMap<String, Object>();
         requestMap.put("postSeq", postSeq);
-        return ApiResult.successBuilder(postService.getPosts(requestMap, false));
+        return () -> ApiResult.successBuilder(postService.getPosts(requestMap, false));
     }
     
-    @PostMapping("/a")
+    @PostMapping("/register")
     @Operation(summary = "게시글 등록")
-    public ApiResult addPost (
-        @RequestBody @Valid final PostDto req
-    ) {
-        return ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), true, false, "regist"));
+    public Callable<ApiResult> create(@RequestBody @Valid final PostDto req){
+        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), true, false, "regist"));
     }
     
-    @PostMapping("/m")
+    @PostMapping("/modify")
     @Operation(summary = "게시글 수정")
-    public ApiResult setPost (
-        @RequestBody @Valid final PostDto req
-    ) {        
-        return ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "modify"));
+    public Callable<ApiResult> update(@RequestBody @Valid final PostDto req){
+        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "modify"));
     }
     
-    @PostMapping("/d-l")
+    @PostMapping("/logical-delete")
     @Operation(summary = "게시글 논리적 삭제")
-    public ApiResult logicalRemovePost (
-        @RequestBody @Valid final PostDto req    
-    ) {
-        return ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, true, "remove"));
+    public Callable<ApiResult> logicalDelete(@RequestBody @Valid final PostDto req){
+        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, true, "remove"));
     }   
     
-    @PostMapping("/d-p")
+    @PostMapping("/physical-delete")
     @Operation(summary = "게시글 물리적 삭제")
-    public ApiResult physicalRemovePost (
-        @RequestBody @Valid final PostDto req
-    ) {
-        return ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "remove"));
+    public Callable<ApiResult> physicalDelete(@RequestBody @Valid final PostDto req){
+        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "remove"));
     }
 }

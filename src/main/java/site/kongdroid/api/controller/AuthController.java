@@ -17,6 +17,7 @@ import site.kongdroid.api.dto.request.auth.AuthDto;
 import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.AuthService;
 import site.kongdroid.api.util.MapUtil;
+import java.util.concurrent.Callable;
 
 @Validated
 @RestController
@@ -27,28 +28,22 @@ public class AuthController {
 	
 	private final AuthService authService;
 	
-    @PostMapping("/authentication")
     @Operation(summary = "로그인")
-    public ApiResult authentication (
-        @RequestBody @Valid final AuthDto req
-    ) {
-        return ApiResult.successBuilder(authService.getAuth(MapUtil.toMap(req)));
+    @PostMapping("/authentication")
+    public Callable<ApiResult> authentication(@RequestBody @Valid final AuthDto req) {
+        return () -> ApiResult.successBuilder(authService.getAuth(MapUtil.toMap(req)));
     } 
 
-    @PostMapping("/duplicate-check")
     @Operation(summary = "아이디 중복체크")
-    public ApiResult getMemberByDuplicateCheck (
-        @RequestBody @Valid final AuthDto req
-    ) {
-        return ApiResult.successBuilder(authService.getDuplicate(MapUtil.toMap(req)));
+    @PostMapping("/duplicate-check")
+    public Callable<ApiResult> duplicate(@RequestBody @Valid final AuthDto req){
+        return () -> ApiResult.successBuilder(authService.getDuplicate(MapUtil.toMap(req)));
     } 
 
-    @PostMapping("/change-password")    
     @Operation(summary = "비밀번호 수정")
+    @PostMapping("/change-password")
     @ApiResponse(responseCode = "200", description = "modified password.")
-    public void setPassword (
-        @RequestBody @Valid final AuthDto req        
-    ) {
+    public void changePassword(@RequestBody @Valid final AuthDto req){
        authService.setPassword(MapUtil.toMap(req));
     } 
 }

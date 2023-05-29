@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 
 @OpenAPIDefinition(
-        info = @Info(title = "BOARD-API",
-                description = "kong-droid board-api(myBatis)",
-                version = "v2.0"))
+    info = @Info(
+        title = "BOARD-API",
+        description = "kong-droid board-api(myBatis)",
+        version = "v2.0"
+    )
+)
 @Configuration
 public class SwaggerConfig {
-
     @Bean
     public GroupedOpenApi boardOpenApi() {
         String[] paths = {"/**"};
@@ -22,5 +24,4 @@ public class SwaggerConfig {
             .pathsToMatch(paths)
             .build();
     }
-	
 }

@@ -16,6 +16,8 @@ import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.CommentService;
 import site.kongdroid.api.util.MapUtil;
 
+import java.util.concurrent.Callable;
+
 
 @Validated
 @RestController
@@ -23,32 +25,25 @@ import site.kongdroid.api.util.MapUtil;
 @RequestMapping("/comment")
 @Tag(name = "댓글", description = "댓글 관리 API")
 public class CommentController {
-	
-	
+
 	private final CommentService commentService;
 	
-    @PostMapping("/a")
+    @PostMapping("/register")
     @Operation(summary = "댓글 등록")
-    public ApiResult addComment (
-        @RequestBody @Valid final CommentDto req
-    ) {
-        return ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), true, "regist"));
+    public Callable<ApiResult> create(@RequestBody @Valid final CommentDto req){
+        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), true, "regist"));
     }
     
-    @PostMapping("/m")
+    @PostMapping("/modify")
     @Operation(summary = "댓글 수정")
-    public ApiResult setComment (
-        @RequestBody @Valid final CommentDto req
-    ) {        
-        return ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "modify"));
+    public Callable<ApiResult> update(@RequestBody @Valid final CommentDto req){
+        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "modify"));
     }
     
-    @PostMapping("/d")
+    @PostMapping("/delete")
     @Operation(summary = "댓글 삭제")
-    public ApiResult removeComment (
-        @RequestBody @Valid final CommentDto req    
-    ) {
-        return ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "remove"));
+    public Callable<ApiResult> removeComment(@RequestBody @Valid final CommentDto req){
+        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "remove"));
     }   
     
 }

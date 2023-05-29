@@ -1,7 +1,7 @@
 package site.kongdroid.api.controller;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.Callable;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.memo.MemoDto;
 import site.kongdroid.api.dto.response.ApiResult;
@@ -29,49 +31,39 @@ public class MemoController {
 	
 	private final MemoService memoService;
 	
-	@PostMapping("/r")
+	@PostMapping("/read")
 	@Operation(summary = "메모 조회")
-	public ApiResult getMemos (
-		@RequestBody @Valid final MemoDto req
-	)  {
-		return ApiResult.successBuilder(memoService.getMemos(MapUtil.toMap(req), true));
+	public Callable<ApiResult> list(@RequestBody @Valid final MemoDto req) {
+		return () -> ApiResult.successBuilder(memoService.getMemos(MapUtil.toMap(req), true));
 	}
 	
 	
-	@GetMapping("/r/{memoSeq}")
+	@GetMapping("/read/{memoSeq}")
 	@Operation(summary = "메모 개별조회")
-	public ApiResult getMemo (
-		@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq
-	) {
-	    Map<String, Object> requestMap = new HashMap<String, Object>();
+	public Callable<ApiResult> get(@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq){
+	    val requestMap = new HashMap<String, Object>();
 	    requestMap.put("memoSeq", memoSeq);
-	    return ApiResult.successBuilder(memoService.getMemos(requestMap, false));
+	    return () -> ApiResult.successBuilder(memoService.getMemos(requestMap, false));
 	} 
 	
 	
-	@PostMapping("/a")
+	@PostMapping("/register")
 	@Operation(summary = "메모 등록")
-	public ApiResult addMemo (
-		@RequestBody @Valid final MemoDto req
-	) {
-		return ApiResult.successBuilder(memoService.handleMemo(MapUtil.toMap(req), true, "regist"));
+	public Callable<ApiResult> create(@RequestBody @Valid final MemoDto req){
+		return () -> ApiResult.successBuilder(memoService.handleMemo(MapUtil.toMap(req), true, "regist"));
 	} 
 
-    @PostMapping("/m")
+    @PostMapping("/modify")
     @Operation(summary = "메모 수정")
-    public ApiResult setMemo (
-        @RequestBody @Valid final MemoDto req
-    ) {
-        return ApiResult.successBuilder(memoService.handleMemo(MapUtil.toMap(req), false, "modify"));
+    public Callable<ApiResult> update(@RequestBody @Valid final MemoDto req){
+        return () -> ApiResult.successBuilder(memoService.handleMemo(MapUtil.toMap(req), false, "modify"));
     } 
 
-	@PostMapping("/d/{memoSeq}")	
+	@PostMapping("/delete/{memoSeq}")
 	@Operation(summary = "메모 삭제")
-	public ApiResult physicalRemoveMemo (
-        @PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq        
-	) {
-       Map<String, Object> requestMap = new HashMap<String, Object>();
+	public Callable<ApiResult> physicalDelete(@PathVariable @Positive(message = "memoSeq는 양수여야 합니다.") @Parameter(description = "메모 고유번호", example = "1") Integer memoSeq){
+       val requestMap = new HashMap<String, Object>();
        requestMap.put("memoSeq", memoSeq);
-       return ApiResult.successBuilder(memoService.handleMemo(requestMap, false, "remove"));
+       return () -> ApiResult.successBuilder(memoService.handleMemo(requestMap, false, "remove"));
 	} 
 }

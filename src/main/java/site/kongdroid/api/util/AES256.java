@@ -17,13 +17,13 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 @Component
-public class Aes256Util {
+public class AES256 {
 
     private static String aesKey;
 
     @Value("${properties.aesKey}")
     private void setAesKey(String aesKey) {
-        Aes256Util.aesKey = aesKey;
+        AES256.aesKey = aesKey;
     }
 
     private static Key keySpec;

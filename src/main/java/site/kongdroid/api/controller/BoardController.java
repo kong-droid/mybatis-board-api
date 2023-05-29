@@ -1,7 +1,7 @@
 package site.kongdroid.api.controller;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.board.BoardDto;
 import site.kongdroid.api.dto.response.ApiResult;
@@ -32,54 +34,41 @@ public class BoardController {
 		
 	private final BoardService boardService;
 	
-	@PostMapping("/r")
+	@PostMapping("/read")
 	@Operation(summary = "게시판 목록")
-    public ApiResult getBoards (
-		@RequestBody @Valid final BoardDto req
-	) {
-		return ApiResult.successBuilder(boardService.getBoards(MapUtil.toMap(req), true));
+    public Callable<ApiResult> list(@RequestBody @Valid final BoardDto req){
+		return () -> ApiResult.successBuilder(boardService.getBoards(MapUtil.toMap(req), true));
 	}
 	
-	@GetMapping("/r/{boardSeq}")
+	@GetMapping("/read/{boardSeq}")
 	@Operation(summary = "게시판 조회")
-    public ApiResult getBoard ( 
-        @PathVariable @Positive(message = "boardSeq는 양수여야 합니다.") @Parameter(description = "게시판 고유번호", example = "1") Integer boardSeq
-    ) {
-	    Map<String, Object> requestMap = new HashMap<String, Object>();
+    public Callable<ApiResult> get(@PathVariable @Positive(message = "boardSeq는 양수여야 합니다.") @Parameter(description = "게시판 고유번호", example = "1") Integer boardSeq){
+	    val requestMap = new HashMap<String, Object>();
 	    requestMap.put("boardSeq", boardSeq);
-	    return ApiResult.successBuilder(boardService.getBoards(requestMap, false));
+	    return () -> ApiResult.successBuilder(boardService.getBoards(requestMap, false));
 	}
-	
-	@PostMapping("/a")
+
+	@PostMapping("/register")
 	@Operation(summary = "게시판 등록")
-	public ApiResult addBoard (
-        @RequestBody @Valid final BoardDto req
-    ) {
-	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), true, false, "regist"));
+	public Callable<ApiResult> create(@RequestBody @Valid final BoardDto req){
+	    return () -> ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), true, false, "regist"));
 	}
 	
-	@PostMapping("/m")
+	@PostMapping("/modify")
 	@Operation(summary = "게시판 수정")
-    public ApiResult setBoard (
-        @RequestBody @Valid final BoardDto req
-    ) {        
-	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "modify"));
+    public Callable<ApiResult> update(@RequestBody @Valid final BoardDto req){
+	    return () -> ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "modify"));
 	}
 	
-	@PostMapping("/d-l")
+	@PostMapping("/logical-delete")
 	@Operation(summary = "게시판 논리적 삭제")
-    public ApiResult logicalRemoveBoard (
-        @RequestBody @Valid final BoardDto req    
-    ) {
-	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, true, "remove"));
+    public Callable<ApiResult> logicalDelete(@RequestBody @Valid final BoardDto req){
+	    return () -> ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, true, "remove"));
 	}	
 	
-	@PostMapping("/d-p")
+	@PostMapping("/physical-delete")
 	@Operation(summary = "게시판 물리적 삭제")
-    public ApiResult physicalRemoveBoard (
-        @RequestBody @Valid final BoardDto req
-    ) {
-	    return ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "remove"));
+    public Callable<ApiResult> physicalDelete(@RequestBody @Valid final BoardDto req){
+	    return () -> ApiResult.successBuilder(boardService.handleBoard(MapUtil.toMap(req), false, false, "remove"));
 	}
-	
 }
