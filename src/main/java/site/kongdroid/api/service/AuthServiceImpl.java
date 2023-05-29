@@ -1,10 +1,11 @@
 package site.kongdroid.api.service;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.ResourceAccessException;
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
@@ -19,12 +20,10 @@ public class AuthServiceImpl implements AuthService {
 	private final MemberEnDecoder memberEnDecoder;
 	
     public Map<String, Object> getAuth(Map<String, Object> requestMap) {
-    	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", requestMap);
-    	List<Map<String, Object>> details = null;
-    	
+    	val responseMap = dao.dbDetail("member.getMembers", requestMap);
         if(!CollectionUtils.isEmpty(responseMap)) {
-        	details = dao.dbDetails("member.getMemberDetails", requestMap);
-        	this.memberEnDecoder.decodeMember(responseMap);
+			val details = dao.dbDetails("member.getMemberDetails", requestMap);
+        	memberEnDecoder.decodeMember(responseMap);
         	responseMap.put("details", details);
         } else {
         	new ResourceAccessException("Invalid Error");
@@ -34,19 +33,17 @@ public class AuthServiceImpl implements AuthService {
     }
     
     public Map<String, Object> getDuplicate(Map<String, Object> requestMap) {
-    	Map<String, Object> resultMap = new HashMap<>();
-    	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", requestMap);
-        if(!CollectionUtils.isEmpty(responseMap)) {
-        	resultMap.put("message", "already exists");
-        } else {
-        	resultMap.put("message", "available");
-        }
-             
-        return resultMap;
+    	val resultMap = new HashMap<String, Object>();
+    	val responseMap = dao.dbDetail("member.getMembers", requestMap);
+
+		if(!CollectionUtils.isEmpty(responseMap)) resultMap.put("message", "already exists");
+        else resultMap.put("message", "available");
+
+		return resultMap;
     }
     
     public void setPassword(Map<String, Object> requestMap) {
-    	Map<String, Object> chkMap = new HashMap<>();
+    	val chkMap = new HashMap<String, Object>();
     	chkMap.put("memberSeq", requestMap.get("memberSeq"));
     	chkMap.put("oldPassword", requestMap.get("oldPassword"));
     	chkMap.put("newPassword", requestMap.get("newPassword"));

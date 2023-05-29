@@ -12,10 +12,10 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
@@ -29,12 +29,12 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberEnDecoder memberEnDecoder;
 	
     public Map<String, Object> getMembers(Map<String, Object> requestMap, boolean isDouble) throws BadRequestException {
-        Map<String, Object> responseMap = isDouble ? new HashMap<>() : memberEnDecoder.decodeMember(dao.dbDetail("member.getMembers", requestMap));  
+        Map<String, Object> responseMap = isDouble ? new HashMap<>() : memberEnDecoder.decodeMember(dao.dbDetail("member.getMembers", requestMap));
         if(isDouble) {
-            List<Map<String, Object>> members = memberEnDecoder.decodeMembers(dao.dbDetails("member.getMembers", requestMap));
+            val members = memberEnDecoder.decodeMembers(dao.dbDetails("member.getMembers", requestMap));
             if(!CollectionUtils.isEmpty(members)) {
                 members.forEach(member -> {
-                    Map<String, Object> detReqMap = new HashMap<>();
+                    val detReqMap = new HashMap<String, Object>();
                     detReqMap.put("memberSeq", member.get("memberSeq"));
                     member.put("details", dao.dbDetails("member.getMemberDetails", requestMap));
                 });
@@ -45,18 +45,18 @@ public class MemberServiceImpl implements MemberService {
         return responseMap;
     }
 
-    public Map<String, Object> handleMember ( Map<String, Object> requestMap, boolean isAdd, String whatAct ) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        Map<String, Object> responseMap = new HashMap<>();
-        Map<String, Object> handle = new HashMap<>((Map<String, Object>)requestMap.get("handle"));
+    public Map<String, Object> handleMember(Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        val responseMap = new HashMap<String, Object>();
+        val handle = new HashMap<>((Map<String, Object>)requestMap.get("handle"));
         switch (whatAct) {
             case "regist":
             case "modify":
                 if(dao.dbInsert(isAdd ? "member.addMember" : "member.setMember", memberEnDecoder.encodeMember(requestMap)) < 0) new BadRequestException("Invalid Error");
                 if(!isAdd) if(dao.dbDelete("member.removeMemberDetail", requestMap) < 0) new BadRequestException("Invalid Error");
-                List<Map<String, Object>> details = (List<Map<String, Object>>) requestMap.get("details");
+                val details = (List<Map<String, Object>>) requestMap.get("details");
                 if(!CollectionUtils.isEmpty(details)) {
                     details.forEach(detail -> {
-                        Map<String, Object> handleMap = (Map<String, Object>) detail.get("handle");
+                        val handleMap = (Map<String, Object>) detail.get("handle");
                         handleMap.put("memberSeq", isAdd ? requestMap.get("memberSeq") : handle.get("memberSeq"));
                         if(dao.dbInsert("member.addMemberDetail", detail) < 0) new BadRequestException("Invalid Error");
                     });

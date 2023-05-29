@@ -9,6 +9,7 @@ import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalRe
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
@@ -23,10 +24,11 @@ public class PostServiceImpl implements PostService {
 	private final MemberServiceImpl memberService;
 	
     public Map<String, Object> getPosts( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<>();
+        Map<String, Object> responseMap = new HashMap<String, Object>();
         List<Map<String, Object>> posts = new ArrayList<Map<String,Object>>();
         if(isDouble) {
-            Map<String, Object> searchMap = (Map<String, Object>) requestMap.get("search");         
+
+            val searchMap = (Map<String, Object>) requestMap.get("search");
             if(!CollectionUtils.isEmpty(searchMap)) {
                 if(searchMap.get("page") != null && searchMap.get("size") != null) {
                     searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
@@ -53,13 +55,13 @@ public class PostServiceImpl implements PostService {
             responseMap = dao.dbDetail("post.getPosts", requestMap); 
 
             if(!CollectionUtils.isEmpty(responseMap)) {
-                this.setPostForViewCount(requestMap);
+                setPostForViewCount(requestMap);
                 
-                Map<String, Object> reqMap = new HashMap<>();
+                val reqMap = new HashMap<String, Object>();
                 reqMap.put("memberSeq", responseMap.get("createdNo"));
                 responseMap.put("memberInfo", memberService.getMembers(reqMap, false));
                 
-                Map<String, Object> resComMap = new HashMap<String, Object>();
+                val resComMap = new HashMap<String, Object>();
                 resComMap.put("postSeq", responseMap.get("postSeq"));
                 responseMap.put("comments", commentService.getComments(resComMap).get("comments"));
             }
@@ -67,25 +69,25 @@ public class PostServiceImpl implements PostService {
         return responseMap;
     }
     
-    public Map<String, Object> handlePost ( Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct ) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<>();
+    public Map<String, Object> handlePost(Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct) throws InternalResourceException {
+        val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
                 if(dao.dbInsert(isAdd ? "post.addPost" : "post.setPost" , requestMap) < 0) throw new BadRequestException("Invalid Error");
                 break;
             case "remove":
-                Map<String, Object> rmvReqMap = new HashMap<>();
-                Map<String, Object> handle = ( Map<String, Object> ) requestMap.get("handle");
+                val rmvReqMap = new HashMap<String, Object>();
+                val handle = ( Map<String, Object> ) requestMap.get("handle");
                 rmvReqMap.put("postSeq", requestMap.get("postSeq"));
-                Map<String, Object> rmvResMap = this.getPosts(rmvReqMap, false);
+                val rmvResMap = getPosts(rmvReqMap, false);
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
                     if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
                         if(isPhysical) {
-                            if(this.dao.dbDelete("post.removePost", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                            if(dao.dbDelete("post.removePost", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
                         } else {
                             handle.put("delYn", "Y");
-                            if(this.dao.dbUpdate("post.setPost", requestMap) < 0) throw new BadRequestException("Invalid Error");
+                            if(dao.dbUpdate("post.setPost", requestMap) < 0) throw new BadRequestException("Invalid Error");
                         }
                     } else {
                         throw new BadRequestException("Invalid Error");
@@ -100,7 +102,6 @@ public class PostServiceImpl implements PostService {
     }
 
     public void setPostForViewCount(Map<String, Object> requestMap) throws InternalResourceException {
-    	int effectRow = this.dao.dbUpdate("post.setPostForViewCount", requestMap);
-    	if(effectRow < 0) throw new BadRequestException("Invalid Error");
+    	if(dao.dbUpdate("post.setPostForViewCount", requestMap) < 0) throw new BadRequestException("Invalid Error");
     }
 }

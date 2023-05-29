@@ -9,6 +9,7 @@ import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalRe
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
@@ -21,15 +22,14 @@ public class CommentServiceImpl implements CommentService {
     private final CustomDao dao;
     private final MemberServiceImpl memberService;
 
-    public Map<String, Object> getComments( Map<String, Object> requestMap) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<>();
-        ArrayList<Map<String, Object>> parents = new ArrayList<>();
-        ArrayList<Map<String, Object>> chlid = new ArrayList<>();
+    public Map<String, Object> getComments(Map<String, Object> requestMap) throws InternalResourceException {
+        val responseMap = new HashMap<String, Object>();
+        val parents = new ArrayList<Map<String, Object>>();
+        val chlid = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> comments = dao.dbDetails("comment.getComments", requestMap);
         if (!CollectionUtils.isEmpty(comments)) {
-            
             comments.forEach(comment -> {
-                Map<String, Object> reqMap = new HashMap<>();
+                val reqMap = new HashMap<String, Object>();
                 reqMap.put("memberSeq", comment.get("createdNo"));
                 comment.put("memberInfo", memberService.getMembers(reqMap, false));
                 
@@ -43,13 +43,13 @@ public class CommentServiceImpl implements CommentService {
             });
             
             parents.forEach(parent -> {
-                ArrayList<Map<String, Object>> array = new ArrayList<>();        
+                val array = new ArrayList<Map<String, Object>>();
                 chlid.forEach(chd -> {
                     if((Integer) parent.get("commentSeq") == (Integer) chd.get("parentsNo")) {
                         array.add(chd);
                     }
                 });
-                parent.put("chlid", array == null ? null : array);
+                parent.put("chlid", array);
             });  
             comments = parents;   
         }
@@ -58,21 +58,23 @@ public class CommentServiceImpl implements CommentService {
         return responseMap;
     }
 
-    public Map<String, Object> handleComment ( Map<String, Object> requestMap, boolean isAdd, String whatAct ) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+    public Map<String, Object> handleComment(Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InternalResourceException {
+        val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
                 if(dao.dbInsert(isAdd ? "comment.addComment" : "comment.setComment" , requestMap) < 0) throw new BadRequestException("Invalid Error");
                 break;
             case "remove":
-                Map<String, Object> rmvReqMap = new HashMap<>();
-                Map<String, Object> handle = ( Map<String, Object> ) requestMap.get("handle");
+                val rmvReqMap = new HashMap<String, Object>();
+                val handle = (Map<String, Object>) requestMap.get("handle");
+
                 rmvReqMap.put("commentSeq", requestMap.get("commentSeq"));
-                Map<String, Object> rmvResMap = dao.dbDetail("comment.getComments", rmvReqMap);
+                val rmvResMap = dao.dbDetail("comment.getComments", rmvReqMap);
+
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
                     if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {                
-                        if(this.dao.dbDelete("comment.removeComment", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                        if(dao.dbDelete("comment.removeComment", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
                     } else {
                         throw new BadRequestException("Invalid Error");
                     }

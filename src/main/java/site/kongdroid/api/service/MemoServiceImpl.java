@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
+
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
@@ -22,8 +24,8 @@ public class MemoServiceImpl implements MemoService {
     	return responseMap;
     }
 
-    public Map<String, Object> handleMemo (Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InternalResourceException {
-    	Map<String, Object> responseMap = new HashMap<>();
+    public Map<String, Object> handleMemo(Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InternalResourceException {
+    	val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
