@@ -1,8 +1,10 @@
 package site.kongdroid.api.dao;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -17,27 +19,32 @@ public class CustomDao {
 	
 	private final SqlSession sqlSession;
 
-	// 목록
+	// list
 	public List<Map<String, Object>> dbDetails(String mapper, Map<String, Object> map) {
 		return sqlSession.selectList(mapper, map);
 	}
-	
-	// 상세보기
+
+	// count
+	public int dbCount(String mapper, Map<String, Object> map) {
+		return sqlSession.selectOne(mapper, map);
+	}
+
+	// detail
 	public Map<String, Object> dbDetail(String mapper, Map<String, Object> map) {
 		return sqlSession.selectOne(mapper, map);
 	}
 	
-	// 입력
+	// insert
 	public int dbInsert(String mapper, Map<String, Object> map) {
 		return sqlSession.insert(mapper, map);
 	}
 	
-	// 수정
+	// update
 	public int dbUpdate(String mapper, Map<String, Object> map) {
 		return sqlSession.update(mapper, map);
 	}
 		
-	// 삭제
+	// delete
 	public int dbDelete(String mapper, Map<String, Object> map) {
 		return sqlSession.delete(mapper, map);
 	}		

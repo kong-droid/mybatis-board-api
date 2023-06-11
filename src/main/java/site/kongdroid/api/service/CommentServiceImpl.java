@@ -1,9 +1,6 @@
 package site.kongdroid.api.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
@@ -45,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
             parents.forEach(parent -> {
                 val array = new ArrayList<Map<String, Object>>();
                 chlid.forEach(chd -> {
-                    if((Integer) parent.get("commentSeq") == (Integer) chd.get("parentsNo")) {
+                    if(Objects.equals(parent.get("commentSeq"), chd.get("parentsNo"))) {
                         array.add(chd);
                     }
                 });
@@ -79,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
                         throw new BadRequestException("Invalid Error");
                     }
                 } else {
-                    new ResourceNotFoundException("Invalid Error");
+                    throw new ResourceNotFoundException("Invalid Error");
                 }
                 break;
         }

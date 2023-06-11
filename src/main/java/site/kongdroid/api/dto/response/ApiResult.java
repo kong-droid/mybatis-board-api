@@ -16,10 +16,6 @@ public class ApiResult {
     @Schema(description = "response", example = "{ generate_key : 200 }")
     private Object data;
 
-    public ApiResult() {
-
-    }
-
     public static ApiResultBuilder builder() {
         return new ApiResultBuilder();
     }
