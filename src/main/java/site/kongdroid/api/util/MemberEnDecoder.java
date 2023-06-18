@@ -11,6 +11,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -21,14 +22,17 @@ import org.springframework.util.CollectionUtils;
  * 암호화 / 복호화 클래스 
  **/
 @Component
+@RequiredArgsConstructor
 public class MemberEnDecoder {
 
-	@Autowired
-    AES256 aes256;
-    public Map<String, Object> encodeMember(Map<String, Object> requestMap) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException  {
+    private final AES256 aes256;
+    public Map<String, Object> encodeMember(Map<String, Object> requestMap) throws InvalidKeyException,
+            NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException,
+            IllegalBlockSizeException, BadPaddingException  {
         if(requestMap.get("email") != null) requestMap.put("email", aes256.aesEncode((String) requestMap.get("email")));
     	if(requestMap.get("phone") != null)requestMap.put("phone", aes256.aesEncode((String) requestMap.get("phone")));
-    	if(requestMap.get("addr") != null && !requestMap.get("addr").equals("")) requestMap.put("addr", aes256.aesEncode((String) requestMap.get("addr")));
+    	if(requestMap.get("addr") != null && !requestMap.get("addr").equals(""))
+            requestMap.put("addr", aes256.aesEncode((String) requestMap.get("addr")));
         return requestMap;
     }
     
@@ -37,7 +41,8 @@ public class MemberEnDecoder {
         if(!CollectionUtils.isEmpty(responseMap)) {
             if(responseMap.get("email") != null) responseMap.put("email", aes256.aesDecode((String) responseMap.get("email")));
             if(responseMap.get("phone") != null) responseMap.put("phone", aes256.aesDecode((String) responseMap.get("phone")));
-            if(responseMap.get("addr") != null && !responseMap.get("addr").equals("")) responseMap.put("addr", aes256.aesDecode((String) responseMap.get("addr")));    
+            if(responseMap.get("addr") != null && !responseMap.get("addr").equals(""))
+                responseMap.put("addr", aes256.aesDecode((String) responseMap.get("addr")));
         }
         return responseMap;
     }
@@ -46,7 +51,8 @@ public class MemberEnDecoder {
         for(Map<String, Object> map : responseMaps) {
             if(map.get("email") != null) map.put("email", aes256.aesDecode((String) map.get("email")));
             if(map.get("phone") != null) map.put("phone", aes256.aesDecode((String) map.get("phone")));
-        	if(map.get("addr") != null && !map.get("addr").equals("")) map.put("addr", aes256.aesDecode((String) map.get("addr")));
+        	if(map.get("addr") != null && !map.get("addr").equals(""))
+                map.put("addr", aes256.aesDecode((String) map.get("addr")));
         }
         return responseMaps;
     }
