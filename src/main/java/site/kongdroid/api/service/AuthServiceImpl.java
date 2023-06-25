@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.ResourceAccessException;
@@ -25,10 +26,11 @@ public class AuthServiceImpl implements AuthService {
 	private final CustomDao dao;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MemberEnDecoder memberEnDecoder;
-	
+	private final PasswordEncoder passwordEncoder;
 
 	public Map<String, Object> getAuth(Map<String, Object> requestMap) throws AuthException {
-    	val responseMap = dao.dbDetail("member.getMembers", requestMap);
+    	requestMap.put("password", passwordEncoder.encode(String.valueOf(requestMap.get("password"))));
+		val responseMap = dao.dbDetail("member.getMembers", requestMap);
         if(!CollectionUtils.isEmpty(responseMap)) {
 			jwtTokenProvider.create(null, (Integer) responseMap.get("userNo"), (UserRole) responseMap.get("role"));
 			val details = dao.dbDetails("member.getMemberDetails", requestMap);

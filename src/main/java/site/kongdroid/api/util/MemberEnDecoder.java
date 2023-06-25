@@ -13,6 +13,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -26,9 +27,11 @@ import org.springframework.util.CollectionUtils;
 public class MemberEnDecoder {
 
     private final AES256 aes256;
+    private final PasswordEncoder passwordEncoder;
     public Map<String, Object> encodeMember(Map<String, Object> requestMap) throws InvalidKeyException,
             NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException  {
+        requestMap.put("password", passwordEncoder.encode(String.valueOf(requestMap.get("password"))));
         if(requestMap.get("email") != null) requestMap.put("email", aes256.aesEncode((String) requestMap.get("email")));
     	if(requestMap.get("phone") != null)requestMap.put("phone", aes256.aesEncode((String) requestMap.get("phone")));
     	if(requestMap.get("addr") != null && !requestMap.get("addr").equals(""))

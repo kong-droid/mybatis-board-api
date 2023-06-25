@@ -47,7 +47,7 @@ public class MemberServiceImpl implements MemberService {
 
     public Map<String, Object> handleMember(Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         val responseMap = new HashMap<String, Object>();
-        val handle = new HashMap<>((Map<String, Object>)requestMap.get("handle"));
+        val handle = new HashMap<>((Map<String, Object>) requestMap.get("handle"));
         switch (whatAct) {
             case "regist":
             case "modify":
