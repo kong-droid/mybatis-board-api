@@ -31,13 +31,16 @@ springdoc:
     operationsSorter: method
     disable-swagger-default-url: true
     display-request-duration: true
+    display-query-params-without-oauth2: true
   api-docs:
     path: /api-docs
+    groups:
+      enabled: true
   show-actuator: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-  paths-to-match: 
-  - /**
-  
-  
-    
+
+api:
+  jwt:
+    secret: k@ng-backE&D!
+    valid-time: 12h

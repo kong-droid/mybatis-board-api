@@ -1,6 +1,7 @@
 package site.kongdroid.api.controller;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.validation.annotation.Validated;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import lombok.val;
 import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.auth.AuthDto;
 import site.kongdroid.api.dto.response.ApiResult;
@@ -30,8 +33,10 @@ public class AuthController {
 	
     @Operation(summary = "로그인")
     @PostMapping("/authentication")
-    public Callable<ApiResult> authentication(@RequestBody @Valid final AuthDto req) {
-        return () -> ApiResult.successBuilder(authService.getAuth(MapUtil.toMap(req)));
+    public Callable<ApiResult> authentication(HttpServletRequest request,
+                                              @RequestBody @Valid final AuthDto req) {
+        val userAgent = request.getHeader("User-Agent");
+        return () -> ApiResult.successBuilder(authService.getAuth(userAgent, MapUtil.toMap(req)));
     } 
 
     @Operation(summary = "아이디 중복체크")

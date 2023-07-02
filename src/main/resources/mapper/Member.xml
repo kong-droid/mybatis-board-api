@@ -31,9 +31,6 @@
 			<if test="id != null and !id.equals('')">
 				and id= #{id}
 			</if>
-			<if test="password != null and !password.equals('')">
-				and password= #{password}
-			</if>
 			<if test="oldPassword != null and !oldPassword.equals('')">
 				and password= #{oldPassword}
 			</if>

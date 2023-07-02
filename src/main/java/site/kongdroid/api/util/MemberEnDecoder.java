@@ -1,6 +1,5 @@
 package site.kongdroid.api.util;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +11,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +32,7 @@ public class MemberEnDecoder {
         requestMap.put("password", passwordEncoder.encode(String.valueOf(requestMap.get("password"))));
         if(requestMap.get("email") != null) requestMap.put("email", aes256.aesEncode((String) requestMap.get("email")));
     	if(requestMap.get("phone") != null)requestMap.put("phone", aes256.aesEncode((String) requestMap.get("phone")));
-    	if(requestMap.get("addr") != null && !requestMap.get("addr").equals(""))
+        if(requestMap.get("addr") != null && !requestMap.get("addr").equals(""))
             requestMap.put("addr", aes256.aesEncode((String) requestMap.get("addr")));
         return requestMap;
     }
