@@ -8,8 +8,10 @@ import org.springframework.util.CollectionUtils;
 
 import lombok.val;
 import lombok.RequiredArgsConstructor;
+import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
+import site.kongdroid.api.exception.InternalServerException;
 import site.kongdroid.api.exception.ResourceNotFoundException;
 
 @Service
@@ -24,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
         val parents = new ArrayList<Map<String, Object>>();
         val chlid = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> comments = dao.dbDetails("comment.getComments", requestMap);
-        if (!CollectionUtils.isEmpty(comments)) {
+        if (!comments.isEmpty()) {
             comments.forEach(comment -> {
                 val reqMap = new HashMap<String, Object>();
                 reqMap.put("memberSeq", comment.get("createdNo"));
@@ -55,12 +57,14 @@ public class CommentServiceImpl implements CommentService {
         return responseMap;
     }
 
-    public Map<String, Object> handleComment(Map<String, Object> requestMap, boolean isAdd, String whatAct) throws InternalResourceException {
+    public Map<String, Object> handleComment(Map<String, Object> requestMap,
+                                             boolean isAdd, String whatAct) throws InternalResourceException {
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
-                if(dao.dbInsert(isAdd ? "comment.addComment" : "comment.setComment" , requestMap) < 0) throw new BadRequestException("Invalid Error");
+                if(dao.dbInsert(isAdd ? "comment.addComment" : "comment.setComment" , requestMap) < 0)
+                    throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
@@ -71,12 +75,13 @@ public class CommentServiceImpl implements CommentService {
 
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
                     if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {                
-                        if(dao.dbDelete("comment.removeComment", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                        if(dao.dbDelete("comment.removeComment", requestMap) < 0 )
+                            throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     } else {
-                        throw new BadRequestException("Invalid Error");
+                        throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     }
                 } else {
-                    throw new ResourceNotFoundException("Invalid Error");
+                    throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
                 }
                 break;
         }

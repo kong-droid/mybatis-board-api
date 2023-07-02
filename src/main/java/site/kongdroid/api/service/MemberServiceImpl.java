@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
+import site.kongdroid.api.exception.InternalServerException;
 import site.kongdroid.api.util.MemberEnDecoder;
 
 @Service
@@ -59,11 +60,11 @@ public class MemberServiceImpl implements MemberService {
                 if(dao.dbInsert(isAdd
                         ? "member.addMember"
                         : "member.setMember", memberEnDecoder.encodeMember(requestMap)) < 0)
-                    throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
+                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
 
                 if(!isAdd)
                     if(dao.dbDelete("member.removeMemberDetail", requestMap) < 0)
-                        throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
+                        throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
 
                 val details = (List<Map<String, Object>>) requestMap.get("details");
                 if(!details.isEmpty()) {
@@ -73,13 +74,13 @@ public class MemberServiceImpl implements MemberService {
                                 ? requestMap.get("memberSeq")
                                 : handle.get("memberSeq"));
                         if(dao.dbInsert("member.addMemberDetail", detail) < 0)
-                            throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
+                            throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     });
                 }
                 break;
             case "remove":           
                 if(dao.dbDelete("member.removeMember", requestMap) < 0)
-                    throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
+                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 break;
         }
         responseMap.put("memberSeq", isAdd ? requestMap.get("memberSeq") : handle.get("memberSeq"));

@@ -12,6 +12,7 @@ import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.constants.UserRole;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.InternalServerException;
+import site.kongdroid.api.exception.ResourceNotFoundException;
 
 import javax.security.auth.message.AuthException;
 
@@ -36,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
 				throw new AuthException(MessageConstant.NOT_FOUND_MESSAGE);
 			}
 		} else {
-        	throw new AuthException(MessageConstant.NOT_FOUND_MESSAGE);
+        	throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
         }
         return resultMap;
     }
@@ -61,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     	    if(dao.dbUpdate("member.setMember", chkMap) < 0)
 				throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
     	} else {
-    		throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
+    		throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
     	}   
     }
     
