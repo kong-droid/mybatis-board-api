@@ -31,9 +31,6 @@
 			<if test="id != null and !id.equals('')">
 				and id= #{id}
 			</if>
-			<if test="oldPassword != null and !oldPassword.equals('')">
-				and password= #{oldPassword}
-			</if>
 			<if test="name != null and !name.equals('')">
 				and name= #{name}
 			</if>
@@ -122,17 +119,17 @@
 				<if test="handle.delYn != null and !handle.delYn.equals('')">del_yn= #{handle.delYn},</if>
 			</if>
 			updated_dt= NOW(),
-			updated_no=	#{handle.memberSeq}
+			updated_no=	#{memberSeq}
 		</set>
 		<where>
-			member_seq= #{handle.memberSeq}
+			member_seq= #{memberSeq}
 		</where>
 	</update>
 
 	<delete id="removeMember">
 		/** member.removeMember **/
 		DELETE FROM member
-		WHERE member_seq= #{handle.memberSeq}
+		WHERE member_seq= #{memberSeq}
 	</delete>
 
 	<!-- member-detail -->

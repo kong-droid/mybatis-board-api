@@ -5,7 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.internal.LoadingCache;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,6 @@ import site.kongdroid.api.constants.UserRole;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +25,10 @@ public class JwtTokenProvider {
 
     private final ExtendedUserDetailsService userService;
 
-    public String create(String userAgent, Integer userNo, UserRole role) {
-        val claims = Jwts.claims().setSubject(userNo.toString());
+
+    public String create(String userAgent, Integer memberSeq, UserRole role) {
+        val claims = Jwts.claims().setSubject(memberSeq.toString());
+        claims.put("memberSeq", memberSeq);
         claims.put("role", role.name());
         claims.put("agent", userAgent); // todo shorter agent
         val issuedAt = new Date();
@@ -41,12 +42,12 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        val userDetails = getUserNo(token);
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails, null);
+        val memberSeq = getUserNo(token);
+        return new UsernamePasswordAuthenticationToken(memberSeq, null, null);
     }
 
-    private UserDetails getDetail(Integer userNo) {
-        return userService.loadUserByNo(userNo);
+    private UserDetails getDetail(Integer memberSeq) {
+        return userService.loadUserByNo(memberSeq);
     }
 
     public String resolve(HttpServletRequest req) {
@@ -55,11 +56,11 @@ public class JwtTokenProvider {
         return token;
     }
 
-    public boolean isValid(String agent, String token) {
+    public boolean isValid(String userAgent, String token) {
         try {
             val claims = Jwts.parser().setSigningKey(jwtConfig.getEncodedSecret()).parseClaimsJws(token);
             val body = claims.getBody();
-            val userNo =  body.getSubject();
+            val memberSeq =  body.getSubject();
 //            val lastLogin = historyLoginService.getFirstByMethod(userId, method);
 //            if (lastLogin != null) {
 //                if (!agent.equals(lastLogin.getAgent())) {

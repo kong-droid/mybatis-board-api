@@ -2,6 +2,7 @@ package site.kongdroid.api.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,24 +47,34 @@ public class AuthServiceImpl implements AuthService {
     
     public Map<String, Object> getDuplicate(Map<String, Object> requestMap) {
     	val resultMap = new HashMap<String, Object>();
-    	val responseMap = dao.dbDetail("member.getMembers", requestMap);
-		if(!responseMap.isEmpty()) resultMap.put("message", MessageConstant.DUPLICATE_CHECK_TRUE);
+    	val responseMap = Optional.ofNullable(dao.dbDetail("member.getMembers", requestMap));
+		if(responseMap.isPresent()) resultMap.put("message", MessageConstant.DUPLICATE_CHECK_TRUE);
         else resultMap.put("message", MessageConstant.DUPLICATE_CHECK_FALSE);
 		return resultMap;
     }
     
-    public void setPassword(Map<String, Object> requestMap) {
-    	val chkMap = new HashMap<String, Object>();
-    	chkMap.put("memberSeq", requestMap.get("memberSeq"));
-    	chkMap.put("oldPassword", requestMap.get("oldPassword"));
-    	chkMap.put("newPassword", requestMap.get("newPassword"));
-    	Map<String, Object> responseMap = dao.dbDetail("member.getMembers", chkMap);
-    	if(!responseMap.isEmpty()) {
-    	    if(dao.dbUpdate("member.setMember", chkMap) < 0)
-				throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
-    	} else {
-    		throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
-    	}   
-    }
-    
+    public Map<String, Object> setPassword(Integer memberSeq, Map<String, Object> requestMap) {
+		val chkMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
+		chkMap.put("memberSeq", memberSeq);
+		chkMap.put("newPassword", passwordEncoder.encode((String) requestMap.get("newPassword")));
+		Map<String, Object> responseMap = dao.dbDetail("member.getMembers", chkMap);
+		if (!responseMap.isEmpty()) {
+			if (passwordEncoder.matches((String) requestMap.get("oldPassword"), (String) responseMap.get("password"))) {
+				if (dao.dbUpdate("member.setMember", chkMap) > 0) {
+					resultMap.put("message", MessageConstant.SUCCESS);
+					return resultMap;
+				} else {
+					resultMap.put("message", MessageConstant.FAIL);
+					return resultMap;
+				}
+			} else {
+				resultMap.put("message", MessageConstant.FAIL);
+				return resultMap;
+			}
+		} else {
+			resultMap.put("message", MessageConstant.FAIL);
+			return resultMap;
+		}
+	}
 }
