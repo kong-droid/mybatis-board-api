@@ -1,5 +1,6 @@
 package site.kongdroid.api.exception;
 
+
 @SuppressWarnings("serial")
 public class BadRequestException extends DefaultNestedRuntimeExcepiton {
     public BadRequestException(String code) {
@@ -21,4 +22,5 @@ public class BadRequestException extends DefaultNestedRuntimeExcepiton {
     public BadRequestException(String code, String reason, Throwable cause) {
         super(code, reason, cause);
     }
+
 }

@@ -2,50 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
 	<resultMap type="site.kongdroid.api.util.CamelCaseMap" id="camelCaseMap"></resultMap>
-  	<!-- member -->
-  	<sql id="memberSql">
-  		SELECT 
-  			member_seq
-  		   , id
-  		   , password
-  		   , name
-  		   , `role`
-  		   , profile
-  		   , email
-  		   , phone
-  		   , addr
-  		   , remark
-  		   , del_yn
-  		   , created_dt
-  		   , updated_dt
-  		   , updated_no
+	<!-- member -->
+	<sql id="memberSql">
+		SELECT
+			member_seq
+			 , id
+			 , password
+			 , name
+			 , `role`
+			 , profile
+			 , email
+			 , phone
+			 , addr
+			 , remark
+			 , del_yn
+			 , created_dt
+			 , updated_dt
+			 , updated_no
 		FROM member
-  	</sql>
-  	
-  	<sql id="memberSqlWhere">
-  	  	<where>
-  		  	1=1
-  			<if test="role != null and !role.equals('')">
-  				and `role`= #{role}
-  			</if>
-  			<if test="id != null and  !id.equals('')">
-  				and id= #{id}
-  			</if>
-  			<if test="password != null and !password.equals('')">
-  				and password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password}))))))
-  			</if>
-  			<if test="oldPassword != null and !oldPassword.equals('')">
-  				and password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{oldPassword}))))))
-  			</if>  			
-  			<if test="name != null and !name.equals('')">
-  				and name= #{name}
-  			</if>
-  			<if test="email != null and !email.equals('')">
-  				and email= #{email}
-  			</if>
-  			<if test="phone != null and !phone.equals('')">
-  				and phone= #{phone}
-  			</if>	
+	</sql>
+
+	<sql id="memberSqlWhere">
+		<where>
+			1=1
+			<if test="role != null and !role.equals('')">
+				and `role`= #{role}
+			</if>
+			<if test="id != null and !id.equals('')">
+				and id= #{id}
+			</if>
+			<if test="oldPassword != null and !oldPassword.equals('')">
+				and password= #{oldPassword}
+			</if>
+			<if test="name != null and !name.equals('')">
+				and name= #{name}
+			</if>
+			<if test="email != null and !email.equals('')">
+				and email= #{email}
+			</if>
+			<if test="phone != null and !phone.equals('')">
+				and phone= #{phone}
+			</if>
 			<if test="search != null">
 				<if test="search.keyword != null and !search.keyword.equals('')">
 					AND name like CONCAT('%', #{search.keyword}, '%')
@@ -54,134 +51,134 @@
 					OR remark like CONCAT('%', #{search.keyword}, '%')
 				</if>
 				<include refid="commonSearch.getWhere"/>
-			</if>  	
+			</if>
 			<if test="search == null">
 				<if test="memberSeq != null and !memberSeq.equals('')">
 					AND member_seq= #{memberSeq}
 					AND del_yn = 'N'
 				</if>
-			</if>  				
-		</where>	
-  	</sql>
-  	
-  	<select id="getMembers" resultMap="camelCaseMap">
-  		/** member.getMembers **/
-  		<include refid="memberSql"/>
+			</if>
+		</where>
+	</sql>
+
+	<select id="getMembers" resultMap="camelCaseMap">
+		/** member.getMembers **/
+		<include refid="memberSql"/>
 		<include refid="memberSqlWhere"/>
-  		ORDER BY member_seq desc
+		ORDER BY member_seq desc
 		<if test="search != null">
-		  	<if test="search.startRow != null and !search.startRow.equals('')">limit #{search.startRow}, #{search.size}</if>
+			<if test="search.startRow != null and !search.startRow.equals('')">limit #{search.startRow}, #{search.size}</if>
 		</if>
-  	</select>
-  
-    <select id="getMembersCnt" resultMap="camelCaseMap">
-   		/** member.getMembersCnt **/
-    	select count(*) as cnt from member
+	</select>
+
+	<select id="getMembersCnt" resultMap="camelCaseMap">
+		/** member.getMembersCnt **/
+		select count(*) as cnt from member
 		<include refid="memberSqlWhere"/>
-  	</select>
-  		
-  	<insert id="addMember" useGeneratedKeys="true" keyProperty="memberSeq">
-  		/** member.addMember **/
-  		INSERT INTO member ( 
-	  		id
-	  		, password
-	  		, name
-	  		, `role`
-	  		, profile
-	  		, email
-	  		, phone
-	  		, addr
-	  		, remark
-	  		, del_yn
-	  		, created_dt
-	  	) VALUES (
-  			#{id}
-  			, CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{password}))))))
-  			, #{name}
-  			, #{role}
-  			, #{profile}
-  			, #{email}
-  			, #{phone}
-  			, #{addr}
-  			, #{remark}
-  			, 'N'
-  			, NOW()
-  		)
-  	</insert>
-  	
-  	<update id="setMember">
-  		/** member.setMember **/
-  		UPDATE member
-  		<set>
-  			<if test="name != null and !name.equals('')">name= #{name},</if>
-  			<if test="newPassword != null and !newPassword.equals('')">password= CONCAT('*', UPPER(SHA1(UNHEX(SHA1((#{newPassword})))))),</if>
-  			<if test="role != null and !role.equals('')">`role`= #{role},</if>
-  			<if test="profile != null and !profile.equals('')">profile= #{profile},</if>
-  			<if test="email != null and !email.equals('')">email= #{email},</if>
-  			<if test="phone != null and !phone.equals('')">phone= #{phone},</if>
-  			<if test="addr != null and !addr.equals('')">addr= #{addr},</if>
-  			<if test="handle!= null">
-	  			<if test="handle.remark != null and !handle.remark.equals('')">remark= #{handle.remark},</if>
-	  			<if test="handle.delYn != null and !handle.delYn.equals('')">del_yn= #{handle.delYn},</if>  			
-  			</if>			
-  			updated_dt= NOW(), 
-  			updated_no=	#{handle.memberSeq}
-  		</set>
-  		<where>
-  			member_seq= #{handle.memberSeq}
-  		</where> 
-  	</update>
-  	
-  	<delete id="removeMember">
-  		/** member.removeMember **/
-  		DELETE FROM member
+	</select>
+
+	<insert id="addMember" useGeneratedKeys="true" keyProperty="memberSeq">
+		/** member.addMember **/
+		INSERT INTO member (
+			id
+			, password
+			, name
+			, `role`
+			, profile
+			, email
+			, phone
+			, addr
+			, remark
+			, del_yn
+			, created_dt
+		) VALUES (
+			#{id}
+			, #{password}
+			, #{name}
+			, #{role}
+			, #{profile}
+			, #{email}
+			, #{phone}
+			, #{addr}
+			, #{remark}
+			, 'N'
+			, NOW()
+		)
+	</insert>
+
+	<update id="setMember">
+		/** member.setMember **/
+		UPDATE member
+		<set>
+			<if test="name != null and !name.equals('')">name= #{name},</if>
+			<if test="newPassword != null and !newPassword.equals('')">password= #{newPassword},</if>
+			<if test="role != null and !role.equals('')">`role`= #{role},</if>
+			<if test="profile != null and !profile.equals('')">profile= #{profile},</if>
+			<if test="email != null and !email.equals('')">email= #{email},</if>
+			<if test="phone != null and !phone.equals('')">phone= #{phone},</if>
+			<if test="addr != null and !addr.equals('')">addr= #{addr},</if>
+			<if test="handle!= null">
+				<if test="handle.remark != null and !handle.remark.equals('')">remark= #{handle.remark},</if>
+				<if test="handle.delYn != null and !handle.delYn.equals('')">del_yn= #{handle.delYn},</if>
+			</if>
+			updated_dt= NOW(),
+			updated_no=	#{handle.memberSeq}
+		</set>
+		<where>
+			member_seq= #{handle.memberSeq}
+		</where>
+	</update>
+
+	<delete id="removeMember">
+		/** member.removeMember **/
+		DELETE FROM member
 		WHERE member_seq= #{handle.memberSeq}
-  	</delete>
-  	
-  	<!-- member-detail -->
-  	<sql id="memberDetailSql">
-  		SELECT 
-  			detail_seq
-  			, member_fk
-  			, category
-  			, content
-  			, remark
-  			, created_dt
-  			, created_no
+	</delete>
+
+	<!-- member-detail -->
+	<sql id="memberDetailSql">
+		SELECT
+			detail_seq
+			 , member_fk
+			 , category
+			 , content
+			 , remark
+			 , created_dt
+			 , created_no
 		FROM member_detail
-  	</sql>
-  	
-  	<select id="getMemberDetails" resultMap="camelCaseMap">
-  		/** member.getMemberDetails **/
-  		<include refid="memberDetailSql"/>
-  		<if test="search != null">WHERE member_fk= #{search.memberSeq}</if>
-  		<if test="search == null">WHERE member_fk= #{memberSeq}</if>
-  	</select>
-  	
-  	<insert id="addMemberDetail">
-  		/** member.addMemberDetail **/
-  		INSERT INTO member_detail (
-  			member_fk
-  			, category
-  			, content
-  			, remark
-  			, created_dt
-  			, created_no
-  		) VALUES (
-  			#{handle.memberSeq}
-  			, #{category}
-  			, #{handle.content}
-  			, #{handle.remark}
-  			, NOW()
-  			, #{handle.memberSeq}
-  		)
-  		
-  	</insert>
-  	
-  	<delete id="removeMemberDetail">
-  		/** member.removeMemberDetail **/
-  		DELETE FROM member_detail
-		WHERE member_fk= #{handle.memberSeq}		
-  	</delete>
+	</sql>
+
+	<select id="getMemberDetails" resultMap="camelCaseMap">
+		/** member.getMemberDetails **/
+		<include refid="memberDetailSql"/>
+		<if test="search != null">WHERE member_fk= #{search.memberSeq}</if>
+		<if test="search == null">WHERE member_fk= #{memberSeq}</if>
+	</select>
+
+	<insert id="addMemberDetail">
+		/** member.addMemberDetail **/
+		INSERT INTO member_detail (
+			member_fk
+			, category
+			, content
+			, remark
+			, created_dt
+			, created_no
+		) VALUES (
+			#{handle.memberSeq}
+			, #{category}
+			, #{handle.content}
+			, #{handle.remark}
+			, NOW()
+			, #{handle.memberSeq}
+		)
+
+	</insert>
+
+	<delete id="removeMemberDetail">
+		/** member.removeMemberDetail **/
+		DELETE FROM member_detail
+		WHERE member_fk= #{handle.memberSeq}
+	</delete>
 
 </mapper>
