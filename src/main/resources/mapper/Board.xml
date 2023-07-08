@@ -35,7 +35,7 @@
 		</if>
 		<if test="attachmentYn != null and !attachmentYn.equals('')">
 			AND attachment_yn= #{attachmentYn}
-		</if>					
+		</if>
 		<if test="search != null">
 			<if test="search.keyword != null and !search.keyword.equals('')">
 				AND title like CONCAT('%', #{search.keyword}, '%')
@@ -92,7 +92,7 @@
 			, #{handle.useYn}
 			, #{handle.delYn}
 			, NOW()
-			, #{handle.memberSeq}
+			, #{memberSeq}
 		)
 	</insert>
 	
@@ -112,7 +112,7 @@
 				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{periodEndDt},</if>			
 				<if test="handle.useYn != null and !handle.useYn.equals('')"> use_yn= #{handle.useYn},</if>
 				<if test="handle.delYn != null and !handle.delYn.equals('')"> del_yn= #{handle.delYn},</if>
-				updated_no= #{handle.memberSeq},
+				updated_no= #{memberSeq},
 			</if>
 			updated_dt= NOW()
 		</set>

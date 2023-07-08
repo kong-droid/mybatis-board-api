@@ -1,6 +1,7 @@
 package site.kongdroid.api.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
@@ -76,8 +77,9 @@ public class MemberController {
     public Callable<ApiResult> logicalDelete(Authentication authentication)
             throws InternalResourceException, AuthException {
         Integer memberSeq = AuthUtil.memberSeq(authentication);
+        Map<String, Object> emptyMap = new HashMap<>();
         return () -> ApiResult.successBuilder(memberService.handleMember(memberSeq ,
-                null, false, "remove"));
+                emptyMap, false, "remove"));
     }
 
 }

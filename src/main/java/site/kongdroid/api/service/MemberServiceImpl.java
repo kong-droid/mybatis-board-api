@@ -72,7 +72,10 @@ public class MemberServiceImpl implements MemberService {
                     });
                 }
                 break;
-            case "remove":           
+            case "remove":
+                System.err.println("test ::::" + requestMap);
+                if(dao.dbDelete("member.removeMemberDetail", requestMap) < 0)
+                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 if(dao.dbDelete("member.removeMember", requestMap) < 0)
                     throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 break;
