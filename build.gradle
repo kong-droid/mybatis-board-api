@@ -6,7 +6,7 @@ plugins {
 
 group = 'site.kongdroid.api'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {
 	compileOnly {
@@ -20,15 +20,22 @@ repositories {
 
 dependencies {
 	implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.1'	
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.1'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.1'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.7.0'
 	implementation 'org.springdoc:springdoc-openapi-common:1.7.0'
+	implementation 'org.springdoc:springdoc-openapi-security:1.6.13'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'io.vavr:vavr:0.10.4'
+	implementation 'org.springframework.security:spring-security-core:5.6.1'
+	implementation 'org.springframework.roo:org.springframework.roo.addon.security:2.0.0.RELEASE'
+	implementation 'org.springframework.security:spring-security-oauth2-core:5.6.1'
 	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -38,6 +45,6 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-test {
-	useJUnitPlatform()
-}
+//test {
+//	useJUnitPlatform()
+//}

@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="commonSearch">	
 	<sql id="getWhere">	
-		<if test="search.memberSeq != null and !search.memberSeq.equals('')">
-			AND created_no= #{search.memberSeq}
-		</if>
 		<if test="search.content != null and !search.content.equals('')">
 			AND content like CONCAT('%', #{search.content}, '%')
 		</if>
