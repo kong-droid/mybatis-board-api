@@ -40,6 +40,9 @@
 			<if test="phone != null and !phone.equals('')">
 				and phone= #{phone}
 			</if>
+			<if test="memberSeq != null and !memberSeq.equals('')">
+				AND member_seq= #{memberSeq}
+			</if>
 			<if test="search != null">
 				<if test="search.keyword != null and !search.keyword.equals('')">
 					AND name like CONCAT('%', #{search.keyword}, '%')
@@ -48,12 +51,6 @@
 					OR remark like CONCAT('%', #{search.keyword}, '%')
 				</if>
 				<include refid="commonSearch.getWhere"/>
-			</if>
-			<if test="search == null">
-				<if test="memberSeq != null and !memberSeq.equals('')">
-					AND member_seq= #{memberSeq}
-					AND del_yn = 'N'
-				</if>
 			</if>
 		</where>
 	</sql>
@@ -68,7 +65,7 @@
 		</if>
 	</select>
 
-	<select id="getMembersCnt" resultMap="camelCaseMap">
+	<select id="getMembersCnt" resultType="int">
 		/** member.getMembersCnt **/
 		select count(*) as cnt from member
 		<include refid="memberSqlWhere"/>
@@ -148,7 +145,6 @@
 	<select id="getMemberDetails" resultMap="camelCaseMap">
 		/** member.getMemberDetails **/
 		<include refid="memberDetailSql"/>
-		<if test="search != null">WHERE member_fk= #{search.memberSeq}</if>
 		<if test="search == null">WHERE member_fk= #{memberSeq}</if>
 	</select>
 
@@ -162,20 +158,19 @@
 			, created_dt
 			, created_no
 		) VALUES (
-			#{handle.memberSeq}
+			#{memberSeq}
 			, #{category}
 			, #{handle.content}
 			, #{handle.remark}
 			, NOW()
-			, #{handle.memberSeq}
+			, #{memberSeq}
 		)
-
 	</insert>
 
 	<delete id="removeMemberDetail">
 		/** member.removeMemberDetail **/
 		DELETE FROM member_detail
-		WHERE member_fk= #{handle.memberSeq}
+		WHERE member_fk= #{memberSeq}
 	</delete>
 
 </mapper>
