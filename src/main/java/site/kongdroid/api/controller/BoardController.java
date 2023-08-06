@@ -1,7 +1,6 @@
 package site.kongdroid.api.controller;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.security.auth.message.AuthException;
@@ -78,7 +77,7 @@ public class BoardController {
 											 @RequestBody @Valid final BoardDto req) throws AuthException {
 		Integer memberSeq = AuthUtil.memberSeq(authentication);
 	    return () -> ApiResult.successBuilder(boardService.handleBoard(memberSeq, MapUtil.toMap(req),
-				false, true, "remove"));
+				false, false, "remove"));
 	}	
 	
 	@PostMapping("/physical-delete")
@@ -86,8 +85,7 @@ public class BoardController {
     public Callable<ApiResult> physicalDelete(Authentication authentication,
 											  @RequestBody @Valid final BoardDto req) throws AuthException {
 		Integer memberSeq = AuthUtil.memberSeq(authentication);
-		Map<String, Object> emptyMap = new HashMap<>();
-	    return () -> ApiResult.successBuilder(boardService.handleBoard(memberSeq, emptyMap,
-				false, false, "remove"));
+		return () -> ApiResult.successBuilder(boardService.handleBoard(memberSeq, MapUtil.toMap(req),
+				false, true, "remove"));
 	}
 }

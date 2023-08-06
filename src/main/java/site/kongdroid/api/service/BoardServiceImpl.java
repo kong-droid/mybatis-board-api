@@ -32,6 +32,7 @@ public class BoardServiceImpl implements BoardService {
     	    }   
     	    
     	    val boards = dao.dbDetails("board.getBoards", requestMap);
+
     	    if(!boards.isEmpty()) {
     	        boards.forEach(board -> {
     	            val reqMap = new HashMap<String, Object>();
@@ -41,8 +42,7 @@ public class BoardServiceImpl implements BoardService {
     	    }
     	    
             responseMap.put("boards", boards);
-            responseMap.put("totalCount",
-                    Integer.parseInt(String.valueOf(dao.dbDetail("board.getBoardsCnt", requestMap).get("cnt"))));
+            responseMap.put("totalCount", dao.dbCount("board.getBoardsCnt", requestMap));
     	} else {
     	    responseMap = dao.dbDetail("board.getBoards", requestMap);
             if(!responseMap.isEmpty()) {
@@ -56,7 +56,7 @@ public class BoardServiceImpl implements BoardService {
 
     public Map<String, Object> handleBoard(Integer memberSeq, Map<String, Object> requestMap, boolean isAdd,
                                            boolean isPhysical, String whatAct) throws InternalResourceException {
-        if(!isAdd) requestMap.put("memberSeq", memberSeq);
+        requestMap.put("memberSeq", memberSeq);
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
@@ -66,7 +66,7 @@ public class BoardServiceImpl implements BoardService {
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
-                val handle = ( Map<String, Object> ) requestMap.get("handle");
+                val handle = (Map<String, Object>) requestMap.get("handle");
                 rmvReqMap.put("boardSeq", requestMap.get("boardSeq"));
                 val rmvResMap = getBoards(rmvReqMap, false);
                 if(!rmvResMap.isEmpty()) {

@@ -56,7 +56,7 @@
 		</if>
 	</select>
 	
-	<select id="getBoardsCnt" resultMap="camelCaseMap">
+	<select id="getBoardsCnt" resultType="int">
 		/** board.getBoardsCnt **/
 		select count(*) as cnt 
 		from board where 1=1

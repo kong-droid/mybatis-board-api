@@ -4,6 +4,7 @@ import java.util.Map;
 
 public interface PostService {
     Map<String, Object> getPosts(Map<String, Object> requestMap, boolean isDouble);
-    Map<String, Object> handlePost(Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct);
+    Map<String, Object> handlePost(Integer memberSeq, Map<String, Object> requestMap, boolean isAdd,
+                                   boolean isPhysical, String whatAct);
     void setPostForViewCount(Map<String, Object> requestMap);
 }

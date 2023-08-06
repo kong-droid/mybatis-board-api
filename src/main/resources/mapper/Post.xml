@@ -66,10 +66,9 @@
 	
 	<select id="getPostsCnt" resultMap="camelCaseMap">
 		/** post.getPostsCnt **/
-		select count(*) as cnt from (
-			<include refid="getSql"/>
-			<include refid="getWhere"/>			
-    	) tb
+		select count(*) as cnt
+		from post where 1=1
+		<include refid="getWhere"/>
 	</select>
 	
 	<insert id="addPost" useGeneratedKeys="true" keyProperty="postSeq">
@@ -92,7 +91,7 @@
 			, created_no
 		) VALUES (
 			#{boardSeq}
-			, #{handle.memberSeq}
+			, #{memberSeq}
 			, #{thumbnail}
 			, #{title}
 			, #{handle.content}
@@ -105,7 +104,7 @@
 			, #{handle.delYn}
 			, 0
 			, NOW()
-			, #{handle.memberSeq}
+			, #{memberSeq}
 		)
 	</insert>
 	
@@ -124,7 +123,7 @@
 				<if test="handle.periodEndDt != null and !handle.periodEndDt.equals('')"> period_end_dt= #{handle.periodEndDt},</if>			
 				<if test="handle.useYn != null and !handle.useYn.equals('')"> use_yn= #{handle.useYn},</if>
 				<if test="handle.delYn != null and !handle.delYn.equals('')"> del_yn= #{handle.delYn},</if>
-				updated_no= #{handle.memberSeq},
+				updated_no= #{memberSeq},
 			</if>	
 			updated_dt= NOW()
 		</set>

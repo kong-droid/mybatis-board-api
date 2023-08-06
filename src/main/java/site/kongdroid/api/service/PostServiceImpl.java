@@ -27,7 +27,7 @@ public class PostServiceImpl implements PostService {
 	
     public Map<String, Object> getPosts( Map<String, Object> requestMap,
                                          boolean isDouble ) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+        Map<String, Object> responseMap = new HashMap<>();
         List<Map<String, Object>> posts = new ArrayList<Map<String,Object>>();
         if(isDouble) {
 
@@ -53,8 +53,7 @@ public class PostServiceImpl implements PostService {
             }
             
             responseMap.put("posts", posts);
-            responseMap.put("totalCount",
-                    Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
+            responseMap.put("totalCount", dao.dbCount("post.getPostsCnt", requestMap));
         } else {
             responseMap = dao.dbDetail("post.getPosts", requestMap); 
 
@@ -73,8 +72,9 @@ public class PostServiceImpl implements PostService {
         return responseMap;
     }
     
-    public Map<String, Object> handlePost(Map<String, Object> requestMap, boolean isAdd,
+    public Map<String, Object> handlePost(Integer memberSeq, Map<String, Object> requestMap, boolean isAdd,
                                           boolean isPhysical, String whatAct) throws InternalResourceException {
+        requestMap.put("memberSeq", memberSeq);
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
@@ -84,11 +84,11 @@ public class PostServiceImpl implements PostService {
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
-                val handle = ( Map<String, Object> ) requestMap.get("handle");
+                val handle = (Map<String, Object>) requestMap.get("handle");
                 rmvReqMap.put("postSeq", requestMap.get("postSeq"));
                 val rmvResMap = getPosts(rmvReqMap, false);
                 if(!rmvResMap.isEmpty()) {
-                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
+                    if(rmvResMap.get("createdNo").equals(memberSeq)) {
                         if(isPhysical) {
                             if(dao.dbDelete("post.removePost", requestMap) < 0 )
                                 throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
