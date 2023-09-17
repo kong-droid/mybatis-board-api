@@ -11,8 +11,10 @@ import org.springframework.util.CollectionUtils;
 
 import lombok.val;
 import lombok.RequiredArgsConstructor;
+import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
+import site.kongdroid.api.exception.InternalServerException;
 import site.kongdroid.api.exception.ResourceNotFoundException;
 
 @Service
@@ -23,20 +25,21 @@ public class PostServiceImpl implements PostService {
 	private final CommentServiceImpl commentService;
 	private final MemberServiceImpl memberService;
 	
-    public Map<String, Object> getPosts( Map<String, Object> requestMap, boolean isDouble ) throws InternalResourceException {
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+    public Map<String, Object> getPosts( Map<String, Object> requestMap,
+                                         boolean isDouble ) throws InternalResourceException {
+        Map<String, Object> responseMap = new HashMap<>();
         List<Map<String, Object>> posts = new ArrayList<Map<String,Object>>();
         if(isDouble) {
 
             val searchMap = (Map<String, Object>) requestMap.get("search");
-            if(!CollectionUtils.isEmpty(searchMap)) {
+            if(!searchMap.isEmpty()) {
                 if(searchMap.get("page") != null && searchMap.get("size") != null) {
                     searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
                 }
             }   
             
             posts = dao.dbDetails("post.getPosts", requestMap);
-            if(!CollectionUtils.isEmpty(posts)) {
+            if(!posts.isEmpty()) {
                 posts.forEach(post -> {
                     Map<String, Object> reqMap = new HashMap<>();
                     reqMap.put("memberSeq", post.get("createdNo"));
@@ -50,11 +53,11 @@ public class PostServiceImpl implements PostService {
             }
             
             responseMap.put("posts", posts);
-            responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("post.getPostsCnt", requestMap).get("cnt"))));
+            responseMap.put("totalCount", dao.dbCount("post.getPostsCnt", requestMap));
         } else {
             responseMap = dao.dbDetail("post.getPosts", requestMap); 
 
-            if(!CollectionUtils.isEmpty(responseMap)) {
+            if(!responseMap.isEmpty()) {
                 setPostForViewCount(requestMap);
                 
                 val reqMap = new HashMap<String, Object>();
@@ -69,31 +72,36 @@ public class PostServiceImpl implements PostService {
         return responseMap;
     }
     
-    public Map<String, Object> handlePost(Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct) throws InternalResourceException {
+    public Map<String, Object> handlePost(Integer memberSeq, Map<String, Object> requestMap, boolean isAdd,
+                                          boolean isPhysical, String whatAct) throws InternalResourceException {
+        requestMap.put("memberSeq", memberSeq);
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
-                if(dao.dbInsert(isAdd ? "post.addPost" : "post.setPost" , requestMap) < 0) throw new BadRequestException("Invalid Error");
+                if(dao.dbInsert(isAdd ? "post.addPost" : "post.setPost" , requestMap) < 0)
+                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
-                val handle = ( Map<String, Object> ) requestMap.get("handle");
+                val handle = (Map<String, Object>) requestMap.get("handle");
                 rmvReqMap.put("postSeq", requestMap.get("postSeq"));
                 val rmvResMap = getPosts(rmvReqMap, false);
-                if(!CollectionUtils.isEmpty(rmvResMap)) {
-                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
+                if(!rmvResMap.isEmpty()) {
+                    if(rmvResMap.get("createdNo").equals(memberSeq)) {
                         if(isPhysical) {
-                            if(dao.dbDelete("post.removePost", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                            if(dao.dbDelete("post.removePost", requestMap) < 0 )
+                                throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                         } else {
                             handle.put("delYn", "Y");
-                            if(dao.dbUpdate("post.setPost", requestMap) < 0) throw new BadRequestException("Invalid Error");
+                            if(dao.dbUpdate("post.setPost", requestMap) < 0)
+                                throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                         }
                     } else {
-                        throw new BadRequestException("Invalid Error");
+                        throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     }
                 } else {
-                    new ResourceNotFoundException("Invalid Error");
+                    throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
                 }
                 break;
         }
@@ -102,6 +110,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public void setPostForViewCount(Map<String, Object> requestMap) throws InternalResourceException {
-    	if(dao.dbUpdate("post.setPostForViewCount", requestMap) < 0) throw new BadRequestException("Invalid Error");
+    	if(dao.dbUpdate("post.setPostForViewCount", requestMap) < 0)
+            throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
     }
 }

@@ -20,7 +20,8 @@ mybatis:
 
 server:
   port: 8100
-
+  error:
+    include-exception: true
 properties:
   aesKey: kong1234!@#$%Qwe
   
@@ -43,4 +44,4 @@ springdoc:
 api:
   jwt:
     secret: k@ng-backE&D!
-    valid-time: 12h
+    valid-time: 720h

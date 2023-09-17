@@ -31,9 +31,6 @@
 			<if test="id != null and !id.equals('')">
 				and id= #{id}
 			</if>
-			<if test="oldPassword != null and !oldPassword.equals('')">
-				and password= #{oldPassword}
-			</if>
 			<if test="name != null and !name.equals('')">
 				and name= #{name}
 			</if>
@@ -43,6 +40,9 @@
 			<if test="phone != null and !phone.equals('')">
 				and phone= #{phone}
 			</if>
+			<if test="memberSeq != null and !memberSeq.equals('')">
+				AND member_seq= #{memberSeq}
+			</if>
 			<if test="search != null">
 				<if test="search.keyword != null and !search.keyword.equals('')">
 					AND name like CONCAT('%', #{search.keyword}, '%')
@@ -51,12 +51,6 @@
 					OR remark like CONCAT('%', #{search.keyword}, '%')
 				</if>
 				<include refid="commonSearch.getWhere"/>
-			</if>
-			<if test="search == null">
-				<if test="memberSeq != null and !memberSeq.equals('')">
-					AND member_seq= #{memberSeq}
-					AND del_yn = 'N'
-				</if>
 			</if>
 		</where>
 	</sql>
@@ -71,7 +65,7 @@
 		</if>
 	</select>
 
-	<select id="getMembersCnt" resultMap="camelCaseMap">
+	<select id="getMembersCnt" resultType="int">
 		/** member.getMembersCnt **/
 		select count(*) as cnt from member
 		<include refid="memberSqlWhere"/>
@@ -122,17 +116,17 @@
 				<if test="handle.delYn != null and !handle.delYn.equals('')">del_yn= #{handle.delYn},</if>
 			</if>
 			updated_dt= NOW(),
-			updated_no=	#{handle.memberSeq}
+			updated_no=	#{memberSeq}
 		</set>
 		<where>
-			member_seq= #{handle.memberSeq}
+			member_seq= #{memberSeq}
 		</where>
 	</update>
 
 	<delete id="removeMember">
 		/** member.removeMember **/
 		DELETE FROM member
-		WHERE member_seq= #{handle.memberSeq}
+		WHERE member_seq= #{memberSeq}
 	</delete>
 
 	<!-- member-detail -->
@@ -151,7 +145,6 @@
 	<select id="getMemberDetails" resultMap="camelCaseMap">
 		/** member.getMemberDetails **/
 		<include refid="memberDetailSql"/>
-		<if test="search != null">WHERE member_fk= #{search.memberSeq}</if>
 		<if test="search == null">WHERE member_fk= #{memberSeq}</if>
 	</select>
 
@@ -165,20 +158,19 @@
 			, created_dt
 			, created_no
 		) VALUES (
-			#{handle.memberSeq}
+			#{memberSeq}
 			, #{category}
 			, #{handle.content}
 			, #{handle.remark}
 			, NOW()
-			, #{handle.memberSeq}
+			, #{memberSeq}
 		)
-
 	</insert>
 
 	<delete id="removeMemberDetail">
 		/** member.removeMemberDetail **/
 		DELETE FROM member_detail
-		WHERE member_fk= #{handle.memberSeq}
+		WHERE member_fk= #{memberSeq}
 	</delete>
 
 </mapper>

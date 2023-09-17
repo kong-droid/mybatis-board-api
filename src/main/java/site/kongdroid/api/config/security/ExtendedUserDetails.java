@@ -12,16 +12,16 @@ import site.kongdroid.api.constants.UserRole;
 public class ExtendedUserDetails extends User{
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-    private final Integer userNo;
+    private final Integer memberSeq;
 
-    public ExtendedUserDetails(Integer userNo, String email, UserRole role){
+    public ExtendedUserDetails(Integer memberSeq, String email, UserRole role){
         super(email, "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.userNo = userNo;
+        this.memberSeq = memberSeq;
     }
 
-    public ExtendedUserDetails(Integer userNo, String email, UserRole role, boolean enabled){
+    public ExtendedUserDetails(Integer memberSeq, String email, UserRole role, boolean enabled){
         super(email, "", enabled, true, true,
                 true, AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.userNo = userNo;
+        this.memberSeq = memberSeq;
     }
 }

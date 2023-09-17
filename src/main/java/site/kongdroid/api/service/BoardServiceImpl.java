@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory.InternalResourceException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import lombok.val;
 import lombok.RequiredArgsConstructor;
+import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
-import site.kongdroid.api.exception.BadRequestException;
+import site.kongdroid.api.exception.InternalServerException;
 import site.kongdroid.api.exception.ResourceNotFoundException;
 
 @Service
@@ -20,18 +20,20 @@ public class BoardServiceImpl implements BoardService {
 	private final CustomDao dao;
 	private final MemberServiceImpl memberService;
 	
-    public Map<String, Object> getBoards(Map<String, Object> requestMap, boolean isDouble) throws InternalResourceException {
+    public Map<String, Object> getBoards(Map<String, Object> requestMap,
+                                         boolean isDouble) throws InternalResourceException {
     	Map<String, Object> responseMap = new HashMap<>();
     	if(isDouble) {
     	    val searchMap = (Map<String, Object>) requestMap.get("search");
-    	    if(!CollectionUtils.isEmpty(searchMap)) {
+    	    if(!searchMap.isEmpty()) {
     	        if(searchMap.get("page") != null && searchMap.get("size") != null) {
     	            searchMap.put("startRow", (Integer) searchMap.get("page") * (Integer) searchMap.get("page"));
     	        }
     	    }   
     	    
     	    val boards = dao.dbDetails("board.getBoards", requestMap);
-    	    if(!CollectionUtils.isEmpty(boards)) {
+
+    	    if(!boards.isEmpty()) {
     	        boards.forEach(board -> {
     	            val reqMap = new HashMap<String, Object>();
     	            reqMap.put("memberSeq", board.get("createdNo"));
@@ -40,10 +42,10 @@ public class BoardServiceImpl implements BoardService {
     	    }
     	    
             responseMap.put("boards", boards);
-            responseMap.put("totalCount", Integer.parseInt(String.valueOf(dao.dbDetail("board.getBoardsCnt", requestMap).get("cnt"))));
+            responseMap.put("totalCount", dao.dbCount("board.getBoardsCnt", requestMap));
     	} else {
     	    responseMap = dao.dbDetail("board.getBoards", requestMap);
-            if(!CollectionUtils.isEmpty(responseMap)) {
+            if(!responseMap.isEmpty()) {
                 val reqMap = new HashMap<String, Object>();
                 reqMap.put("memberSeq", responseMap.get("createdNo"));
                 responseMap.put("memberInfo", memberService.getMembers(reqMap, false));
@@ -52,31 +54,36 @@ public class BoardServiceImpl implements BoardService {
         return responseMap;
     }
 
-    public Map<String, Object> handleBoard(Map<String, Object> requestMap, boolean isAdd, boolean isPhysical, String whatAct) throws InternalResourceException {
+    public Map<String, Object> handleBoard(Integer memberSeq, Map<String, Object> requestMap, boolean isAdd,
+                                           boolean isPhysical, String whatAct) throws InternalResourceException {
+        requestMap.put("memberSeq", memberSeq);
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
             case "modify":
-                if(dao.dbInsert(isAdd ? "board.addBoard" : "board.setBoard" , requestMap) < 0) throw new BadRequestException("Invalid Error");
+                if(dao.dbInsert(isAdd ? "board.addBoard" : "board.setBoard" , requestMap) < 0)
+                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
-                val handle = ( Map<String, Object> ) requestMap.get("handle");
+                val handle = (Map<String, Object>) requestMap.get("handle");
                 rmvReqMap.put("boardSeq", requestMap.get("boardSeq"));
                 val rmvResMap = getBoards(rmvReqMap, false);
-                if(!CollectionUtils.isEmpty(rmvResMap)) {
-                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {
+                if(!rmvResMap.isEmpty()) {
+                    if(rmvResMap.get("createdNo").equals(memberSeq)) {
                         if(isPhysical) {
-                            if(dao.dbDelete("board.removeBoard", requestMap) < 0 ) throw new BadRequestException("Invalid Error");
+                            if(dao.dbDelete("board.removeBoard", requestMap) < 0 )
+                                throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                         } else {
                             handle.put("delYn", "Y");
-                            if(dao.dbUpdate("board.setBoard", requestMap) < 0) throw new BadRequestException("Invalid Error");
+                            if(dao.dbUpdate("board.setBoard", requestMap) < 0)
+                                throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                         }
                     } else {
-                        throw new BadRequestException("Invalid Error");
+                        throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     }
                 } else {
-                    new ResourceNotFoundException("Invalid Error");
+                    throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
                 }
                 break;
         }

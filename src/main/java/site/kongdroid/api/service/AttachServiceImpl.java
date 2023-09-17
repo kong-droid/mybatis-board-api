@@ -13,11 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.val;
 import lombok.RequiredArgsConstructor;
+import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.dto.request.attach.AttachDto;
 import site.kongdroid.api.exception.BadRequestException;
@@ -78,8 +78,8 @@ public class AttachServiceImpl implements AttachService {
         requestMap.put("attachSeq", attachSeq);
         val attach = dao.dbDetail("attach.getAttaches", requestMap);
 
-        if(CollectionUtils.isEmpty(attach)) {
-            throw new ResourceNotFoundException("Not Found");
+        if(attach.isEmpty()) {
+            throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
         } else {
             String fullPath = String.valueOf(attach.get("fullPath"));
             String originalFileName = FileUtil.transUtf8FileName(String.valueOf(attach.get("realPath")));
@@ -98,21 +98,21 @@ public class AttachServiceImpl implements AttachService {
     	requestMap.put("attachSeq", attachSeq);
 
         val attaches = dao.dbDetails("attach.getAttaches", requestMap);
-    	if(!CollectionUtils.isEmpty(attaches)) {
+    	if(!attaches.isEmpty()) {
     	    if(attaches.get(0).get("attachSeq").equals(attachSeq)) {
     	        if(dao.dbDelete("attach.removeAttach", requestMap) < 0) {
-    	            throw new BadRequestException("Invalid Error"); 
+    	            throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
     	        } else {
     	            try {
                         FileUtil.removeFiles(attaches);
                     } catch (IOException e) {
-                        throw new ResourceNotFoundException("Invalid Error");
+                        throw new ResourceNotFoundException(MessageConstant.INVALID_MESSAGE);
                     }
     	        }
     	    }
     	    return attachSeq;
     	} else {
-    	    throw new ResourceNotFoundException("Invalid Error");
+    	    throw new ResourceNotFoundException(MessageConstant.INVALID_MESSAGE);
     	}
     }
 }

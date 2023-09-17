@@ -24,16 +24,16 @@ public class UserDetailsServiceImpl implements ExtendedUserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByNo(Integer userNo) throws UsernameNotFoundException {
+    public UserDetails loadUserByNo(Integer memberSeq) throws UsernameNotFoundException {
         val requestMap = new HashMap<String, Object>();
-        requestMap.put("userNo", userNo);
+        requestMap.put("memberSeq", memberSeq);
         return convert(serviceSupplier.get().getMembers(requestMap, false));
     }
 
     private UserDetails convert(Map<String, Object> memberMap){
-        Integer userNo = (Integer) memberMap.get("userNo");
+        Integer memberSeq = (Integer) memberMap.get("memberSeq");
         String email = (String) memberMap.get("email");
         UserRole role = (UserRole) memberMap.get("role");
-        return new ExtendedUserDetails(userNo, email, role);
+        return new ExtendedUserDetails(memberSeq, email, role);
     }
 }
