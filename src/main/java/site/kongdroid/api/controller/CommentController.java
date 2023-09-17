@@ -1,7 +1,10 @@
 package site.kongdroid.api.controller;
 
 
+import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.board.CommentDto;
 import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.CommentService;
+import site.kongdroid.api.util.AuthUtil;
 import site.kongdroid.api.util.MapUtil;
 
 import java.util.concurrent.Callable;
@@ -30,20 +34,29 @@ public class CommentController {
 	
     @PostMapping("/register")
     @Operation(summary = "댓글 등록")
-    public Callable<ApiResult> create(@RequestBody @Valid final CommentDto req){
-        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), true, "regist"));
+    public Callable<ApiResult> create(Authentication authentication,
+                                      @RequestBody @Valid final CommentDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(commentService.handleComment(memberSeq, MapUtil.toMap(req),
+                true, "regist"));
     }
     
     @PostMapping("/modify")
     @Operation(summary = "댓글 수정")
-    public Callable<ApiResult> update(@RequestBody @Valid final CommentDto req){
-        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "modify"));
+    public Callable<ApiResult> update(Authentication authentication,
+                                      @RequestBody @Valid final CommentDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(commentService.handleComment(memberSeq, MapUtil.toMap(req),
+                false, "modify"));
     }
     
     @PostMapping("/delete")
     @Operation(summary = "댓글 삭제")
-    public Callable<ApiResult> removeComment(@RequestBody @Valid final CommentDto req){
-        return () -> ApiResult.successBuilder(commentService.handleComment(MapUtil.toMap(req), false, "remove"));
+    public Callable<ApiResult> removeComment(Authentication authentication,
+                                             @RequestBody @Valid final CommentDto req)  throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(commentService.handleComment(memberSeq, MapUtil.toMap(req),
+                false, "remove"));
     }   
     
 }
