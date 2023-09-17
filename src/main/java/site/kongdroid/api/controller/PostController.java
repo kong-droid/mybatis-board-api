@@ -76,7 +76,7 @@ public class PostController {
                                              @RequestBody @Valid final PostDto req) throws AuthException {
         Integer memberSeq = AuthUtil.memberSeq(authentication);
         return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
-                false, true, "remove"));
+                false, false, "remove"));
     }   
     
     @PostMapping("/physical-delete")
@@ -85,6 +85,6 @@ public class PostController {
                                               @RequestBody @Valid final PostDto req) throws AuthException {
         Integer memberSeq = AuthUtil.memberSeq(authentication);
         return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
-                false, false, "remove"));
+                false, true, "remove"));
     }
 }

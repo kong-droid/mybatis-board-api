@@ -64,7 +64,7 @@
 		</if>
 	</select>
 	
-	<select id="getPostsCnt" resultMap="camelCaseMap">
+	<select id="getPostsCnt" resultType="int">
 		/** post.getPostsCnt **/
 		select count(*) as cnt
 		from post where 1=1
