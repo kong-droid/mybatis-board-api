@@ -37,14 +37,14 @@ public class MemoServiceImpl implements MemoService {
             case "remove":
                 val detail = dao.dbDetail("memo.getMemos", requestMap);
                 if(!detail.isEmpty()) {
-                    if(detail.get("memberSeq").equals(memberSeq)) {
+                    if(detail.get("memberFk").equals(memberSeq)) {
                         if(dao.dbDelete("memo.removeMemo", requestMap) < 0)
                             throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     } else {
                         throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     }
                 } else {
-                    throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
+                    throw new InternalServerException(MessageConstant.NOT_FOUND_MESSAGE);
                 }
                 break;
         }

@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
                 rmvReqMap.put("commentSeq", requestMap.get("commentSeq"));
                 val rmvResMap = dao.dbDetail("comment.getComments", rmvReqMap);
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
-                    if(rmvResMap.get("createdNo").equals(memberSeq)) {
+                    if(rmvResMap.get("memberFk").equals(memberSeq)) {
                         if(dao.dbDelete("comment.removeComment", requestMap) < 0 )
                             throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     } else {
