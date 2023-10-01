@@ -32,21 +32,17 @@ public class CommentServiceImpl implements CommentService {
                 reqMap.put("memberSeq", comment.get("createdNo"));
                 comment.put("memberInfo", memberService.getMembers(reqMap, false));
                 
-                if((Integer) comment.get("depsNo") == 1 && (Integer) comment.get("parentsNo") == 0 ) {
+                if((Integer) comment.get("depsNo") == 1 && (Integer) comment.get("parentsNo") == 0 )
                     parents.add(comment);
-                }
                 
-                if((Integer) comment.get("depsNo") >= 2 && (Integer) comment.get("parentsNo") >= 1 ) {
+                if((Integer) comment.get("depsNo") >= 2 && (Integer) comment.get("parentsNo") >= 1 )
                     chlid.add(comment);
-                }
             });
             
             parents.forEach(parent -> {
                 val array = new ArrayList<Map<String, Object>>();
                 chlid.forEach(chd -> {
-                    if(Objects.equals(parent.get("commentSeq"), chd.get("parentsNo"))) {
-                        array.add(chd);
-                    }
+                    if(Objects.equals(parent.get("commentSeq"), chd.get("parentsNo"))) array.add(chd);
                 });
                 parent.put("chlid", array);
             });  
@@ -72,7 +68,6 @@ public class CommentServiceImpl implements CommentService {
 
                 rmvReqMap.put("commentSeq", requestMap.get("commentSeq"));
                 val rmvResMap = dao.dbDetail("comment.getComments", rmvReqMap);
-
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
                     if(rmvResMap.get("createdNo").equals(memberSeq)) {
                         if(dao.dbDelete("comment.removeComment", requestMap) < 0 )
