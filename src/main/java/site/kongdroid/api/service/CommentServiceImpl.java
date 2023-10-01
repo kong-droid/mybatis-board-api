@@ -57,8 +57,9 @@ public class CommentServiceImpl implements CommentService {
         return responseMap;
     }
 
-    public Map<String, Object> handleComment(Map<String, Object> requestMap,
+    public Map<String, Object> handleComment(Integer memberSeq, Map<String, Object> requestMap,
                                              boolean isAdd, String whatAct) throws InternalResourceException {
+        requestMap.put("memberSeq", memberSeq);
         val responseMap = new HashMap<String, Object>();
         switch (whatAct) {
             case "regist":
@@ -68,13 +69,12 @@ public class CommentServiceImpl implements CommentService {
                 break;
             case "remove":
                 val rmvReqMap = new HashMap<String, Object>();
-                val handle = (Map<String, Object>) requestMap.get("handle");
 
                 rmvReqMap.put("commentSeq", requestMap.get("commentSeq"));
                 val rmvResMap = dao.dbDetail("comment.getComments", rmvReqMap);
 
                 if(!CollectionUtils.isEmpty(rmvResMap)) {
-                    if(rmvResMap.get("createdNo").equals(handle.get("memberSeq"))) {                
+                    if(rmvResMap.get("createdNo").equals(memberSeq)) {
                         if(dao.dbDelete("comment.removeComment", requestMap) < 0 )
                             throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                     } else {

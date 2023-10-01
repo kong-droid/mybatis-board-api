@@ -56,12 +56,12 @@
 			, created_no
 		) VALUES (
 			#{postSeq}
-			, #{handle.memberSeq}
+			, #{memberSeq}
 			, #{parentsNo}
 			, #{depsNo}
 			, #{comment}
 			, NOW()
-			, #{handle.memberSeq}	
+			, #{memberSeq}
 		)
 	</insert>
 	
@@ -71,7 +71,7 @@
 		<set>
 			comment= #{comment},
 			updated_dt= NOW(),
-			updated_no= #{handle.memberSeq}	
+			updated_no= #{memberSeq}
 		</set>
 		WHERE comment_seq= #{commentSeq}
 	</update>

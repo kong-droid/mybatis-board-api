@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.board.PostDto;
 import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.PostService;
+import site.kongdroid.api.util.AuthUtil;
 import site.kongdroid.api.util.MapUtil;
 
 
@@ -51,25 +54,37 @@ public class PostController {
     
     @PostMapping("/register")
     @Operation(summary = "게시글 등록")
-    public Callable<ApiResult> create(@RequestBody @Valid final PostDto req){
-        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), true, false, "regist"));
+    public Callable<ApiResult> create(Authentication authentication,
+                                      @RequestBody@Valid final PostDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
+                true, false, "regist"));
     }
     
     @PostMapping("/modify")
     @Operation(summary = "게시글 수정")
-    public Callable<ApiResult> update(@RequestBody @Valid final PostDto req){
-        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "modify"));
+    public Callable<ApiResult> update(Authentication authentication,
+                                      @RequestBody @Valid final PostDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
+                false, false, "modify"));
     }
     
     @PostMapping("/logical-delete")
     @Operation(summary = "게시글 논리적 삭제")
-    public Callable<ApiResult> logicalDelete(@RequestBody @Valid final PostDto req){
-        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, true, "remove"));
+    public Callable<ApiResult> logicalDelete(Authentication authentication,
+                                             @RequestBody @Valid final PostDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
+                false, false, "remove"));
     }   
     
     @PostMapping("/physical-delete")
     @Operation(summary = "게시글 물리적 삭제")
-    public Callable<ApiResult> physicalDelete(@RequestBody @Valid final PostDto req){
-        return () -> ApiResult.successBuilder(postService.handlePost(MapUtil.toMap(req), false, false, "remove"));
+    public Callable<ApiResult> physicalDelete(Authentication authentication,
+                                              @RequestBody @Valid final PostDto req) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(postService.handlePost(memberSeq, MapUtil.toMap(req),
+                false, true, "remove"));
     }
 }
