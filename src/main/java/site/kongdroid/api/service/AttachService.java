@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface AttachService {
     Map<String, Object> getAttaches(Map<String, Object> requestMap);
-    Map<String, Object> addAttach(AttachDto.AddAttachReq req) throws IOException;
     ResponseEntity<InputStreamResource> downloadFile(int attachSeq) throws FileNotFoundException;
-    int physicalRemoveAttach(int attachSeq);
+    Map<String, Object> addAttach(Integer memberSeq, AttachDto.AddAttachReq req) throws IOException;
+    Map<String, Object> physicalRemoveAttach(Integer memberSeq, int attachSeq);
 }

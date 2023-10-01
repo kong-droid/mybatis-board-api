@@ -38,40 +38,7 @@ public class AttachServiceImpl implements AttachService {
         responseMap.put("attaches", dao.dbDetails("attach.getAttaches", requestMap));
         return responseMap;
     }
-    
-	@Transactional
-    public Map<String, Object> addAttach(AttachDto.AddAttachReq req) throws IOException {
-		val responsesMap = new HashMap<String, Object>();
-		val attached = new ArrayList<>();
-		for(MultipartFile maps : req.getFiles()) {            
-            String calPath = FileUtil.calcPath(uploadPath);
-            String saveName = FileUtil.uploadFile(calPath, maps.getOriginalFilename(), maps.getBytes());
-            val requestMap = new HashMap<String, Object>();
 
-            requestMap.put("realName", maps.getOriginalFilename());
-            requestMap.put("uuidName", saveName.substring(saveName.lastIndexOf("/") + 1));
-            requestMap.put("fileType", maps.getOriginalFilename().substring(maps.getOriginalFilename().lastIndexOf(".") + 1));
-            requestMap.put("fileSize", maps.getBytes().length);
-            requestMap.put("filePath", calPath);
-            requestMap.put("tbName", req.getTbName());
-            requestMap.put("tbSeq", req.getTbSeq());
-            requestMap.put("tbType", req.getTbType());
-            requestMap.put("memberSeq", req.getMemberSeq());
-
-            if (dao.dbInsert("attach.addAttach", requestMap) < 0) {
-            	throw new BadRequestException("Invalid Error");
-            } else {
-            	val responseMap = new HashMap<String, Object>();
-            	responseMap.put("attachSeq", requestMap.get("attachSeq"));
-            	responseMap.put("realName", maps.getOriginalFilename());
-            	responseMap.put("fullPath", requestMap.get("filePath") + "/" + requestMap.get("uuidName"));
-            	attached.add(responseMap);
-            }       
-        }
-		responsesMap.put("attached", attached);
-		return responsesMap;
-    }
-	
     public ResponseEntity<InputStreamResource> downloadFile(int attachSeq) throws FileNotFoundException {
         val requestMap = new HashMap<String, Object>();
 
@@ -92,13 +59,47 @@ public class AttachServiceImpl implements AttachService {
                 .body(resource);
         }
     }
-	
-    public int physicalRemoveAttach(int attachSeq) {
+
+    @Transactional
+    public Map<String, Object> addAttach(Integer memberSeq, AttachDto.AddAttachReq req) throws IOException {
+        val responsesMap = new HashMap<String, Object>();
+        val attached = new ArrayList<>();
+        for(MultipartFile maps : req.getFiles()) {
+            String calPath = FileUtil.calcPath(uploadPath);
+            String saveName = FileUtil.uploadFile(calPath, maps.getOriginalFilename(), maps.getBytes());
+            val requestMap = new HashMap<String, Object>();
+
+            requestMap.put("realName", maps.getOriginalFilename());
+            requestMap.put("uuidName", saveName.substring(saveName.lastIndexOf("/") + 1));
+            requestMap.put("fileType", maps.getOriginalFilename().substring(maps.getOriginalFilename().lastIndexOf(".") + 1));
+            requestMap.put("fileSize", maps.getBytes().length);
+            requestMap.put("filePath", calPath);
+            requestMap.put("tbName", req.getTbName());
+            requestMap.put("tbSeq", req.getTbSeq());
+            requestMap.put("tbType", req.getTbType());
+            requestMap.put("memberSeq", memberSeq);
+
+            if (dao.dbInsert("attach.addAttach", requestMap) < 0) {
+                throw new BadRequestException("Invalid Error");
+            } else {
+                val responseMap = new HashMap<String, Object>();
+                responseMap.put("attachSeq", requestMap.get("attachSeq"));
+                responseMap.put("realName", maps.getOriginalFilename());
+                responseMap.put("fullPath", requestMap.get("filePath") + "/" + requestMap.get("uuidName"));
+                attached.add(responseMap);
+            }
+        }
+        responsesMap.put("attached", attached);
+        return responsesMap;
+    }
+
+    public Map<String, Object> physicalRemoveAttach(Integer memberSeq, int attachSeq) {
     	val requestMap = new HashMap<String, Object>();
     	requestMap.put("attachSeq", attachSeq);
-
         val attaches = dao.dbDetails("attach.getAttaches", requestMap);
     	if(!attaches.isEmpty()) {
+            if(!attaches.get(0).get("createdNo").equals(memberSeq))
+                throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
     	    if(attaches.get(0).get("attachSeq").equals(attachSeq)) {
     	        if(dao.dbDelete("attach.removeAttach", requestMap) < 0) {
     	            throw new BadRequestException(MessageConstant.INVALID_MESSAGE);
@@ -110,7 +111,7 @@ public class AttachServiceImpl implements AttachService {
                     }
     	        }
     	    }
-    	    return attachSeq;
+    	    return requestMap;
     	} else {
     	    throw new ResourceNotFoundException(MessageConstant.INVALID_MESSAGE);
     	}
