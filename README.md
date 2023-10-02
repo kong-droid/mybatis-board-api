@@ -18,6 +18,6 @@ Mybatis Board Api
 - local: (base on eclipse) Run > configuration 에 들어가서 profile을 local 설정, Dspring.profiles.active=local
 - prod: Dspring.profiles.active=prod ( jar 압축 시... java -jar -Dspring.profiles.active=prod jar rest-api.jar
 ```````````````````````````````````````````````````````````````````````````````````````````````````````````````
-4. [admin](https://github.com/kong-droid/thymeleaf-admin, "admin")
+4. [admin](https://github.com/kong-droid/thymeleaf-admin "admin")
 
 
