@@ -20,10 +20,10 @@ import site.kongdroid.api.dto.request.common.CommonSearchDto;
 @Schema(description = "메모")
 public class MemoDto {
 
-    @Schema(description = "메모 고유번호", example = "1", required = true)
     @Positive(message = "memoSeq는 양수여야 합니다.")
-    private Integer memoSeq;
-    
+    @Schema(description = "메모일시", example = "20220101", required = false)
+    Integer memoSeq;
+
     @Schema(description = "메모일시", example = "20220101", required = false)
     private String memoDt;
     

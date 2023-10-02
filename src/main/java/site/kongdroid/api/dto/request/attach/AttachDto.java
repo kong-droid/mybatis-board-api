@@ -51,12 +51,7 @@ public class AttachDto {
         @NotEmpty(message = "tbType이 비어있음. ")
         @Parameter(description = "파일첨부 참조 타입", example = "post contents image")
         private String tbType;
-        
-        @NotNull(message = "memberSeq가 비어있음. ")
-        @Positive(message = "memberSeq는 양수여야함. ")
-        @Parameter(description = "회원 고유번호", example = "1")
-        private Integer memberSeq;
-        
+
         @NotNull(message = "files가 비어있음. ")
         private List<MultipartFile> files;
     }

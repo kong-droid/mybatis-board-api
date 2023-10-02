@@ -40,6 +40,11 @@
 		<include refid="getSql"/>
 		<include refid="getWhere"/>		
 		ORDER BY memo_dt desc
+		<if test="search != null">
+			<if test="search.startRow != null and !search.startRow.equals('')">
+		    	limit #{search.startRow}, #{search.size}
+			</if>
+		</if>
 	</select>
 	
 	<select id="getMemosCnt" resultMap="camelCaseMap">
@@ -60,12 +65,12 @@
 			, created_dt
 			, created_no
 		) VALUES (
-			#{handle.memberSeq}
+			#{memberSeq}
 			, #{memoDt}
 			, #{handle.content}
 			, #{handle.remark}
 			, NOW()
-			, #{handle.memberSeq}
+			, #{memberSeq}
 		)
 	</insert>
 	
@@ -77,7 +82,7 @@
 			<if test="handle != null">
 				<if test="handle.content != null and !handle.content.equals('')"> content= #{handle.content},</if>
 				<if test="handle.remark != null and !handle.remark.equals('')"> remark= #{handle.remark},</if>
-				updated_no= #{handle.memberSeq}, 
+				updated_no= #{memberSeq},
 			</if>
 			updated_dt= NOW()
 		</set>

@@ -3,11 +3,13 @@ package site.kongdroid.api.controller;
 import java.io.FileNotFoundException;
 import java.util.concurrent.Callable;
 
+import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import site.kongdroid.api.dto.request.attach.AttachDto;
 import site.kongdroid.api.dto.response.ApiResult;
 import site.kongdroid.api.service.AttachServiceImpl;
+import site.kongdroid.api.util.AuthUtil;
 import site.kongdroid.api.util.MapUtil;
 
 
@@ -50,15 +53,19 @@ public class AttachController {
 
 	@Operation(summary = "파일 저장")
 	@PostMapping("/upload")
-	public Callable<ApiResult> upload(@ModelAttribute @Valid AttachDto.AddAttachReq req) {
-	    return () -> ApiResult.successBuilder(attachService.addAttach(req));
+	public Callable<ApiResult> upload(Authentication authentication,
+									  @Valid final AttachDto.AddAttachReq req) throws AuthException {
+		Integer memberSeq = AuthUtil.memberSeq(authentication);
+	    return () -> ApiResult.successBuilder(attachService.addAttach(memberSeq, req));
 	} 
 	
 	@Operation(summary = "파일 삭제")
 	@PostMapping("/delete/{attachSeq}")
 	@ApiResponse(responseCode = "200", description = "delete file.")
-	public Callable<ApiResult> delete(@Valid @PathVariable int attachSeq) {
-	    return () -> ApiResult.successBuilder(attachService.physicalRemoveAttach(attachSeq));
+	public Callable<ApiResult> delete(Authentication authentication,
+									  @Valid @PathVariable int attachSeq) throws AuthException {
+		Integer memberSeq = AuthUtil.memberSeq(authentication);
+	    return () -> ApiResult.successBuilder(attachService.physicalRemoveAttach(memberSeq, attachSeq));
 	} 
 
 }
