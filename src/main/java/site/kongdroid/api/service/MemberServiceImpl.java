@@ -20,6 +20,7 @@ import site.kongdroid.api.constants.MessageConstant;
 import site.kongdroid.api.dao.CustomDao;
 import site.kongdroid.api.exception.BadRequestException;
 import site.kongdroid.api.exception.InternalServerException;
+import site.kongdroid.api.exception.ResourceNotFoundException;
 import site.kongdroid.api.util.MemberEnDecoder;
 
 @Service
@@ -44,6 +45,15 @@ public class MemberServiceImpl implements MemberService {
         return responseMap;
     }
 
+    @Override
+    public Map<String, Object> getMember(Integer memberSeq) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("memberSeq", memberSeq);
+        val member = memberEnDecoder.decodeMember(dao.dbDetail("member.getMembers", requestMap));
+        if(member == null) throw new ResourceNotFoundException(MessageConstant.NOT_FOUND_MESSAGE);
+        return member;
+    }
+
     @Transactional
     public Map<String, Object> handleMember(Integer memberSeq, Map<String, Object> requestMap,
                                             boolean isAdd, String whatAct)
@@ -64,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
                         throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
 
                 val details = (List<Map<String, Object>>) requestMap.get("details");
-                if(!details.isEmpty()) {
+                if(details != null) {
                     details.forEach(detail -> {
                         detail.put("memberSeq", requestMap.get("memberSeq"));
                         if(dao.dbInsert("member.addMemberDetail", detail) < 0)
@@ -73,7 +83,6 @@ public class MemberServiceImpl implements MemberService {
                 }
                 break;
             case "remove":
-                System.err.println("test ::::" + requestMap);
                 if(dao.dbDelete("member.removeMemberDetail", requestMap) < 0)
                     throw new InternalServerException(MessageConstant.INVALID_MESSAGE);
                 if(dao.dbDelete("member.removeMember", requestMap) < 0)
