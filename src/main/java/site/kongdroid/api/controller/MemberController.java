@@ -43,7 +43,14 @@ public class MemberController {
     public Callable<ApiResult> list(@RequestBody @Valid final MemberDto req) {
         return () -> ApiResult.successBuilder(memberService.getMembers(MapUtil.toMap(req), true));
     }
-    
+
+    @Operation(summary = "내 정보 보기")
+    @GetMapping("/me")
+    public Callable<ApiResult> me(Authentication authentication) throws AuthException {
+        Integer memberSeq = AuthUtil.memberSeq(authentication);
+        return () -> ApiResult.successBuilder(memberService.getMember(memberSeq));
+    }
+
     @GetMapping("/read/{memberSeq}")
     @Operation(summary = "회원 조회")
     public Callable<ApiResult> get(@PathVariable
