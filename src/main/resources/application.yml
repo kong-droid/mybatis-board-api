@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: prod
   banner:
     location: "classpath:banner.txt"
     charset: UTF-8
@@ -19,7 +19,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 8100
+  port: 2000
   error:
     include-exception: true
 properties:
