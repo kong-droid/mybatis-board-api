@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://3.39.123.2:3306/admin-board?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&allowMultiQueries=true&autoreconnect=true
-    username: root
-    password: hyang461512@
+    url: jdbc:log4jdbc:mysql://board-pilot.c0vybfmy0srp.ap-northeast-2.rds.amazonaws.com:3306/board-admin?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&allowMultiQueries=true&autoreconnect=true
+    username: admin
+    password: Qwer!234
    
 file:
   upload:
