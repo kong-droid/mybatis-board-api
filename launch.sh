@@ -9,7 +9,7 @@ fi
 echo ">>> Current Mode : $env_mode"
 
 echo ">>> Check Server was Launched"
-CURRENT_PID=$(pgrep -f mybatis-board-api)
+CURRENT_PID=$(pgrep -f "$(ls | grep 'mybatis-board-api*' | head -n 1)")
 
 if [ -z $CURRENT_PID ]; then
   echo ">>> No Server"
