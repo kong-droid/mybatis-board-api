@@ -9,7 +9,7 @@ fi
 echo ">>> Current Mode : $env_mode"
 
 echo ">>> Check Server was Launched"
-CURRENT_PID=$(pgrep -f beyond-logger-rest)
+CURRENT_PID=$(pgrep -f mybatis-board-api)
 
 if [ -z $CURRENT_PID ]; then
   echo ">>> No Server"
@@ -21,7 +21,7 @@ fi
 
 echo ">>> New Server Launch!!!"
 
-JAR_NAME=$(ls | grep 'mybatis-board-api' | tail -n 1)
+JAR_NAME=$(ls | grep 'mybatis-board-api*' | head -n 1)
 echo ">>> JAR Name: /home/kong/api/$JAR_NAME"
 echo ">>> Launch IT!!!"
 
